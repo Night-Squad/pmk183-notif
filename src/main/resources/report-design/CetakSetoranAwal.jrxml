@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CetakSetoranAwal" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6d490cfc-a626-42c4-80d3-dc0693412963">
+	<subDataset name="Dataset1" uuid="42deecdf-21c0-46e5-aba0-563fe556549d">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="no_validasi" class="java.lang.String"/>
+		<field name="bank" class="java.lang.String"/>
+		<field name="branch_name" class="java.lang.String"/>
+		<field name="branch_address" class="java.lang.String"/>
+		<field name="no_rekening" class="java.lang.String"/>
+		<field name="nama_nasabah" class="java.lang.String"/>
+		<field name="jenis_kelamin" class="java.lang.String"/>
+		<field name="tempat_lahir" class="java.lang.String"/>
+		<field name="tgl_lahir" class="java.lang.String"/>
+		<field name="alamat" class="java.lang.String"/>
+		<field name="kode_pos" class="java.lang.String"/>
+		<field name="kelurahan" class="java.lang.String"/>
+		<field name="kecamatan" class="java.lang.String"/>
+		<field name="kab_kota" class="java.lang.String"/>
+		<field name="nama_provinsi" class="java.lang.String"/>
+		<field name="pendidikan" class="java.lang.String"/>
+		<field name="pekerjaan" class="java.lang.String"/>
+		<field name="jumlah_pembayaran" class="java.lang.String"/>
+		<field name="jumlah_terbilang" class="java.lang.String"/>
+		<field name="virtual_account" class="java.lang.String"/>
+		<field name="tanggal" class="java.lang.String"/>
+		<field name="kota" class="java.lang.String"/>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="802" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<componentElement>
+				<reportElement stretchType="ElementGroupHeight" x="0" y="0" width="560" height="802" uuid="61d7093e-c056-417e-bb36-e77ef045aa7b"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Dataset1" uuid="4812abe9-4daf-467f-8223-c3d31c8653e9">
+						<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("isi")]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="802" width="560">
+						<staticText>
+							<reportElement x="320" y="10" width="90" height="17" uuid="c1560ca5-f183-444e-84a0-56eab953e5d6"/>
+							<textElement verticalAlignment="Top">
+								<font fontName="Arial" size="10"/>
+							</textElement>
+							<text><![CDATA[No. Validasi	:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="320" y="27" width="90" height="17" uuid="704d82a9-73a3-4858-a24a-980d0558bb3b"/>
+							<textElement verticalAlignment="Top">
+								<font fontName="Arial" size="10"/>
+							</textElement>
+							<text><![CDATA[Bank 		:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="320" y="44" width="90" height="17" uuid="a2a735a3-76e2-47df-932b-1d661bffb051"/>
+							<textElement verticalAlignment="Top">
+								<font fontName="Arial" size="10"/>
+							</textElement>
+							<text><![CDATA[Kantor		:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="320" y="61" width="90" height="17" uuid="82c23c28-77ef-4bfd-914d-feb524066f2e"/>
+							<textElement verticalAlignment="Top">
+								<font fontName="Arial" size="10"/>
+							</textElement>
+							<text><![CDATA[Alamat		:]]></text>
+						</staticText>
+						<textField>
+							<reportElement x="410" y="10" width="150" height="17" uuid="264c4d82-39e6-413b-a8e1-30b00c01d3cd"/>
+							<textElement verticalAlignment="Top">
+								<font fontName="Arial" size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{no_validasi}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="410" y="27" width="150" height="17" uuid="2de03cdc-435c-4e20-9536-ece6e960beb2"/>
+							<textElement verticalAlignment="Top">
+								<font fontName="Arial" size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{bank}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="410" y="44" width="150" height="17" uuid="a9b8d3b4-a0ed-482f-9063-e69ed098916d"/>
+							<textElement verticalAlignment="Top">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{branch_name}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="410" y="61" width="150" height="34" uuid="94d6b520-452c-4eee-8898-7923622037f4"/>
+							<textElement verticalAlignment="Top">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{branch_address}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="0" y="100" width="560" height="50" uuid="e3307672-a701-4197-aa5c-3c40e01d88cb"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="15" isBold="true"/>
+							</textElement>
+							<text><![CDATA[TANDA BUKTI SETORAN AWAL
+BIAYA PENYELENGGARAAN IBADAH HAJI]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="173" width="140" height="20" uuid="2cae2648-4231-4cbd-bddf-f37c6e45f96d"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[NOMOR REKENING]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="193" width="140" height="20" uuid="56410893-9686-4dd2-a2a0-7846f401f967"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[NAMA CALON HAJI]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="213" width="140" height="20" uuid="7c50ffe5-31c3-40e4-a824-e9bdd664188c"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[JENIS KELAMIN]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="233" width="140" height="20" uuid="801a0f24-7598-4b42-8641-2aaa680dce4a"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[TEMPAT LAHIR]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="253" width="140" height="20" uuid="7daaa2ee-782b-474a-ae24-46347fb41814"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[TANGGAL LAHIR]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="273" width="140" height="20" uuid="4aa41e2a-b4b6-4f89-af82-860f49c6a1f2"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[ALAMAT]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="293" width="140" height="20" uuid="de6d7ada-64c4-41c5-a904-59dbd8f3e323"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[KODE POS]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="313" width="140" height="20" uuid="1f3f8bfd-8fde-44e5-97cb-3755024f1521"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[DESA / KELURAHAN]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="333" width="140" height="20" uuid="15b1bc22-aac2-46dd-a33b-75bceb7e6994"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[KECAMATAN]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="353" width="140" height="20" uuid="2a16d072-ebb8-4252-b090-9ce6ccfb6ac7"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[KABUPATEN / KODYA]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="373" width="140" height="20" uuid="7dad6615-086a-4ee6-96bc-7ff9e73a43aa"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[PROVINSI]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="393" width="140" height="20" uuid="baec2e8e-14e3-4a65-80f3-a1d691fb4963"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[PENDIDIKAN]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="413" width="140" height="20" uuid="c99b587a-c99d-4497-8bc8-88c6d78ca76f"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[PEKERJAAN]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="433" width="140" height="20" uuid="f3c22b6b-e552-44da-9425-d5f83098f850"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[JUMLAH PEMBAYARAN]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="453" width="140" height="20" uuid="eaa212d9-fb2e-477f-bbe2-14930d23e513"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[TERBILANG]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="70" y="473" width="140" height="20" uuid="4bf7a3a1-6af7-4ddf-9e04-cc3062196704"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[NO VIRTUAL ACCOUNT]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="173" width="10" height="20" uuid="c36a04ae-0216-4d96-aa9a-a4c63eca556e"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="193" width="10" height="20" uuid="485acbaa-e7f4-46f3-99cf-ba06add00b02"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="233" width="10" height="20" uuid="a9018401-deaf-4827-bf99-6cced805c327"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="213" width="10" height="20" uuid="947ec482-41b4-4f66-b5ae-9ff150154ef2"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="313" width="10" height="20" uuid="f891750d-4b54-4d0d-ab39-f07a06d15529"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="293" width="10" height="20" uuid="e32437be-3604-44d5-89b2-2ce310e799c7"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="273" width="10" height="20" uuid="e9dcad42-b719-4a26-b055-0f4637a9b4da"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="253" width="10" height="20" uuid="027ebf87-5e7e-4b95-b558-9af28f3ddeb5"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="393" width="10" height="20" uuid="523669d5-936e-4a3a-b19a-5c667cb1faad"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="373" width="10" height="20" uuid="aefa2a66-bfc3-4c3c-954e-f37c1575a6ca"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="353" width="10" height="20" uuid="cf57f732-223e-485b-b93c-9827a0388d16"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="333" width="10" height="20" uuid="bbf65e30-acb6-457c-aebb-fa3ef3084cdf"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="473" width="10" height="20" uuid="96b8ce73-8c7f-4b46-b138-8796fb9b8ed2"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="453" width="10" height="20" uuid="0f1ddac2-6c98-4f23-9ff3-868cab47fc91"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="433" width="10" height="20" uuid="d75d6011-182d-4695-b35d-49d4e284c86a"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="210" y="413" width="10" height="20" uuid="bd60a59f-e790-4a4d-ab69-a4caf78bf043"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<textField>
+							<reportElement x="220" y="173" width="320" height="20" uuid="618db6f4-bc1d-4d97-bd3d-9355d1e1ee6d"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{no_rekening}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="193" width="320" height="20" uuid="8bd0118e-7767-401c-b266-f1e987bfbd2d"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{nama_nasabah}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="213" width="320" height="20" uuid="9aca3bd0-b441-43e2-979c-f1ebf944df56"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{jenis_kelamin}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="233" width="320" height="20" uuid="8b5c6a88-2bf3-43fc-a7f6-5236b9671674"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{tempat_lahir}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="253" width="320" height="20" uuid="b7b28399-f03a-4d76-8623-f18d06d2afe8"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{tgl_lahir}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="273" width="320" height="20" uuid="6de4aa50-d666-4cae-9fbb-5760ecfecf55"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{alamat}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="293" width="320" height="20" uuid="3875947c-913a-41bf-abab-bc9513ca7366"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{kode_pos}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="313" width="320" height="20" uuid="4fe7e439-587b-4d30-8595-0e9cadbef521"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{kelurahan}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="333" width="320" height="20" uuid="dc0207ec-28f5-406b-a7ca-06ad4d24f78d"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{kecamatan}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="353" width="320" height="20" uuid="cb1c02ea-3cdb-4593-b6b1-b0ad42317796"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{kab_kota}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="373" width="320" height="20" uuid="93b43b10-3ae6-4e76-b284-ab4b724f7fe1"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{nama_provinsi}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="393" width="320" height="20" uuid="be72b84f-e253-41be-95a5-7b2c833ddf28"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{pendidikan}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="413" width="320" height="20" uuid="63880c1e-209f-4387-bedd-75bf617c4102"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{pekerjaan}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="433" width="320" height="20" uuid="e702442e-8990-4b42-b76d-626b2d346d30"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{jumlah_pembayaran}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="453" width="320" height="20" uuid="23efb203-6488-42ef-af71-ff4bf830630b"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{jumlah_terbilang}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="473" width="320" height="20" uuid="ebdc8a6f-ec23-4984-baff-8bb9ddb4c88d"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{virtual_account}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="63" y="550" width="100" height="20" uuid="42465325-143f-4679-9ed6-752ef66daecb"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[DISETOR OLEH]]></text>
+						</staticText>
+						<textField>
+							<reportElement x="43" y="650" width="140" height="30" uuid="9ba22309-6694-492c-a071-a5aa8594e400"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{nama_nasabah}]]></textFieldExpression>
+						</textField>
+						<rectangle>
+							<reportElement x="203" y="530" width="113" height="151" uuid="7d1ee021-f0c9-45a5-8366-b9e66277ae62"/>
+						</rectangle>
+						<staticText>
+							<reportElement x="203" y="530" width="113" height="151" uuid="16c893c0-2a70-4c57-a4fc-18a32c506431"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<text><![CDATA[Photo 3 x 4]]></text>
+						</staticText>
+						<textField>
+							<reportElement x="333" y="540" width="227" height="20" uuid="0195744f-2514-42d6-a56c-96142f5bb29f"/>
+							<textElement verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{kota}+", "+$F{tanggal}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="333" y="560" width="227" height="20" uuid="18dca994-d32e-4e15-831a-2909102b57c9"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle">
+								<font fontName="Arial" size="12"/>
+							</textElement>
+							<text><![CDATA[DITERIMA OLEH]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

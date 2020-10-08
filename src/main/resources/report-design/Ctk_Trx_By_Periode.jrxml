@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Ctk_Trx_By_Periode" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f749bc6e-fdb3-4eda-8459-148d0c18970f">
+	<subDataset name="Isi" uuid="48502ac9-31b5-4954-a78b-3dab36b86c4f">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="nomorRegistrasi" class="java.lang.String"/>
+		<field name="nomorPastiUmroh" class="java.lang.String"/>
+		<field name="nama" class="java.lang.String"/>
+		<field name="ppiu" class="java.lang.String"/>
+		<field name="asuransi" class="java.lang.String"/>
+		<field name="paket" class="java.lang.String"/>
+		<field name="nominalAsuransi" class="java.lang.String"/>
+		<field name="nominalPpiu" class="java.lang.String"/>
+		<field name="nominalTotal" class="java.lang.String"/>
+		<field name="totalPembayaran" class="java.lang.String"/>
+		<field name="tglBayar" class="java.lang.String"/>
+		<field name="nomorReferensi" class="java.lang.String"/>
+		<field name="no" class="java.lang.Integer"/>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="tanggalPembayaranAwal" class="java.lang.String"/>
+	<field name="tanggalPembayaranAkhir" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="68" splitType="Stretch">
+			<staticText>
+				<reportElement x="89" y="10" width="600" height="30" uuid="690dbe1a-382a-4c07-a02d-f69ef3b736df"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Daftar Bukti Pembayaran Calon Peserta Umroh]]></text>
+			</staticText>
+			<image>
+				<reportElement x="2" y="2" width="78" height="66" uuid="8c965295-3ae2-46aa-a0c3-9f3bfd713f7a"/>
+				<imageExpression><![CDATA["/var/www/bjbs_umroh_services/report-design/assets/kemenag.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="721" y="2" width="80" height="66" uuid="5554d2e5-3396-4b07-bddf-bbe6aafcf916"/>
+				<imageExpression><![CDATA["/var/www/bjbs_umroh_services/report-design/assets/bjbs.png"]]></imageExpression>
+			</image>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="161" splitType="Stretch">
+			<staticText>
+				<reportElement x="650" y="90" width="58" height="30" uuid="e859a8f5-dfaa-4238-bfb9-3d92519b85b6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[Tanggal Bayar]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="580" y="90" width="70" height="30" uuid="3a8c1f3c-1323-408c-a5a3-f7a19155c843">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[Total Pembayaran]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="331" y="90" width="58" height="30" uuid="286f955a-617b-443f-ae41-b07120eb6748">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[Nama Paket Umroh]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="90" width="100" height="30" uuid="6d470a1b-2802-4bf4-941e-acdc421ce434"/>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[Nama Nasabah]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="90" width="70" height="30" uuid="2316ccdc-5415-4e80-9bd3-3eb9eec90b73"/>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[Nama Asuransi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="448" y="90" width="60" height="30" uuid="e5e4a9a5-b307-45e4-83bf-07ec140692ce">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[Nominal PPIU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="509" y="90" width="71" height="30" uuid="25268157-03cc-44ab-874b-77beef3157cf">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[nominal_asuransi + nominal_ppiu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="708" y="90" width="70" height="30" uuid="9c07fc42-4e8b-4eba-a5b6-b389956455dd">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.75"/>
+				</box>
+				<text><![CDATA[No. Referensi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="90" width="50" height="30" uuid="47b3911c-9113-45f8-8344-f10759f6d23a"/>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[No. Pasti Umroh]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="90" width="40" height="30" uuid="65cdd3f8-a4ab-4570-ac52-183057d70735"/>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[Nama PPIU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="20" height="30" uuid="ba09e7fe-889c-4546-b465-d8c85b73a34d"/>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="90" width="50" height="30" uuid="d4c10726-3490-4d79-b393-333027aa96fd"/>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[No. Registrasi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="389" y="90" width="60" height="30" uuid="04cbf6b3-05ae-4a31-b9f9-aa78d1deb28b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</box>
+				<text><![CDATA[Nominal Asuransi]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="120" width="778" height="39" uuid="7bbce46d-cf54-4f1f-bc7f-9e3912ed5a72"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="Isi" uuid="0af894f2-de82-440e-a1b7-5fd6b80d7923">
+						<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("isi")]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="39" width="778">
+						<textField>
+							<reportElement x="0" y="1" width="20" height="38" uuid="0090c281-5c1b-48a8-9720-2ffe1a573508">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{no}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="20" y="1" width="50" height="38" uuid="07a32927-8ef5-4042-88ed-4dc78bc560bb">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{nomorRegistrasi}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="70" y="1" width="50" height="38" uuid="dabad648-dc56-421c-8c9c-91c727c1206b">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{nomorPastiUmroh}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="120" y="1" width="100" height="38" uuid="7e61ca1a-2aba-4ac0-a08a-e28ce1df47f1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{nama}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="220" y="1" width="40" height="38" uuid="79cd52a0-a799-48c8-a8bd-f0d842268fd1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{ppiu}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="260" y="1" width="70" height="38" uuid="1f052155-b306-4b99-b520-b9d9d0ee2a1b">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{asuransi}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="331" y="1" width="58" height="38" uuid="abad9550-df09-42fd-8eaa-dd811bb96b20">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{paket}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="389" y="1" width="60" height="38" uuid="09d527cc-b721-4f90-9e50-2528e652dfb1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{nominalAsuransi}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="449" y="1" width="60" height="38" uuid="73b05ee8-1c0e-4268-bc0f-29d582ad8aec">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{nominalPpiu}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="509" y="1" width="71" height="38" uuid="d3358070-3032-4a1b-a42d-0724aef3c204">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{nominalTotal}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="580" y="1" width="70" height="38" uuid="5de6743e-9534-4668-873e-e0b231b90825">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{totalPembayaran}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="650" y="1" width="58" height="38" uuid="910dc9e5-4576-4fba-89b1-dfcb84925be1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{tglBayar}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="708" y="1" width="70" height="38" uuid="546768fd-2aef-451c-a018-8638ce600b4e">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</reportElement>
+							<box>
+								<pen lineWidth="0.25"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$F{nomorReferensi}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField>
+				<reportElement x="52" y="50" width="140" height="20" uuid="b0faa1d6-c837-49a7-80f5-b1c95acc51d7"/>
+				<textFieldExpression><![CDATA[$F{tanggalPembayaranAkhir}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="52" y="20" width="140" height="30" uuid="a4360438-2547-4c17-8ad0-b1e652de86f9"/>
+				<textFieldExpression><![CDATA[$F{tanggalPembayaranAwal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
