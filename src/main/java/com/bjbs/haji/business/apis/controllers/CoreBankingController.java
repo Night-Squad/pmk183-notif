@@ -14,9 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -37,8 +35,8 @@ public class CoreBankingController {
 	static final Logger logger = LogManager.getLogger(CoreBankingController.class.getName());
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 	
-	@PostMapping(value = "/getCif", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getCif(@RequestBody String request) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
+	@PostMapping(value = "/getCif-old", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Object getCifOld(@RequestBody String request) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
         
 		String url = urlCoreBankServer + "Gateway/service/v2/postData";
         
@@ -95,8 +93,8 @@ public class CoreBankingController {
 		}
 	}
 
-	@PostMapping(value = "/getAccount", produces = MediaType.APPLICATION_JSON_VALUE)
-	public String getAccount(@RequestBody String request) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
+	@PostMapping(value = "/getAccount-old", produces = MediaType.APPLICATION_JSON_VALUE)
+	public String getAccountOld(@RequestBody String request) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
 		
 		String url = urlCoreBankServer + "Gateway/service/v2/postData";
 		
@@ -134,8 +132,8 @@ public class CoreBankingController {
 		return response;
 	}
 	
-	@PostMapping(value = "/transaction", produces = MediaType.APPLICATION_JSON_VALUE)
-	public String transaction(@RequestBody String request) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
+	@PostMapping(value = "/transaction-old", produces = MediaType.APPLICATION_JSON_VALUE)
+	public String transactionOld(@RequestBody String request) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
 		
 		String url = urlCoreBankServer + "Gateway/service/v2/postData";
 		
@@ -173,6 +171,57 @@ public class CoreBankingController {
 		logger.debug("Core Banking transaction response : " + response);
 		
 		return response;
+	}
+
+	@GetMapping(value = "/getCif", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getCif(@RequestParam("noRekening") String noRekening, @RequestHeader("token") String token) throws InvalidKeyException, SignatureException, NoSuchAlgorithmException {
+		try {
+			String url = urlCoreBankServer2 + "/api/cif/inquiry/by-account/" + noRekening;
+			RestTemplate restTemplate = new RestTemplate();
+			HttpHeaders headers = new HttpHeaders();
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setBearerAuth(token);
+			HttpEntity<String> request = new HttpEntity<String>("parameters", headers);
+			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+			return response.getBody();
+		} catch (HttpClientErrorException e) {
+			return e.getResponseBodyAsString();
+		}
+	}
+
+	@GetMapping(value = "/getAccount", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Object getAccount(@RequestParam("noRekening") String noRekening, @RequestHeader("token") String token) {
+		try {
+			String url = urlCoreBankServer2 + "/api/account-saving/" + noRekening;
+			RestTemplate restTemplate = new RestTemplate();
+			HttpHeaders headers = new HttpHeaders();
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setBearerAuth(token);
+			HttpEntity<String> request = new HttpEntity<String>("parameters", headers);
+			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+			return response.getBody();
+		} catch (HttpClientErrorException e) {
+			return e.getResponseBodyAsString();
+		}
+	}
+
+	@PostMapping(value = "/transaction", produces = MediaType.APPLICATION_JSON_VALUE)
+	public String transaction(@RequestBody String request, @RequestHeader("token") String token) {
+		try {
+			String url = urlCoreBankServer2 + "/api/developer/core/trx-v2";
+			RestTemplate restTemplate = new RestTemplate();
+			HttpHeaders headers = new HttpHeaders();
+
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.setBearerAuth(token);
+			HttpEntity<String> requestBody = new HttpEntity<String>(request);
+			String response = restTemplate.postForObject(url, requestBody, String.class);
+			return response;
+		} catch (HttpClientErrorException e) {
+			return e.getResponseBodyAsString();
+		}
 	}
 
 	private static String toHexString(byte[] bytes) {

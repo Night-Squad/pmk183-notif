@@ -119,47 +119,27 @@ public class SetoranAwalCustomController {
 
     @PostMapping("/approve")
     public Object approve(@RequestParam("setoranAwalId") long setoranAwalId, @RequestParam("userCode") String userCode,
-                          @RequestBody String request) {
+                          @RequestBody String request, @RequestHeader("token") String token) {
         try {
             SetoranAwal setoranAwal = setoranAwalRepository.findById(setoranAwalId).orElse(null);
             if(setoranAwal != null){
-                String url = urlCoreBankServer + "Gateway/service/v2/postData";
-                SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyyMMdd");
-                SimpleDateFormat timeFormatter = new SimpleDateFormat("HHmmss");
-                SimpleDateFormat dateGenerateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-                SimpleDateFormat timeGenerateFormatter = new SimpleDateFormat("HH:mm:ss");
-                SimpleDateFormat dateRkFormatter = new SimpleDateFormat("dd-MM-yyyy");
+                String url = urlCoreBankServer2 + "/api/developer/core/trx-v2";
                 Date settlementDate = new Date();
-                String ipCoreBank = urlCoreBankClient;
-                String data = "00005" + ipCoreBank + dateGenerateFormatter.format(settlementDate) + timeGenerateFormatter.format(settlementDate);
-
-                String authKey = calculateRFC2104HMAC(data, "fosgw");
-                JSONObject requestJson = new JSONObject(request);
-                requestJson.put("authKey", authKey);
-                requestJson.put("txDate", dateFormatter.format(settlementDate));
-                requestJson.put("txHour", timeFormatter.format(settlementDate));
-                requestJson.put("date", dateRkFormatter.format(settlementDate));
-                requestJson.put("date_rk", dateRkFormatter.format(settlementDate));
-
-                System.out.println("data : " + data);
-                System.out.println("authKey : " + authKey);
-                System.out.println("dateFormatter : " + dateFormatter.format(settlementDate));
-                System.out.println("timeFormatter : " + timeFormatter.format(settlementDate));
-                System.out.println("new Request : " + requestJson.toString());
 
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders headers = new HttpHeaders();
 
                 try {
                     headers.setContentType(MediaType.APPLICATION_JSON);
-                    HttpEntity<String> requestBody = new HttpEntity<String>(requestJson.toString());
+                    headers.setBearerAuth(token);
+                    HttpEntity<String> requestBody = new HttpEntity<String>(request, headers);
                     String response = restTemplate.postForObject(url, requestBody, String.class);
 
                     System.out.println("Core Banking transaction response : " + response);
                     JSONObject journalResponse = new JSONObject(response);
 
-                    if (journalResponse.getString("rCode").equals("00")) {
-                        JSONObject journalResult = new JSONObject(journalResponse.get("result").toString());
+                    if (journalResponse.getString("rc").equals("00")) {
+                        JSONObject journalResult = new JSONObject(journalResponse.get("data").toString());
                         setoranAwal.setTransactionId(journalResult.get("TXID").toString());
                         setoranAwal.setStatusTransaksi(new StatusTransaksi(2));
                         setoranAwal.setTanggalTransaksi(settlementDate);
@@ -168,11 +148,11 @@ public class SetoranAwalCustomController {
                         SetoranAwal result = setoranAwalRepository.save(setoranAwal);
                         return ResponseEntity.ok().body(new Response("00", result, "Setoran Awal telah disetujui"));
                     } else {
-                        return ResponseEntity.ok().body(new Response(journalResponse.getString("rCode"), null, journalResponse.getString("message")));
+                        return ResponseEntity.ok().body(new Response(journalResponse.getString("rc"), null, journalResponse.getString("message")));
                     }
                 } catch (HttpClientErrorException e) {
                     JSONObject failedResponse = new JSONObject(e.getResponseBodyAsString());
-                    return ResponseEntity.ok().body(new Response(failedResponse.getString("rCode"), null, failedResponse.getString("message")));
+                    return ResponseEntity.ok().body(new Response(failedResponse.getString("rc"), null, failedResponse.getString("message")));
                 }
             }else{
                 return ResponseEntity.ok().body(new Response("99", null, "Data Setoran Awal tidak ditemukan"));
