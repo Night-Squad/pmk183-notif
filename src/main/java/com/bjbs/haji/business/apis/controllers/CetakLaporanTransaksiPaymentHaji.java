@@ -83,10 +83,10 @@ public class CetakLaporanTransaksiPaymentHaji extends HibernateReportController<
 
             if (productId == 1) {
                 List<SetoranAwal> list = setoranAwalRepository.getListSetoranAwalPeriod(tglAwal, tglAkhir);
-
+                System.out.println(list);
                 List<SetoranAwal> listStatus = list.stream()
                         .filter( StreamUtil.distinctByKey(s -> s.getStatusTransaksi().getNamaStatusTransaksi()))
-                        .collect( Collectors.toList());;
+                        .collect( Collectors.toList());
 
                 if (statusId != 0) {
                     list = list.stream()
@@ -116,6 +116,10 @@ public class CetakLaporanTransaksiPaymentHaji extends HibernateReportController<
                             .collect(Collectors.toList());
                 }
 
+                System.out.println(listStatus.size());
+                System.out.println(listBranch.size());
+                System.out.println(list.size());
+
                 List<Map<String, Object>> isiList = new ArrayList<>();
                 Double tagihan=0D, fee=0D, total=0D;
                 for (SetoranAwal status : listStatus){
@@ -123,33 +127,28 @@ public class CetakLaporanTransaksiPaymentHaji extends HibernateReportController<
                     List<Map<String, Object>> data1List = new ArrayList<>();
                     isi.put("status", status.getStatusTransaksi().getNamaStatusTransaksi());
                     Double tagihanStat=0D, feeStat=0D, totalStat=0D;
-                    for (SetoranAwal branch : listBranch) {
-                        for (SetoranAwal setoranAwal : list) {
-                            if (setoranAwal.getStatusTransaksi().getStatusTransaksiId() == status.getStatusTransaksi().getStatusTransaksiId()) {
-                                if (branch.getBranchCode() == setoranAwal.getBranchCode()) {
-                                    Map<String, Object> data1 = new HashMap<>();
-                                    data1.put("no", data1List.size()+1);
-                                    data1.put("tgl_tx", new SimpleDateFormat("dd/MM/yyyy").format(setoranAwal.getTanggalTransaksi()));
-                                    data1.put("branch_code", setoranAwal.getBranchCode());
-                                    data1.put("no_rek", setoranAwal.getNoRekening());
-                                    data1.put("nama", setoranAwal.getNamaJemaah());
-                                    data1.put("no_arsip", setoranAwal.getTransactionId());
-                                    data1.put("tagihan", kursIndonesia.format(setoranAwal.getNominalSetoran()));
-                                    tagihanStat+=setoranAwal.getNominalSetoran().doubleValue();
-                                    data1.put("fee", kursIndonesia.format(0D));
-                                    feeStat+=0;
-                                    data1.put("total", kursIndonesia.format(setoranAwal.getNominalSetoran()));
-                                    totalStat+=setoranAwal.getNominalSetoran().doubleValue();
-                                    data1.put("no_validasi", (setoranAwal.getNoValidasi()!=null)?setoranAwal.getNoValidasi():"-");
-                                    data1.put("user", setoranAwal.getCreatedBy());
-                                    data1.put("channel", setoranAwal.getChannel().getTipeMerchant());
-                                    data1List.add(data1);
-                                }
-                            } else {
-                                continue;
-                            }
+                    for (SetoranAwal setoranAwal : list) {
+                        if (setoranAwal.getStatusTransaksi().getStatusTransaksiId() == status.getStatusTransaksi().getStatusTransaksiId()) {
+                            Map<String, Object> data1 = new HashMap<>();
+                            data1.put("no", data1List.size() + 1);
+                            data1.put("tgl_tx", new SimpleDateFormat("dd/MM/yyyy").format(setoranAwal.getTanggalTransaksi()));
+                            data1.put("branch_code", setoranAwal.getBranchCode());
+                            data1.put("no_rek", setoranAwal.getNoRekening());
+                            data1.put("nama", setoranAwal.getNamaJemaah());
+                            data1.put("no_arsip", setoranAwal.getTransactionId());
+                            data1.put("tagihan", kursIndonesia.format(setoranAwal.getNominalSetoran()));
+                            tagihanStat += setoranAwal.getNominalSetoran().doubleValue();
+                            data1.put("fee", kursIndonesia.format(0D));
+                            feeStat += 0;
+                            data1.put("total", kursIndonesia.format(setoranAwal.getNominalSetoran()));
+                            totalStat += setoranAwal.getNominalSetoran().doubleValue();
+                            data1.put("no_validasi", (setoranAwal.getNoValidasi() != null) ? setoranAwal.getNoValidasi() : "-");
+                            data1.put("user", setoranAwal.getCreatedBy());
+                            data1.put("channel", setoranAwal.getChannel().getTipeMerchant());
+                            data1List.add(data1);
                         }
                     }
+
                     if (data1List.size() > 0) {
                         isi.put("data1", data1List);
                         isi.put("tagihan_stat", kursIndonesia.format(tagihanStat));
@@ -172,7 +171,7 @@ public class CetakLaporanTransaksiPaymentHaji extends HibernateReportController<
 
                 List<SetoranPelunasan> listStatus = list.stream()
                         .filter( StreamUtil.distinctByKey(s -> s.getStatusTransaksi().getNamaStatusTransaksi()))
-                        .collect( Collectors.toList());;
+                        .collect( Collectors.toList());
 
                 if (statusId != 0) {
                     list = list.stream()
@@ -182,7 +181,7 @@ public class CetakLaporanTransaksiPaymentHaji extends HibernateReportController<
 
                 List<SetoranPelunasan> listBranch = list.stream()
                         .filter( StreamUtil.distinctByKey(s -> s.getBranchCode()))
-                        .collect( Collectors.toList());;
+                        .collect( Collectors.toList());
 
                 if (branchCode != null && !branchCode.equals("")) {
                     list = list.stream()
@@ -210,31 +209,25 @@ public class CetakLaporanTransaksiPaymentHaji extends HibernateReportController<
                     isi.put("status", status.getStatusTransaksi().getNamaStatusTransaksi());
 
                     Double tagihanStat=0D, feeStat=0D, totalStat=0D;
-                    for (SetoranPelunasan branch : listBranch) {
-                        for (SetoranPelunasan setoranPelunasan : list) {
-                            if (setoranPelunasan.getStatusTransaksi().getStatusTransaksiId() == status.getStatusTransaksi().getStatusTransaksiId()) {
-                                if (branch.getBranchCode() == setoranPelunasan.getBranchCode()) {
-                                    Map<String, Object> data1 = new HashMap<>();
-                                    data1.put("no", data1List.size()+1);
-                                    data1.put("tgl_tx", new SimpleDateFormat("dd/MM/yyyy").format(setoranPelunasan.getTanggalTransaksi()));
-                                    data1.put("branch_code", setoranPelunasan.getBranchCode());
-                                    data1.put("no_rek", setoranPelunasan.getNoRekening());
-                                    data1.put("nama", setoranPelunasan.getNamaJemaah());
-                                    data1.put("no_arsip", setoranPelunasan.getTransactionId());
-                                    data1.put("tagihan", kursIndonesia.format(setoranPelunasan.getNominalSetoran()));
-                                    tagihanStat+=setoranPelunasan.getNominalSetoran().doubleValue();
-                                    data1.put("fee", kursIndonesia.format(0D));
-                                    feeStat+=0;
-                                    data1.put("total", kursIndonesia.format(setoranPelunasan.getNominalSetoran()));
-                                    totalStat+=setoranPelunasan.getNominalSetoran().doubleValue();
-                                    data1.put("no_validasi", (setoranPelunasan.getNoPorsi()!=null)?setoranPelunasan.getNoPorsi():"-");
-                                    data1.put("user", setoranPelunasan.getCreatedBy());
-                                    data1.put("channel", setoranPelunasan.getChannel().getTipeMerchant());
-                                    data1List.add(data1);
-                                }
-                            } else {
-                                continue;
-                            }
+                    for (SetoranPelunasan setoranPelunasan : list) {
+                        if (setoranPelunasan.getStatusTransaksi().getStatusTransaksiId() == status.getStatusTransaksi().getStatusTransaksiId()) {
+                            Map<String, Object> data1 = new HashMap<>();
+                            data1.put("no", data1List.size()+1);
+                            data1.put("tgl_tx", new SimpleDateFormat("dd/MM/yyyy").format(setoranPelunasan.getTanggalTransaksi()));
+                            data1.put("branch_code", setoranPelunasan.getBranchCode());
+                            data1.put("no_rek", setoranPelunasan.getNoRekening());
+                            data1.put("nama", setoranPelunasan.getNamaJemaah());
+                            data1.put("no_arsip", setoranPelunasan.getTransactionId());
+                            data1.put("tagihan", kursIndonesia.format(setoranPelunasan.getNominalSetoran()));
+                            tagihanStat+=setoranPelunasan.getNominalSetoran().doubleValue();
+                            data1.put("fee", kursIndonesia.format(0D));
+                            feeStat+=0;
+                            data1.put("total", kursIndonesia.format(setoranPelunasan.getNominalSetoran()));
+                            totalStat+=setoranPelunasan.getNominalSetoran().doubleValue();
+                            data1.put("no_validasi", (setoranPelunasan.getNoPorsi()!=null)?setoranPelunasan.getNoPorsi():"-");
+                            data1.put("user", setoranPelunasan.getCreatedBy());
+                            data1.put("channel", setoranPelunasan.getChannel().getTipeMerchant());
+                            data1List.add(data1);
                         }
                     }
                     if (data1List.size() > 0) {

@@ -57,9 +57,9 @@ public class SetoranAwalCustomController {
     @PostMapping("/inquiry")
     public Object create(@RequestBody SetoranAwalDTO setoranAwalDTO, @RequestParam("userCode") String userCode, @RequestParam("userBranchCode") String userBranchCode) {
 
-        if (!setoranAwalDTO.getNoRekening().substring(5,7).equals("07")) {
-            return ResponseEntity.ok().body(new Response("98", null, "Nomor Rekening bukan tabungan Haji!"));
-        }
+//        if (!setoranAwalDTO.getNoRekening().substring(5,7).equals("07")) {
+//            return ResponseEntity.ok().body(new Response("98", null, "Nomor Rekening bukan tabungan Haji!"));
+//        }
 
         SetoranAwal setoranAwal = new SetoranAwal();
         try {
@@ -120,6 +120,7 @@ public class SetoranAwalCustomController {
     @PostMapping("/approve")
     public Object approve(@RequestParam("setoranAwalId") long setoranAwalId, @RequestParam("userCode") String userCode,
                           @RequestBody String request, @RequestHeader("token") String token) {
+
         try {
             SetoranAwal setoranAwal = setoranAwalRepository.findById(setoranAwalId).orElse(null);
             if(setoranAwal != null){

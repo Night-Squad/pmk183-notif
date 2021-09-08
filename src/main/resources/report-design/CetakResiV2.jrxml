@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CetakResi" pageWidth="600" pageHeight="500" orientation="Landscape" columnWidth="560" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Key" uuid="3efec358-2f75-4f64-8e43-ffd5d8df4aee">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<subDataset name="isi" uuid="7165af67-deaf-437e-8f61-0d99b71ed61c">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="tanggalTransaksi" class="java.lang.String"/>
+		<field name="noRekening" class="java.lang.String"/>
+		<field name="noValidasi" class="java.lang.String"/>
+		<field name="terbilang" class="java.lang.String"/>
+		<field name="jamTransaksi" class="java.lang.String"/>
+		<field name="jumlah" class="java.lang.String"/>
+		<field name="namaJemaahHaji" class="java.lang.String"/>
+		<field name="nomorKtp" class="java.lang.String"/>
+		<field name="nomorVirtualAccount" class="java.lang.String"/>
+		<field name="qrCode" class="java.lang.String"/>
+	</subDataset>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="460" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="0" width="560" height="460" uuid="363a9bf4-b90a-4a73-b7f6-d6a71ddec543"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="isi" uuid="ef1e327e-dfa2-4624-9d8f-549a7ab99d0b">
+						<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("isi")]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="460" width="560">
+						<staticText>
+							<reportElement positionType="FixRelativeToBottom" x="20" y="187" width="90" height="17" uuid="9724ddf5-1e4c-4abb-aa37-39611f1fd568"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<text><![CDATA[Tanggal Transaksi]]></text>
+						</staticText>
+						<textField>
+							<reportElement x="140" y="187" width="270" height="17" uuid="4b80ddf6-5bb7-4ad8-a424-8020150cc91b"/>
+							<textElement verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{tanggalTransaksi} + " " +  $F{jamTransaksi}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="130" y="187" width="10" height="17" uuid="250017de-65f2-49ed-ab32-7458550ff4ba"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="130" y="167" width="10" height="17" uuid="1a2269d7-d2d1-42fd-979c-e7c07b21398b"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="FixRelativeToBottom" x="20" y="167" width="110" height="17" uuid="c85b019d-4a69-4df0-9c72-0a3645c0ff10"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<text><![CDATA[Nomor Virtual Account]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="130" y="207" width="10" height="17" uuid="46d202a1-a0ec-488f-9613-a793d3acdee4"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="FixRelativeToBottom" x="20" y="207" width="90" height="17" uuid="b0d9f0a7-8f7e-4338-8cc2-3ccfb15606e8"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<text><![CDATA[No. Rekening]]></text>
+						</staticText>
+						<textField>
+							<reportElement x="140" y="207" width="181" height="17" uuid="f465641d-0919-4e5d-ba8e-74cce85d73d4"/>
+							<textElement verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{noRekening}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="130" y="247" width="10" height="17" uuid="026a0805-20b6-4843-9ed2-f160e5b42e1b"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<textField>
+							<reportElement x="140" y="147" width="181" height="17" uuid="af4aefba-395e-4bed-b037-c25f911a594d"/>
+							<textElement verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{noValidasi}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="130" y="227" width="10" height="17" uuid="523f5444-34c3-45a5-8ce9-e1a5beb2ba8f"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="FixRelativeToBottom" x="20" y="227" width="90" height="17" uuid="e9ce5ce4-2d76-4a4b-a8c1-79daa8ca4782"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<text><![CDATA[Nomor KTP]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="FixRelativeToBottom" x="20" y="247" width="90" height="17" uuid="7c426843-06a6-4ed4-afe8-83e4d6399bd5"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<text><![CDATA[Nama Jemaah Haji]]></text>
+						</staticText>
+						<textField>
+							<reportElement x="140" y="247" width="380" height="17" uuid="27608380-1a92-4cb7-b174-6cb2e8029fe5"/>
+							<textElement verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{namaJemaahHaji}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="130" y="147" width="10" height="17" uuid="654f683b-2076-4391-bf27-dac66d3046a9"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<textField>
+							<reportElement x="140" y="167" width="380" height="17" uuid="5554a3b8-509f-40d7-8c85-26abc6645629"/>
+							<textElement verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{nomorVirtualAccount}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="140" y="227" width="380" height="17" uuid="8469a47f-1175-4f10-9647-96aa4e3c83fb"/>
+							<textElement verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{nomorKtp}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="130" y="267" width="10" height="17" uuid="ffea21b0-4a58-41c7-96b4-c61fd84c8fea"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="FixRelativeToBottom" x="20" y="287" width="90" height="17" uuid="f32a8496-b8ce-4d2e-a8ea-d1547c058d64"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<text><![CDATA[Terbilang]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="FixRelativeToBottom" x="20" y="267" width="90" height="17" uuid="c1efd9cf-7fdc-4ff2-8a54-fb3f7d6872e1"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<text><![CDATA[Jumlah]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="130" y="287" width="10" height="17" uuid="5597bd4a-4618-4090-9722-cc22466751bb"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<text><![CDATA[:]]></text>
+						</staticText>
+						<textField>
+							<reportElement x="140" y="267" width="181" height="17" uuid="5d3abe03-8792-4db2-819c-392698b500ac"/>
+							<textElement verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{jumlah}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="140" y="287" width="380" height="17" uuid="2f975c53-16f8-4375-a465-d5a53c372086"/>
+							<textElement verticalAlignment="Middle">
+								<font size="10"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{terbilang}]]></textFieldExpression>
+						</textField>
+						<image onErrorType="Blank">
+							<reportElement x="0" y="0" width="90" height="80" uuid="eff3fb13-9507-4eef-b263-90d5e7a0f004"/>
+							<imageExpression><![CDATA["/var/www/bjbs_umroh_services/report-design/assets/bjbs.png"]]></imageExpression>
+						</image>
+						<image onErrorType="Blank">
+							<reportElement x="468" y="0" width="90" height="80" uuid="d497bd29-2ec4-4768-b8a5-e91c7b55511d"/>
+							<imageExpression><![CDATA["/var/www/bjbs_umroh_services/report-design/assets/kemenag.png"]]></imageExpression>
+						</image>
+						<staticText>
+							<reportElement positionType="FixRelativeToBottom" x="20" y="147" width="90" height="17" uuid="2a17d8f5-3b4e-4420-a383-14fd19a4d3ee"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<text><![CDATA[Nomor Validasi]]></text>
+						</staticText>
+						<componentElement>
+							<reportElement x="20" y="340" width="110" height="110" uuid="16268069-9761-4283-af47-ac76e0247fa2"/>
+							<jr:QRCode>
+								<jr:codeExpression><![CDATA[$F{qrCode}]]></jr:codeExpression>
+							</jr:QRCode>
+						</componentElement>
+						<componentElement>
+							<reportElement x="20" y="100" width="150" height="47" uuid="26d26fe4-c349-4576-9b3e-72b3626b1661"/>
+							<jr:Codabar>
+								<jr:codeExpression><![CDATA[$F{noValidasi}]]></jr:codeExpression>
+							</jr:Codabar>
+						</componentElement>
+						<staticText>
+							<reportElement positionType="FixRelativeToBottom" x="20" y="310" width="500" height="30" uuid="07efa9e7-1ed2-45cc-baf6-d21b1367a33f"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle" markup="html">
+								<font size="11"/>
+							</textElement>
+							<text><![CDATA[<b><i>Segera melakukan pendaftaran melalui kantor Kementrian Agama Kab/Kota sesuai domisili atau aplikasi Haji Pintar</i></b>]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="FixRelativeToBottom" x="180" y="60" width="230" height="40" uuid="bb4fb050-96ec-4833-89bb-410eaeb598ad"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+								<font size="16"/>
+							</textElement>
+							<text><![CDATA[<b>Setoran Awal BIPIH</b>]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

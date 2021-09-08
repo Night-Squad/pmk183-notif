@@ -41,7 +41,9 @@ public class PaymentOverviewChartsController {
     SetoranPelunasanRepository setoranPelunasanRepository;
 
     @GetMapping("/data-payment")
-    private Object getPaymentChartDatas(@Nullable @RequestParam String startDate, @Nullable @RequestParam String finishDate) {
+    private Object getPaymentChartDatas(@Nullable @RequestParam String startDate, @Nullable @RequestParam String finishDate,
+                                        @RequestParam("isBjbs") Boolean isBjbs, @RequestParam("isKonsolidasi") Boolean isKonsolidasi,
+                                        @RequestParam("branchCode") String branchCode) {
         ChartDataOverviewPropertiesModel cP=new ChartDataOverviewPropertiesModel();
         ChartDataModel cD=new ChartDataModel();
 
@@ -81,12 +83,32 @@ public class PaymentOverviewChartsController {
         setoranPelunasanDataset.setPointRadius(0D);
         setoranPelunasanDataset.setPointHoverRadius(3D);
 
-        do {
-            labels.add(new String[]{datePointer.getMonth().getDisplayName(TextStyle.SHORT, Locale.US), String.valueOf(datePointer.getDayOfMonth())});
-            setoranAwalList.add(setoranAwalRepository.getCountByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(datePointer)));
-            setoranPelunasanList.add(setoranPelunasanRepository.getCountByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(datePointer)));
-            datePointer=datePointer.plusDays(1);
-        } while (!datePointer.equals(fDt.plusDays(1)));
+        if (isKonsolidasi) {
+            do {
+                labels.add(new String[]{datePointer.getMonth().getDisplayName(TextStyle.SHORT, Locale.US), String.valueOf(datePointer.getDayOfMonth())});
+                setoranAwalList.add(setoranAwalRepository.getCountByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(datePointer)));
+                setoranPelunasanList.add(setoranPelunasanRepository.getCountByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(datePointer)));
+                datePointer=datePointer.plusDays(1);
+            } while (!datePointer.equals(fDt.plusDays(1)));
+        } else {
+            if (branchCode.equals("000")) {
+                do {
+                    labels.add(new String[]{datePointer.getMonth().getDisplayName(TextStyle.SHORT, Locale.US), String.valueOf(datePointer.getDayOfMonth())});
+                    setoranAwalList.add(setoranAwalRepository.getCountByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(datePointer), isBjbs));
+                    setoranPelunasanList.add(setoranPelunasanRepository.getCountByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(datePointer), isBjbs));
+                    datePointer=datePointer.plusDays(1);
+                } while (!datePointer.equals(fDt.plusDays(1)));
+            } else {
+                do {
+                    labels.add(new String[]{datePointer.getMonth().getDisplayName(TextStyle.SHORT, Locale.US), String.valueOf(datePointer.getDayOfMonth())});
+                    setoranAwalList.add(setoranAwalRepository.getCountByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(datePointer), branchCode));
+                    setoranPelunasanList.add(setoranPelunasanRepository.getCountByDate(DateTimeFormatter.ofPattern("yyyy-MM-dd").format(datePointer), branchCode));
+                    datePointer=datePointer.plusDays(1);
+                } while (!datePointer.equals(fDt.plusDays(1)));
+            }
+
+        }
+
 
         setoranAwalDataset.setData(setoranAwalList);
         setoranPelunasanDataset.setData(setoranPelunasanList);
