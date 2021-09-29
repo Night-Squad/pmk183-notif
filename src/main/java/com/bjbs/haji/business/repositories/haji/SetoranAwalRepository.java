@@ -64,4 +64,7 @@ public interface SetoranAwalRepository extends JpaRepository<SetoranAwal, Long> 
     @Query("SELECT sum(sa.nominalSetoran) FROM SetoranAwal sa WHERE sa.tanggalTransaksi BETWEEN :tglAwal AND :tglAkhir AND sa.branchCode=:branchCode")
     Long getNominalSetoranWithBranchCode(Date tglAwal, Date tglAkhir, String branchCode);
 
+    @Query("FROM SetoranAwal WHERE isUploaded = false")
+    List<SetoranAwal> getSetoranAwalNotUploaded();
+
 }

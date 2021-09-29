@@ -139,6 +139,9 @@ public class SetoranAwal implements java.io.Serializable {
 	@Column(name = "tahun_berangkat")
 	private String tahunBerangkat;
 
+	@Column(name = "is_uploaded")
+	private Boolean isUploaded;
+
 	@Column(name = "created_date", columnDefinition = "DATE")
 	private Date createdDate;
 

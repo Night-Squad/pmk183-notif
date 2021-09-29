@@ -1,32 +1,36 @@
 package com.bjbs.haji.business.repositories.controllers;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Formatter;
-
+import com.bjbs.haji.business.apis.controllers.CetakResiSetoranAwalController;
+import com.bjbs.haji.business.apis.controllers.utility.CustomMultipartFile;
 import com.bjbs.haji.business.apis.dtos.*;
 import com.bjbs.haji.business.models.*;
 import com.bjbs.haji.business.repositories.haji.AwalReversalHistoryRepository;
 import com.bjbs.haji.business.repositories.haji.SetoranAwalRepository;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.Date;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/repo/setoran-awal")
@@ -50,9 +54,15 @@ public class SetoranAwalCustomController {
     @Value("${url.core-bank-client}")
     private String urlCoreBankClient;
 
+    @Value("${url.app}")
+    private String siskohatUrl;
+
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
     ObjectMapper mapper = new ObjectMapper();
+
+    @Autowired
+    CetakResiSetoranAwalController cetakResiSetoranAwalController;
 
     @PostMapping("/inquiry")
     public Object create(@RequestBody SetoranAwalDTO setoranAwalDTO, @RequestParam("userCode") String userCode, @RequestParam("userBranchCode") String userBranchCode) {
@@ -280,6 +290,136 @@ public class SetoranAwalCustomController {
     @PostMapping("/pembayaran")
     public Object pembayaran(@RequestParam("setoranAwalId") long setoranAwalId, @RequestParam("userCode") String userCode,
                              @RequestParam("branchCode") String branchCode, @RequestParam("userBranchCode") String userBranchCode,
+                             @RequestParam("cityId") String cityId, @RequestParam("provinceId") String provinceId,
+                             @RequestHeader("token-kemenag") String tokenKemenag) {
+        try {
+            System.out.println("token : " + tokenKemenag);
+            SetoranAwal setoranAwal = setoranAwalRepository.findById(setoranAwalId).orElse(null);
+            if (setoranAwal != null) {
+                SetoranAwalHajiRequest setoranAwalHajiRequest = new SetoranAwalHajiRequest();
+                setoranAwalHajiRequest.setJenisHaji(setoranAwal.getTipeHaji().getKodeHaji());
+                setoranAwalHajiRequest.setJenisKelamin(String.valueOf(setoranAwal.getJenisKelamin()));
+                setoranAwalHajiRequest.setKodePekerjaan(String.valueOf(setoranAwal.getPekerjaan().getKodePekerjaan()));
+                setoranAwalHajiRequest.setKodePendidikan(String.valueOf(setoranAwal.getPendidikan().getKodePendidikan()));
+                setoranAwalHajiRequest.setKodeStatusPernikahan(String.valueOf(setoranAwal.getStatusKawin().getStatusKawinId()));
+                setoranAwalHajiRequest.setNamaJemaah(setoranAwal.getNamaJemaah());
+                setoranAwalHajiRequest.setNoIdentitas(setoranAwal.getNoIdentitas());
+                setoranAwalHajiRequest.setTanggalLahir(new SimpleDateFormat("ddMMyyyy").format(setoranAwal.getTanggalLahir()));
+                setoranAwalHajiRequest.setTempatLahir(setoranAwal.getTempatLahir());
+                setoranAwalHajiRequest.setAlamat(setoranAwal.getAlamat());
+                setoranAwalHajiRequest.setKodePos(setoranAwal.getKodePos());
+                setoranAwalHajiRequest.setDesa(setoranAwal.getKelurahan());
+                setoranAwalHajiRequest.setKecamatan(setoranAwal.getKecamatan());
+                setoranAwalHajiRequest.setKabupatenKota(setoranAwal.getKabupatenKota());
+                setoranAwalHajiRequest.setKodeKabupatenKota(cityId);
+                setoranAwalHajiRequest.setKodeProvinsi(provinceId);
+                setoranAwalHajiRequest.setNamaAyah(setoranAwal.getNamaAyah());
+
+                SetoranAwalHajiData setoranAwalHajiData = new SetoranAwalHajiData();
+                setoranAwalHajiData.setNoRekening(setoranAwal.getNoRekening());
+                setoranAwalHajiData.setMerchantType(setoranAwal.getChannel().getKodeMerchant());
+                setoranAwalHajiData.setSettlementDate(setoranAwal.getTanggalTransaksi());
+                setoranAwalHajiData.setTerminalId(userBranchCode);
+                setoranAwalHajiData.setTransactionAmount(setoranAwal.getNominalSetoran().toString() + "00");
+                setoranAwalHajiData.setBranchCode(branchCode);
+                setoranAwalHajiData.setSetoranAwalHajiRequest(setoranAwalHajiRequest);
+
+                String url = urlSwitchingApp + "api/switching_haji/pembayaran_setoran_awal";
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
+
+                HttpEntity<SetoranAwalHajiData> request = new HttpEntity<SetoranAwalHajiData>(setoranAwalHajiData, headers);
+                String response = restTemplate.postForObject(url, request, String.class);
+                JSONObject objectResponse = new JSONObject(response);
+
+                System.out.println("result from switching : " + objectResponse.toString());
+
+                if (objectResponse.getString("rc").equals("00")) {
+                    SetoranAwalHajiResponse data = mapper.readValue(objectResponse.get("data").toString(), SetoranAwalHajiResponse.class);
+
+                    setoranAwal.setNoValidasi(data.getNomorValidasi());
+                    setoranAwal.setSystemTraceNumber(data.getStan());
+                    setoranAwal.setRetRefNumber(data.getRetrievalReferenceNumber());
+                    setoranAwal.setKloter(data.getKloter());
+                    setoranAwal.setTahunBerangkat(data.getTahunBerangkat());
+                    setoranAwal.setEmbarkasi(data.getEmbarkasi());
+                    setoranAwal.setStatusTransaksi(new StatusTransaksi(3));
+                    setoranAwal.setVirtualAccount(data.getVirtualAccount());
+                    setoranAwal.setUpdatedDate(new Date());
+                    setoranAwal.setUpdatedBy(userCode);
+                    SetoranAwal result = setoranAwalRepository.save(setoranAwal);
+                    Map<String, Object> resultUpload = new HashMap<>();
+                    try {
+                        String uploadBuktiSetoranUrl = siskohatUrl + "siskohat/bank/setoranawal";
+
+                        Map<String, String> parameter = new HashMap<>();
+                        parameter.put("noValidasi", result.getNoValidasi());
+                        Map<String, String> header = new HashMap<>();
+                        SetoranAwalDTO usersDTO = new SetoranAwalDTO();
+                        ResponseEntity<byte[]> responseFile = cetakResiSetoranAwalController.ionaGenerateAsPDF(usersDTO, parameter, header);
+
+                        String filename = "bukti-setoran-awal-" + LocalDateTime.now().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli() + ".pdf";
+                        CustomMultipartFile multipartFile = new
+                                CustomMultipartFile(responseFile.getBody(), "application/pdf", filename);
+                        multipartFile.transferTo(multipartFile.getFile());
+
+                        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+                        map.add("no_validasi", data.getNomorValidasi());
+                        map.add("upload", new FileSystemResource(multipartFile.getFile()));
+
+                        System.out.println("----------------------------------------------------------------------");
+                        System.out.println("No Validasi : " + map.get("no_validasi"));
+                        System.out.println("File : " + multipartFile.getName());
+                        System.out.println("token kemenag : " + tokenKemenag);
+                        System.out.println("----------------------------------------------------------------------");
+
+                        RestTemplate restTemplateUpload = new RestTemplate();
+                        HttpHeaders headersUpload = new HttpHeaders();
+                        headersUpload.setContentType(MediaType.MULTIPART_FORM_DATA);
+                        headersUpload.set("x-access-key", tokenKemenag);
+                        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headersUpload);
+
+                        ResponseEntity<String> responseUpload = restTemplateUpload.postForEntity(uploadBuktiSetoranUrl, requestEntity, String.class);
+
+                        resultUpload.put("uploadBukti", responseUpload.getBody());
+                        JSONObject jsonResultUpload = new JSONObject(responseUpload.getBody());
+                        System.out.println("----------------------------------------------------------------------");
+                        System.out.println(jsonResultUpload.toString());
+                        System.out.println("----------------------------------------------------------------------");
+                        setoranAwal.setIsUploaded(jsonResultUpload.getString("RC").equals("00"));
+
+                    } catch (HttpClientErrorException hcex) {
+                        hcex.printStackTrace();
+                        resultUpload.put("uploadBukti", hcex.getResponseBodyAsString());
+                        setoranAwal.setIsUploaded(false);
+                    } catch (Exception ioe) {
+                        ioe.printStackTrace();
+                        Map<String, String> error = new HashMap<>();
+                        error.put("RC", "99");
+                        error.put("message", ioe.getLocalizedMessage());
+                        resultUpload.put("uploadBukti", error);
+                        setoranAwal.setIsUploaded(false);
+                    }
+
+                    SetoranAwal resultUpdate = setoranAwalRepository.save(setoranAwal);
+
+                    return ResponseEntity.ok().body(new Response(objectResponse.getString("rc"), resultUpdate, objectResponse.getString("message")));
+                } else{
+                    return ResponseEntity.ok().body(new Response(objectResponse.getString("rc"), null, objectResponse.getString("message")));
+                }
+            } else{
+                return ResponseEntity.ok().body(new Response("99", null, "Data Setoran Awal todak ditemukan"));
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.ok().body(new Response("99", null, e.getLocalizedMessage()));
+        }
+    }
+
+    @PostMapping("/pembayaran-multichannel")
+    public Object pembayaranMultichannel(@RequestParam("setoranAwalId") long setoranAwalId, @RequestParam("userCode") String userCode,
+                             @RequestParam("branchCode") String branchCode, @RequestParam("userBranchCode") String userBranchCode,
                              @RequestParam("cityId") String cityId, @RequestParam("provinceId") String provinceId) {
         try {
             SetoranAwal setoranAwal = setoranAwalRepository.findById(setoranAwalId).orElse(null);
@@ -338,6 +478,7 @@ public class SetoranAwalCustomController {
                     setoranAwal.setUpdatedBy(userCode);
 
                     SetoranAwal result = setoranAwalRepository.save(setoranAwal);
+
                     return ResponseEntity.ok().body(new Response(objectResponse.getString("rc"), result, objectResponse.getString("message")));
                 } else{
                     return ResponseEntity.ok().body(new Response(objectResponse.getString("rc"), null, objectResponse.getString("message")));
@@ -346,6 +487,36 @@ public class SetoranAwalCustomController {
                 return ResponseEntity.ok().body(new Response("99", null, "Data Setoran Awal todak ditemukan"));
             }
         } catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.ok().body(new Response("99", null, e.getLocalizedMessage()));
+        }
+    }
+
+    @PostMapping("/reversal-multichannel")
+    public Object reversalMultichannel(@RequestParam("setoranAwalId") long setoranAwalId, @RequestParam("userCode") String userCode) {
+        try {
+            SetoranAwal setoranAwal = setoranAwalRepository.findById(setoranAwalId).orElse(null);
+            if(setoranAwal != null) {
+                AwalReversalHistory awalReversalHistory = new AwalReversalHistory();
+                awalReversalHistory.setSetoranAwalId(setoranAwal.getSetoranAwalId());
+                awalReversalHistory.setNoRekening(setoranAwal.getNoRekening());
+                awalReversalHistory.setNamaJemaah(setoranAwal.getNamaJemaah());
+                awalReversalHistory.setNominalSetoran(setoranAwal.getNominalSetoran());
+                awalReversalHistory.setNoArsip(setoranAwal.getTransactionId());
+                awalReversalHistory.setTanggalReversal(new Date());
+                awalReversalHistory.setBranchCode(setoranAwal.getBranchCode());
+                awalReversalHistory.setCreatedBy(userCode);
+                awalReversalHistory.setCreatedDate(new Date());
+                awalReversalHistory.setUpdatedBy(userCode);
+                awalReversalHistory.setUpdatedDate(new Date());
+                awalReversalHistory.setStatusActive(false);
+                AwalReversalHistory resultReversal = awalReversalHistoryRepository.save(awalReversalHistory);
+                setoranAwalRepository.delete(setoranAwal);
+                return ResponseEntity.ok().body(new Response("00", resultReversal, "Reversal Setoran Awal berhasil"));
+            } else {
+                return ResponseEntity.ok().body(new Response("99", null, "Data Setoran Awal tidak ditemukan"));
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.ok().body(new Response("99", null, e.getLocalizedMessage()));
         }

@@ -44,6 +44,7 @@ public class SetoranAwalDTO {
 	private String tahunBerangkat;
 	private String branchCode;
 	private String transactionId;
+	private Boolean isUploaded;
 	private Date createdDate;
 	private String createdBy;
 	private Date updatedDate;
