@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -116,7 +117,7 @@ public class CetakManualSetoranPelunasanController extends HibernateReportContro
         innerResult.put("nama_provinsi", data.getProvinsi().toUpperCase());
         innerResult.put("embarkasi", data.getEmbarkasi().toUpperCase());
         innerResult.put("setoran_awal", kursIndonesia.format(new Double(data.getNilaiSetoranAwal()) / 100));
-        innerResult.put("setoran_pelunasan", kursIndonesia.format(data.getSisaPelunasan()));
+        innerResult.put("setoran_pelunasan", kursIndonesia.format(new BigInteger(data.getSisaPelunasan()).doubleValue()));
         innerResult.put("biaya_bpih", kursIndonesia.format(new Double(data.getBiayaBpih()) / 100));
         innerResult.put("terbilang", bilangx(new Double(data.getBiayaBpih()) / 100).toUpperCase()+" RUPIAH");
         LocalDate tanggal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

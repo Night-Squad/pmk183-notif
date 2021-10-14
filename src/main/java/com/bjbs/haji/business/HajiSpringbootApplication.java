@@ -10,11 +10,13 @@ import org.springframework.context.annotation.Bean;
 import com.io.iona.springboot.storage.StorageLocationProperties;
 import com.io.iona.springboot.storage.StorageService;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages={"com.bjbs.haji, com.io.iona.springboot.storage"})
 @EnableConfigurationProperties(StorageLocationProperties.class)
 @EnableEurekaClient
 @Configuration
+@EnableScheduling
 public class HajiSpringbootApplication {
 
 	public static void main(String[] args) {
