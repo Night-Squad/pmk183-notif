@@ -452,6 +452,10 @@ public class SetoranAwalCustomController {
                 setoranAwalHajiData.setBranchCode(branchCode);
                 setoranAwalHajiData.setSetoranAwalHajiRequest(setoranAwalHajiRequest);
 
+                System.out.println("--------------- MULTICHANNEL SETORAN AWAL REQUEST -------------------");
+                System.out.println(setoranAwalHajiData.toString());
+                System.out.println("---------------------------------------------------------------------");
+
                 String url = urlSwitchingApp + "api/switching_haji/pembayaran_setoran_awal";
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders headers = new HttpHeaders();
@@ -461,7 +465,9 @@ public class SetoranAwalCustomController {
                 String response = restTemplate.postForObject(url, request, String.class);
                 JSONObject objectResponse = new JSONObject(response);
 
-                System.out.println("result from switching : " + objectResponse.toString());
+                System.out.println("--------------- MULTICHANNEL SETORAN AWAL RESPONSE -------------------");
+                System.out.println(response);
+                System.out.println("------------------------------------------------------------------------");
 
                 if (objectResponse.getString("rc").equals("00")) {
                     SetoranAwalHajiResponse data = mapper.readValue(objectResponse.get("data").toString(), SetoranAwalHajiResponse.class);
