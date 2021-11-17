@@ -1,28 +1,22 @@
 package com.bjbs.haji.business.ols;
 
 import com.io.iona.core.data.annotations.OptionListKey;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Created By Aristo Pacitra
  * Example Option List From DB
  */
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class StatusKawinOLO {
 	@OptionListKey
 	private long statusKawinId;
 	private String namaStatus;
-	
-	public long getStatusKawinId() {
-		return statusKawinId;
-	}
-	public void setStatusKawinId(long statusKawinId) {
-		this.statusKawinId = statusKawinId;
-	}
-	public String getNamaStatus() {
-		return namaStatus;
-	}
-	public void setNamaStatus(String namaStatus) {
-		this.namaStatus = namaStatus;
-	}
-
+	private int statusKawinCore;
+	private int statusKawinKemenag;
 }

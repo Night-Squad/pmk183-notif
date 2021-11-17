@@ -33,6 +33,15 @@ public class StatusKawin implements java.io.Serializable {
 	@Column(name = "status_active")
 	private Boolean statusActive;
 
+	@Column(name = "status_kawin_core")
+	private String statusKawinCore;
+
+	@Column(name = "status_kawin_kemenag")
+	private String statusKawinKemenag;
+
+	@Column(name = "jenis_kelamin")
+	private String jenisKelamin;
+
 	public StatusKawin(long statusKawinId) {
 		this.statusKawinId = statusKawinId;
 	}
