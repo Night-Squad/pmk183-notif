@@ -21,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -39,6 +40,9 @@ public class CetakSetoranAwalController extends HibernateReportController<Setora
 
     @Value("${url.switching.app}")
     String urlSwitchingApp;
+
+    @Value("${url.auth.service}")
+    private String urlAuthService;
 
     ObjectMapper mapper = new ObjectMapper();
 
@@ -88,37 +92,75 @@ public class CetakSetoranAwalController extends HibernateReportController<Setora
 
         System.out.println("result from switching : " + objectResponse.toString());
 
-        CetakSetoranAwalHajiResponse data = mapper.readValue(objectResponse.get("data").toString(), CetakSetoranAwalHajiResponse.class);
-
         Map<String, Object> outerResult = new HashMap<>();
         Map<String, Object> innerResult = new HashMap<>();
 
-        innerResult.put("branch_name", (data.getNamaCabangBank()!=null) ?data.getNamaCabangBank().trim().toUpperCase():"");
-        innerResult.put("branch_address", (data.getAlamatCabangBank()!=null)?data.getAlamatCabangBank().trim().toUpperCase():"");
-        innerResult.put("kota", (data.getKabupatenKota()!=null)?data.getKabupatenKota().trim().toUpperCase():"");
-        innerResult.put("no_validasi", setoranAwal.getNoValidasi());
-        innerResult.put("bank", data.getNamaBank().trim().toUpperCase());
-        innerResult.put("no_rekening", setoranAwal.getNoRekening());
-        innerResult.put("nama_nasabah", (data.getNamaJemaah()!=null)?data.getNamaJemaah().trim().toUpperCase():"");
-        innerResult.put("jenis_kelamin", (data.getJenisKelamin().equals("1"))?"PRIA":"WANITA");
-        innerResult.put("tempat_lahir", (data.getTempatLahir()!=null)?data.getTempatLahir().trim().toUpperCase():"");
-        LocalDate tglLahir = new SimpleDateFormat("ddMMyyyy").parse(data.getTanggalLahir()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        innerResult.put("tgl_lahir", tglLahir.getDayOfMonth() + " " + month[tglLahir.getMonthValue()] + " " + tglLahir.getYear());
-        innerResult.put("alamat", (data.getAlamat()!=null)?data.getAlamat().trim().toUpperCase():"");
-        innerResult.put("kode_pos", (data.getKodePos()!=null)?data.getKodePos().toUpperCase():"");
-        innerResult.put("kelurahan", (data.getDesa()!=null)?data.getDesa().trim().toUpperCase():"");
-        innerResult.put("kecamatan", (data.getKecamatan()!=null)?data.getKecamatan().trim().toUpperCase():"");
-        innerResult.put("kab_kota", (data.getKabupatenKota()!=null)?data.getKabupatenKota().trim().toUpperCase():"");
-        innerResult.put("nama_provinsi", (data.getProvinsi()!=null)?data.getProvinsi().trim().toUpperCase():"");
-        innerResult.put("pendidikan", (data.getPendidikan()!=null)?data.getPendidikan().trim().toUpperCase():"");
-        innerResult.put("pekerjaan", (data.getPekerjaan()!=null)?data.getPekerjaan().trim().toUpperCase():"");
-        innerResult.put("jumlah_pembayaran", kursIndonesia.format(setoranAwal.getNominalSetoran()));
-        innerResult.put("jumlah_terbilang", bilangx(setoranAwal.getNominalSetoran().doubleValue()).toUpperCase() + " RUPIAH");
-        innerResult.put("virtual_account", (data.getVirtualAccount()!=null)?data.getVirtualAccount().trim().toUpperCase():"");
-        LocalDate tanggal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        innerResult.put("tanggal", tanggal.getDayOfMonth() + " " + month[tanggal.getMonthValue()] + " " + tanggal.getYear());
+        if (objectResponse.get("rc").equals("00")) {
+            CetakSetoranAwalHajiResponse data = mapper.readValue(objectResponse.get("data").toString(), CetakSetoranAwalHajiResponse.class);
 
-        outerResult.put("isi", innerResult);
+            innerResult.put("branch_name", (data.getNamaCabangBank()!=null) ?data.getNamaCabangBank().trim().toUpperCase():"");
+            innerResult.put("branch_address", (data.getAlamatCabangBank()!=null)?data.getAlamatCabangBank().trim().toUpperCase():"");
+            innerResult.put("kota", (data.getKabupatenKota()!=null)?data.getKabupatenKota().trim().toUpperCase():"");
+            innerResult.put("no_validasi", setoranAwal.getNoValidasi());
+            innerResult.put("bank", data.getNamaBank().trim().toUpperCase());
+            innerResult.put("no_rekening", setoranAwal.getNoRekening());
+            innerResult.put("nama_nasabah", (data.getNamaJemaah()!=null)?data.getNamaJemaah().trim().toUpperCase():"");
+            innerResult.put("jenis_kelamin", (data.getJenisKelamin().equals("1"))?"PRIA":"WANITA");
+            innerResult.put("tempat_lahir", (data.getTempatLahir()!=null)?data.getTempatLahir().trim().toUpperCase():"");
+            LocalDate tglLahir = new SimpleDateFormat("ddMMyyyy").parse(data.getTanggalLahir()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            innerResult.put("tgl_lahir", tglLahir.getDayOfMonth() + " " + month[tglLahir.getMonthValue()] + " " + tglLahir.getYear());
+            innerResult.put("alamat", (data.getAlamat()!=null)?data.getAlamat().trim().toUpperCase():"");
+            innerResult.put("kode_pos", (data.getKodePos()!=null)?data.getKodePos().toUpperCase():"");
+            innerResult.put("kelurahan", (data.getDesa()!=null)?data.getDesa().trim().toUpperCase():"");
+            innerResult.put("kecamatan", (data.getKecamatan()!=null)?data.getKecamatan().trim().toUpperCase():"");
+            innerResult.put("kab_kota", (data.getKabupatenKota()!=null)?data.getKabupatenKota().trim().toUpperCase():"");
+            innerResult.put("nama_provinsi", (data.getProvinsi()!=null)?data.getProvinsi().trim().toUpperCase():"");
+            innerResult.put("pendidikan", (data.getPendidikan()!=null)?data.getPendidikan().trim().toUpperCase():"");
+            innerResult.put("pekerjaan", (data.getPekerjaan()!=null)?data.getPekerjaan().trim().toUpperCase():"");
+            innerResult.put("jumlah_pembayaran", kursIndonesia.format(setoranAwal.getNominalSetoran()));
+            innerResult.put("jumlah_terbilang", bilangx(setoranAwal.getNominalSetoran().doubleValue()).toUpperCase() + " RUPIAH");
+            innerResult.put("virtual_account", (data.getVirtualAccount()!=null)?data.getVirtualAccount().trim().toUpperCase():"");
+            LocalDate tanggal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            innerResult.put("tanggal", tanggal.getDayOfMonth() + " " + month[tanggal.getMonthValue()] + " " + tanggal.getYear());
+            outerResult.put("isi", innerResult);
+        } else {
+
+            String urlAuthDetailBranch = urlAuthService + "api/detail_branch/get_detail_branch";
+            UriComponentsBuilder builderDetailBranch = UriComponentsBuilder.fromHttpUrl(urlAuthDetailBranch)
+                    .queryParam("branchCode", setoranAwal.getBranchCode());
+
+            String responseDetailBranch = restTemplate.getForObject(builderDetailBranch.build().encode().toUri(), String.class);
+
+            JSONObject jsonDetailBranch = new JSONObject(responseDetailBranch);
+            JSONObject jsonUserData = new JSONObject(jsonDetailBranch.get("userData").toString());
+
+            innerResult.put("branch_name", (jsonUserData.getString("branchName")!=null) ?jsonUserData.getString("branchName").trim().toUpperCase():"");
+            innerResult.put("branch_address", (jsonUserData.getString("branchAddress")!=null)?jsonUserData.getString("branchAddress").trim().toUpperCase():"");
+            innerResult.put("kota", (setoranAwal.getKabupatenKota()!=null)?setoranAwal.getKabupatenKota().trim().toUpperCase():"");
+            innerResult.put("no_validasi", setoranAwal.getNoValidasi());
+            innerResult.put("bank", "BANK BJB SYARIAH");
+            innerResult.put("no_rekening", setoranAwal.getNoRekening());
+            innerResult.put("nama_nasabah", (setoranAwal.getNamaJemaah()!=null)?setoranAwal.getNamaJemaah().trim().toUpperCase():"");
+            innerResult.put("jenis_kelamin", (setoranAwal.getJenisKelamin() == 1)?"PRIA":"WANITA");
+            innerResult.put("tempat_lahir", (setoranAwal.getTempatLahir()!=null)?setoranAwal.getTempatLahir().trim().toUpperCase():"");
+            LocalDate tglLahir = setoranAwal.getTanggalLahir().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            innerResult.put("tgl_lahir", tglLahir.getDayOfMonth() + " " + month[tglLahir.getMonthValue()] + " " + tglLahir.getYear());
+            innerResult.put("alamat", (setoranAwal.getAlamat()!=null)?setoranAwal.getAlamat().trim().toUpperCase():"");
+            innerResult.put("kode_pos", (setoranAwal.getKodePos()!=null)?setoranAwal.getKodePos().toUpperCase():"");
+            innerResult.put("kelurahan", (setoranAwal.getKelurahan()!=null)?setoranAwal.getKelurahan().trim().toUpperCase():"");
+            innerResult.put("kecamatan", (setoranAwal.getKecamatan()!=null)?setoranAwal.getKecamatan().trim().toUpperCase():"");
+            innerResult.put("kab_kota", (setoranAwal.getKabupatenKota()!=null)?setoranAwal.getKabupatenKota().trim().toUpperCase():"");
+            innerResult.put("nama_provinsi", (jsonUserData.getString("provinceName")!=null)?jsonUserData.getString("provinceName").trim().toUpperCase():"");
+            innerResult.put("pendidikan", (setoranAwal.getPendidikan()!=null)?setoranAwal.getPendidikan().getPendidikan().trim().toUpperCase():"");
+            innerResult.put("pekerjaan", (setoranAwal.getPekerjaan()!=null)?setoranAwal.getPekerjaan().getNamaPekerjaan().trim().toUpperCase():"");
+            innerResult.put("jumlah_pembayaran", kursIndonesia.format(setoranAwal.getNominalSetoran()));
+            innerResult.put("jumlah_terbilang", bilangx(setoranAwal.getNominalSetoran().doubleValue()).toUpperCase() + " RUPIAH");
+            innerResult.put("virtual_account", (setoranAwal.getVirtualAccount()!=null)?setoranAwal.getVirtualAccount().trim().toUpperCase():"");
+            LocalDate tanggal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            innerResult.put("tanggal", tanggal.getDayOfMonth() + " " + month[tanggal.getMonthValue()] + " " + tanggal.getYear());
+            outerResult.put("isi", innerResult);
+        }
+
         return outerResult;
     }
 
