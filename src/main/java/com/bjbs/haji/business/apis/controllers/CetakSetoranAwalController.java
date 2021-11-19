@@ -122,7 +122,6 @@ public class CetakSetoranAwalController extends HibernateReportController<Setora
             innerResult.put("virtual_account", (data.getVirtualAccount()!=null)?data.getVirtualAccount().trim().toUpperCase():"");
             LocalDate tanggal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             innerResult.put("tanggal", tanggal.getDayOfMonth() + " " + month[tanggal.getMonthValue()] + " " + tanggal.getYear());
-            outerResult.put("isi", innerResult);
         } else {
 
             String urlAuthDetailBranch = urlAuthService + "api/detail_branch/get_detail_branch";
@@ -158,8 +157,8 @@ public class CetakSetoranAwalController extends HibernateReportController<Setora
             innerResult.put("virtual_account", (setoranAwal.getVirtualAccount()!=null)?setoranAwal.getVirtualAccount().trim().toUpperCase():"");
             LocalDate tanggal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             innerResult.put("tanggal", tanggal.getDayOfMonth() + " " + month[tanggal.getMonthValue()] + " " + tanggal.getYear());
-            outerResult.put("isi", innerResult);
         }
+        outerResult.put("isi", innerResult);
 
         return outerResult;
     }
