@@ -29,6 +29,7 @@ public class SetoranAwalDTO {
 	private String kelurahan;
 	private String kecamatan;
 	private String kabupatenKota;
+	private String kabupatenKotaId;
 	private String namaAyah;
 	private String noRekening;
 	private BigDecimal nominalSetoran;

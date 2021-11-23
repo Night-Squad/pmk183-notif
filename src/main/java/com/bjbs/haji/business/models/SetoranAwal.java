@@ -136,6 +136,9 @@ public class SetoranAwal implements java.io.Serializable {
 	@Column(name = "no_arsip")
 	private String noArsip;
 
+	@Column(name = "kabupaten_kota_id")
+	private String kabupatenKotaId;
+
 	@Column(name = "tahun_berangkat")
 	private String tahunBerangkat;
 
