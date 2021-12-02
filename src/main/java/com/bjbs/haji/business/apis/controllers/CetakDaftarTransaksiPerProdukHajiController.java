@@ -53,6 +53,12 @@ public class CetakDaftarTransaksiPerProdukHajiController extends HibernateReport
         String teller = dataSource.getRequestParameterValue("teller");
         long productId = Long.parseLong(dataSource.getRequestParameterValue("productId"));
 
+        Date plusOneDay = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(tglAkhir);
+        c.add(Calendar.DATE, 1);
+        plusOneDay = c.getTime();
+
         Map<String, Object> header = new HashMap<>();
         Map<String, Object> outerResult = new HashMap<>();
 
@@ -79,7 +85,7 @@ public class CetakDaftarTransaksiPerProdukHajiController extends HibernateReport
             if (productId == 1) {
                 outerResult.put("produk", "[BPIH] SETORAN AWAL");
 
-                List<SetoranAwal> listSetoranAwal = setoranAwalRepository.getListSetoranAwalPeriod(tglAwal, tglAkhir);
+                List<SetoranAwal> listSetoranAwal = setoranAwalRepository.getListSetoranAwalPeriod(tglAwal, plusOneDay);
 
                 if (!teller.equals("0")) {
                     listSetoranAwal = listSetoranAwal.stream()
@@ -235,7 +241,7 @@ public class CetakDaftarTransaksiPerProdukHajiController extends HibernateReport
                 }
             } else {
                 outerResult.put("produk", "[BPIH] SETORAN PELUNASAN");
-                List<SetoranPelunasan> listSetoranPelunasan = setoranPelunasanRepository.getListSetoranPelunasanPeriod(tglAwal, tglAkhir);
+                List<SetoranPelunasan> listSetoranPelunasan = setoranPelunasanRepository.getListSetoranPelunasanPeriod(tglAwal, plusOneDay);
 
                 if (!teller.equals("0")) {
                     listSetoranPelunasan = listSetoranPelunasan.stream()

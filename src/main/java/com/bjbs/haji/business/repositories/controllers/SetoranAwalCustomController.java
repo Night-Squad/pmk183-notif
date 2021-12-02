@@ -1,5 +1,6 @@
 package com.bjbs.haji.business.repositories.controllers;
 
+import com.bjbs.haji.business.apis.controllers.CetakResiSetoranAwal2Controller;
 import com.bjbs.haji.business.apis.controllers.CetakResiSetoranAwalController;
 import com.bjbs.haji.business.apis.controllers.utility.CustomMultipartFile;
 import com.bjbs.haji.business.apis.dtos.*;
@@ -66,7 +67,7 @@ public class SetoranAwalCustomController {
     ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    CetakResiSetoranAwalController cetakResiSetoranAwalController;
+    CetakResiSetoranAwal2Controller cetakResiSetoranAwalController;
 
     @PostMapping("/inquiry")
     public Object create(@RequestBody SetoranAwalDTO setoranAwalDTO, @RequestParam("userCode") String userCode, @RequestParam("userBranchCode") String userBranchCode) {
@@ -108,7 +109,8 @@ public class SetoranAwalCustomController {
             setoranAwal.setKodePos(setoranAwalDTO.getKodePos());
             setoranAwal.setKelurahan(setoranAwalDTO.getKelurahan());
             setoranAwal.setKecamatan(setoranAwalDTO.getKecamatan());
-            setoranAwal.setKabupatenKota(setoranAwalDTO.getKabupatenKota());
+            Cities city = citiesRepository.findByCityCodeCbs(setoranAwalDTO.getKabupatenKotaId());
+            setoranAwal.setKabupatenKota(city.getCityName());
             setoranAwal.setKabupatenKotaId(setoranAwalDTO.getKabupatenKotaId());
             setoranAwal.setNominalSetoran(setoranAwalDTO.getNominalSetoran());
             setoranAwal.setTerminalId(userBranchCode);
@@ -359,7 +361,7 @@ public class SetoranAwalCustomController {
                         String uploadBuktiSetoranUrl = siskohatUrl + "siskohat/bank/setoranawal";
 
                         Map<String, String> parameter = new HashMap<>();
-                        parameter.put("noValidasi", data.getNomorValidasi());
+                        parameter.put("setoranAwalId", setoranAwal.getSetoranAwalId().toString());
                         Map<String, String> header = new HashMap<>();
                         SetoranAwalDTO usersDTO = new SetoranAwalDTO();
                         ResponseEntity<byte[]> responseFile = cetakResiSetoranAwalController.ionaGenerateAsPDF(usersDTO, parameter, header);
@@ -407,9 +409,9 @@ public class SetoranAwalCustomController {
                         setoranAwal.setIsUploaded(false);
                     }
 
-                    SetoranAwal resultUpdate = setoranAwalRepository.save(setoranAwal);
+                    setoranAwalRepository.save(setoranAwal);
 
-                    return ResponseEntity.ok().body(new Response(objectResponse.getString("rc"), resultUpdate, objectResponse.getString("message")));
+                    return ResponseEntity.ok().body(new Response(objectResponse.getString("rc"), setoranAwal, objectResponse.getString("message")));
                 } else{
                     return ResponseEntity.ok().body(new Response(objectResponse.getString("rc"), null, objectResponse.getString("message")));
                 }
@@ -444,8 +446,9 @@ public class SetoranAwalCustomController {
                 setoranAwalHajiRequest.setDesa(setoranAwal.getKelurahan());
                 setoranAwalHajiRequest.setKecamatan(setoranAwal.getKecamatan());
                 setoranAwalHajiRequest.setKabupatenKota(setoranAwal.getKabupatenKota());
-                setoranAwalHajiRequest.setKodeKabupatenKota(cityId);
-                setoranAwalHajiRequest.setKodeProvinsi(provinceId);
+                Cities city = citiesRepository.findByCityCodeCbs(setoranAwal.getKabupatenKotaId());
+                setoranAwalHajiRequest.setKodeKabupatenKota(city.getCityCode());
+                setoranAwalHajiRequest.setKodeProvinsi(city.getProvinces().getProvinceCode());
                 setoranAwalHajiRequest.setNamaAyah(setoranAwal.getNamaAyah());
 
                 SetoranAwalHajiData setoranAwalHajiData = new SetoranAwalHajiData();

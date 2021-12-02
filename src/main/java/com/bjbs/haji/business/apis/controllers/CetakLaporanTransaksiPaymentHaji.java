@@ -54,6 +54,12 @@ public class CetakLaporanTransaksiPaymentHaji extends HibernateReportController<
         long channelId = Long.parseLong(dataSource.getRequestParameterValue("channelId"));
         long productId = Long.parseLong(dataSource.getRequestParameterValue("productId"));
 
+        Date plusOneDay = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(tglAkhir);
+        c.add(Calendar.DATE, 1);
+        plusOneDay = c.getTime();
+
         Map<String, Object> header = new HashMap<>();
         Map<String, Object> outerResult = new HashMap<>();
 
@@ -82,7 +88,7 @@ public class CetakLaporanTransaksiPaymentHaji extends HibernateReportController<
             kursIndonesia.setDecimalFormatSymbols(formatRp);
 
             if (productId == 1) {
-                List<SetoranAwal> list = setoranAwalRepository.getListSetoranAwalPeriod(tglAwal, tglAkhir);
+                List<SetoranAwal> list = setoranAwalRepository.getListSetoranAwalPeriod(tglAwal, plusOneDay);
                 System.out.println(list);
                 List<SetoranAwal> listStatus = list.stream()
                         .filter( StreamUtil.distinctByKey(s -> s.getStatusTransaksi().getNamaStatusTransaksi()))
@@ -167,7 +173,7 @@ public class CetakLaporanTransaksiPaymentHaji extends HibernateReportController<
                 outerResult.put("isi", isiList);
                 return outerResult;
             } else {
-                List<SetoranPelunasan> list = setoranPelunasanRepository.getListSetoranPelunasanPeriod(tglAwal, tglAkhir);
+                List<SetoranPelunasan> list = setoranPelunasanRepository.getListSetoranPelunasanPeriod(tglAwal, plusOneDay);
 
                 List<SetoranPelunasan> listStatus = list.stream()
                         .filter( StreamUtil.distinctByKey(s -> s.getStatusTransaksi().getNamaStatusTransaksi()))

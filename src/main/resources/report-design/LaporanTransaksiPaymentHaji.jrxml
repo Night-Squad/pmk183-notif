@@ -111,7 +111,7 @@
 							<textElement textAlignment="Center" verticalAlignment="Middle">
 								<font fontName="Arial" size="12" isBold="true"/>
 							</textElement>
-							<text><![CDATA[LAPORAN PENDAPATAN BPD BPJS]]></text>
+							<text><![CDATA[LAPORAN PENDAPATAN BPD BJBS]]></text>
 						</staticText>
 						<textField>
 							<reportElement x="0" y="70" width="800" height="20" uuid="41f3f112-aa62-4247-944c-2d07eb4ecc78"/>

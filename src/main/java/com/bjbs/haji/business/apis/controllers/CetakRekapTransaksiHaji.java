@@ -51,6 +51,12 @@ public class CetakRekapTransaksiHaji extends HibernateReportController<Object, O
         Date tglAkhir = new SimpleDateFormat("dd/MM/yyyy").parse(dataSource.getRequestParameterValue("tglAkhir"));
         String teller = dataSource.getRequestParameterValue("teller");
 
+        Date plusOneDay = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(tglAkhir);
+        c.add(Calendar.DATE, 1);
+        plusOneDay = c.getTime();
+
         Map<String, Object> outerResult = new HashMap<>();
         Map<String, Object> header = new HashMap<>();
 
@@ -67,7 +73,7 @@ public class CetakRekapTransaksiHaji extends HibernateReportController<Object, O
             formatRp.setGroupingSeparator('.');
             kursIndonesia.setDecimalFormatSymbols(formatRp);
 
-            List<SetoranAwal> listSetoranAwal = setoranAwalRepository.getListSetoranAwalPeriod(tglAwal, tglAkhir);
+            List<SetoranAwal> listSetoranAwal = setoranAwalRepository.getListSetoranAwalPeriod(tglAwal, plusOneDay);
             List<SetoranAwal> listStatus = listSetoranAwal.stream()
                     .filter( StreamUtil.distinctByKey(s -> s.getStatusTransaksi().getNamaStatusTransaksi()))
                     .collect( Collectors.toList());
@@ -146,7 +152,7 @@ public class CetakRekapTransaksiHaji extends HibernateReportController<Object, O
                 }
             }
 
-            List<SetoranPelunasan> listSetoranPelunasan = setoranPelunasanRepository.getListSetoranPelunasanPeriod(tglAwal, tglAkhir);
+            List<SetoranPelunasan> listSetoranPelunasan = setoranPelunasanRepository.getListSetoranPelunasanPeriod(tglAwal, plusOneDay);
             List<SetoranPelunasan> listStatusPelunasan = listSetoranPelunasan.stream()
                     .filter( StreamUtil.distinctByKey(s -> s.getStatusTransaksi().getNamaStatusTransaksi()))
                     .collect( Collectors.toList());

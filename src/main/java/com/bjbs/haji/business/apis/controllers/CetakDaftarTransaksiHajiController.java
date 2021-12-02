@@ -70,8 +70,14 @@ public class CetakDaftarTransaksiHajiController extends HibernateReportControlle
             Map<String, Object> isiAwal = new HashMap<>();
             Map<String, Object> isiPelunasan = new HashMap<>();
 
-            List<SetoranAwal> listSetoranAwal = setoranAwalRepository.getListSetoranAwalPeriod(tglAwal, tglAkhir);
-            List<SetoranPelunasan> listSetoranPelunasan = setoranPelunasanRepository.getListSetoranPelunasanPeriod(tglAwal, tglAkhir);
+            Date plusOneDay = new Date();
+            Calendar c = Calendar.getInstance();
+            c.setTime(tglAkhir);
+            c.add(Calendar.DATE, 1);
+            plusOneDay = c.getTime();
+
+            List<SetoranAwal> listSetoranAwal = setoranAwalRepository.getListSetoranAwalPeriod(tglAwal, plusOneDay);
+            List<SetoranPelunasan> listSetoranPelunasan = setoranPelunasanRepository.getListSetoranPelunasanPeriod(tglAwal, plusOneDay);
 
 //            listSetoranAwal = listSetoranAwal.stream()
 //                    .filter(s -> s.getStatusTransaksi().getStatusTransaksiId() == 3)
