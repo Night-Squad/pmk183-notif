@@ -148,12 +148,18 @@ public class SetoranAwalCustomController {
                 HttpHeaders headers = new HttpHeaders();
 
                 try {
+                    System.out.println("------------------------- REQUEST BODY JOURNAL ------------------------");
+                    System.out.println(request);
+                    System.out.println("-----------------------------------------------------------------------");
+
                     headers.setContentType(MediaType.APPLICATION_JSON);
                     headers.setBearerAuth(token);
                     HttpEntity<String> requestBody = new HttpEntity<String>(request, headers);
                     String response = restTemplate.postForObject(url, requestBody, String.class);
 
-                    System.out.println("Core Banking transaction response : " + response);
+                    System.out.println("--------------------------- RESPONSE JOURNAL --------------------------");
+                    System.out.println(response);
+                    System.out.println("-----------------------------------------------------------------------");
                     JSONObject journalResponse = new JSONObject(response);
 
                     if (journalResponse.getString("rc").equals("00")) {
@@ -255,7 +261,9 @@ public class SetoranAwalCustomController {
                     paramKredit.put("txId", setoranAwal.getTransactionId());
                     param.put(1, paramKredit);
                     requestJson.put("param", param);
-                    System.out.println("new Request : " + requestJson.toString());
+                    System.out.println("------------------------- REQUEST BODY REVERSAL ------------------------");
+                    System.out.println(requestJson.toString());
+                    System.out.println("------------------------------------------------------------------------");
 
                     RestTemplate journalRestTemplate = new RestTemplate();
                     HttpHeaders journalHeaders = new HttpHeaders();
@@ -265,7 +273,9 @@ public class SetoranAwalCustomController {
                         HttpEntity<String> requestBody = new HttpEntity<String>(requestJson.toString(), journalHeaders);
                         String cbResponse = journalRestTemplate.postForObject(journalUrl, requestBody, String.class);
 
-                        System.out.println("Core Banking transaction response : " + cbResponse);
+                        System.out.println("--------------------------- RESPONSE REVERSAL --------------------------");
+                        System.out.println(cbResponse);
+                        System.out.println("------------------------------------------------------------------------");
                         JSONObject journalResponse = new JSONObject(cbResponse);
 
                         if (journalResponse.getString("rc").equals("00")) {
@@ -331,6 +341,10 @@ public class SetoranAwalCustomController {
                 setoranAwalHajiData.setBranchCode(branchCode);
                 setoranAwalHajiData.setSetoranAwalHajiRequest(setoranAwalHajiRequest);
 
+                System.out.println("------------------ REQUEST BODY SWITCHING PEMBAYARAN SETORAN AWAL ------------------");
+                System.out.println(mapper.writeValueAsString(setoranAwalHajiData));
+                System.out.println("------------------------------------------------------------------------------------");
+
                 String url = urlSwitchingApp + "api/switching_haji/pembayaran_setoran_awal";
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders headers = new HttpHeaders();
@@ -340,7 +354,9 @@ public class SetoranAwalCustomController {
                 String response = restTemplate.postForObject(url, request, String.class);
                 JSONObject objectResponse = new JSONObject(response);
 
-                System.out.println("result from switching : " + objectResponse.toString());
+                System.out.println("--------------------- RESPONSE SWITCHING PEMBAYARAN SETORAN AWAL -------------------");
+                System.out.println(objectResponse.toString());
+                System.out.println("------------------------------------------------------------------------------------");
 
                 if (objectResponse.getString("rc").equals("00")) {
                     SetoranAwalHajiResponse data = mapper.readValue(objectResponse.get("data").toString(), SetoranAwalHajiResponse.class);
@@ -375,11 +391,11 @@ public class SetoranAwalCustomController {
                         map.add("no_validasi", data.getNomorValidasi());
                         map.add("upload", new FileSystemResource(multipartFile.getFile()));
 
-                        System.out.println("----------------------------------------------------------------------");
+                        System.out.println("------------------------- REQUEST BODY BUKTI SETORAN AWAL ------------------");
                         System.out.println("No Validasi : " + map.get("no_validasi"));
                         System.out.println("File : " + multipartFile.getName());
                         System.out.println("token kemenag : " + tokenKemenag);
-                        System.out.println("----------------------------------------------------------------------");
+                        System.out.println("----------------------------------------------------------------------------");
 
                         RestTemplate restTemplateUpload = new RestTemplate();
                         HttpHeaders headersUpload = new HttpHeaders();
@@ -391,9 +407,9 @@ public class SetoranAwalCustomController {
 
                         resultUpload.put("uploadBukti", responseUpload.getBody());
                         JSONObject jsonResultUpload = new JSONObject(responseUpload.getBody());
-                        System.out.println("----------------------------------------------------------------------");
+                        System.out.println("------------------------- RESPONSE UPLOAD BUKTI SETORAN AWAL ------------------");
                         System.out.println(jsonResultUpload.toString());
-                        System.out.println("----------------------------------------------------------------------");
+                        System.out.println("-------------------------------------------------------------------------------");
                         setoranAwal.setIsUploaded(jsonResultUpload.getString("RC").equals("00"));
 
                     } catch (HttpClientErrorException hcex) {

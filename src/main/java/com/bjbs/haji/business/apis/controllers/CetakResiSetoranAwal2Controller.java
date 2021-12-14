@@ -54,11 +54,11 @@ public class CetakResiSetoranAwal2Controller extends HibernateReportController<S
         Map<String, Object> outerResult = new HashMap<>();
         SetoranAwal setoranAwal = setoranAwalRepository.findById(Long.parseLong(noValidasi)).orElse(null);
         if (setoranAwal != null) {
-            System.out.println("****************************GENERATING RESI SETORAN AWAL*****************************");
+            System.out.println("---------------------------- GENERATING RESI SETORAN AWAL -------------------------------");
             System.out.println("Setoran Awal Id : " + setoranAwal.getSetoranAwalId());
             System.out.println("No Validasi : " + setoranAwal.getNoValidasi());
             System.out.println("Nama Jemaah : " + setoranAwal.getNamaJemaah());
-            System.out.println("*************************************************************************************");
+            System.out.println("-----------------------------------------------------------------------------------------");
             Map<String, Object> innerResult = new HashMap<>();
 
             StringBuilder accountNumber = new StringBuilder();
