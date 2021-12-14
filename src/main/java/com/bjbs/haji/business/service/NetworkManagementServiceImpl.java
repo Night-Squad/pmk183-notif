@@ -70,6 +70,60 @@ public class NetworkManagementServiceImpl implements NetworkManagementService {
     }
 
     @Override
+    public Response connect() {
+        Response response = new Response();
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            String networkManagementUrl = urlSwitchingApp + "/api/switching_haji/connect";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            Map<String, Object> parameter = new HashMap<>();
+
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<Map<String, Object>>(parameter, headers);
+            ResponseEntity<String> networkManagementResponse = restTemplate.exchange(networkManagementUrl, HttpMethod.GET, entity, String.class);
+            JSONObject networkManagementObject = new JSONObject(networkManagementResponse.getBody());
+            response.setRC(networkManagementObject.get("rc").toString());
+            response.setData(null);
+            response.setMessage(networkManagementObject.get("message").toString());
+            return  response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setRC("99");
+            response.setData(null);
+            response.setMessage("Connect Fail");
+            return  response;
+        }
+    }
+
+    @Override
+    public Response disconnect() {
+        Response response = new Response();
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            String networkManagementUrl = urlSwitchingApp + "/api/switching_haji/disconnect";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            Map<String, Object> parameter = new HashMap<>();
+
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<Map<String, Object>>(parameter, headers);
+            ResponseEntity<String> networkManagementResponse = restTemplate.exchange(networkManagementUrl, HttpMethod.GET, entity, String.class);
+            JSONObject networkManagementObject = new JSONObject(networkManagementResponse.getBody());
+            response.setRC(networkManagementObject.get("rc").toString());
+            response.setData(null);
+            response.setMessage(networkManagementObject.get("message").toString());
+            return  response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setRC("99");
+            response.setData(null);
+            response.setMessage("Disconnect Fail");
+            return  response;
+        }
+    }
+
+    @Override
     public void updateAfterConnect(String networkType, String rc, String message) {
         try {
             NetworkManagement networkManagement = networkManagementRepository.findById(1).orElse(null);

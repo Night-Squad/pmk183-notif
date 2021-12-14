@@ -59,4 +59,16 @@ public class NetworkManagementController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/connect")
+    public ResponseEntity<Response> connect() {
+        Response response = networkManagementService.connect();
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/disconnect")
+    public ResponseEntity<Response> disconnect() {
+        Response response = networkManagementService.disconnect();
+        return ResponseEntity.ok(response);
+    }
+
 }
