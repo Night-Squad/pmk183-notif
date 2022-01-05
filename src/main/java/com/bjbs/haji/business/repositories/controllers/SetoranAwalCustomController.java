@@ -474,6 +474,7 @@ public class SetoranAwalCustomController {
                 setoranAwalHajiData.setTerminalId(userBranchCode);
                 setoranAwalHajiData.setTransactionAmount(setoranAwal.getNominalSetoran().toString() + "00");
                 setoranAwalHajiData.setBranchCode(branchCode);
+                setoranAwalHajiData.setOriginalBranchCode(setoranAwal.getBranchCode());
                 setoranAwalHajiData.setSetoranAwalHajiRequest(setoranAwalHajiRequest);
 
                 System.out.println("--------------- MULTICHANNEL SETORAN AWAL REQUEST -------------------");

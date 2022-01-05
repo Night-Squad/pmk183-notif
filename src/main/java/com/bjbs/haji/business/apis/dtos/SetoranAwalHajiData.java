@@ -12,5 +12,6 @@ public class SetoranAwalHajiData {
 	Date settlementDate;
 	String terminalId;
 	String branchCode;
+	String originalBranchCode;
 	SetoranAwalHajiRequest setoranAwalHajiRequest;
 }
