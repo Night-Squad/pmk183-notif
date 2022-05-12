@@ -28,17 +28,19 @@ public class NetworkManagementServiceImpl implements NetworkManagementService {
         Response response = new Response();
         RestTemplate restTemplate = new RestTemplate();
         try {
-            String networkManagementUrl = urlSwitchingApp + "/api/switching_haji/network_management";
+            String networkManagementUrl = urlSwitchingApp + "api/switching_haji/network_management?networkCode="+networkType;
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+            System.out.println("networkManagementUrl : "+networkManagementUrl);
+            System.out.println("networkType : "+networkType);
 
-            Map<String, Object> parameter = new HashMap<>();
-            parameter.put("networkCode", networkType);
+            String switchingApiResponse = restTemplate.getForObject(networkManagementUrl, String.class);
+            System.out.println("=============RESPONSE NETMAN==========");
+            System.out.println(switchingApiResponse);
+            System.out.println("======================================");
+            JSONObject netmanResponse = new JSONObject(switchingApiResponse);
 
-            HttpEntity<Map<String, Object>> entity = new HttpEntity<Map<String, Object>>(parameter, headers);
-            ResponseEntity<String> networkManagementResponse = restTemplate.exchange(networkManagementUrl, HttpMethod.GET, entity, String.class);
-            JSONObject networkManagementObject = new JSONObject(networkManagementResponse.getBody());
-            if (networkManagementObject.get("rc").toString().equals("00")) {
+            if (netmanResponse.getString("rc").equals("00")) {
                 response.setRC("00");
                 response.setData(null);
                 switch (networkType) {
@@ -74,7 +76,7 @@ public class NetworkManagementServiceImpl implements NetworkManagementService {
         Response response = new Response();
         RestTemplate restTemplate = new RestTemplate();
         try {
-            String networkManagementUrl = urlSwitchingApp + "/api/switching_haji/connect";
+            String networkManagementUrl = urlSwitchingApp + "api/switching_haji/connect";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -101,7 +103,7 @@ public class NetworkManagementServiceImpl implements NetworkManagementService {
         Response response = new Response();
         RestTemplate restTemplate = new RestTemplate();
         try {
-            String networkManagementUrl = urlSwitchingApp + "/api/switching_haji/disconnect";
+            String networkManagementUrl = urlSwitchingApp + "api/switching_haji/disconnect";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
