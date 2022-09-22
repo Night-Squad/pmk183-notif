@@ -108,6 +108,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.olap4j</groupId>
+			<artifactId>olap4j</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-jpa</artifactId>
 		</dependency>
@@ -211,7 +217,7 @@
 		<repository>
 			<id>padepokan-79-central</id>
 			<name>Padepokan 79 Central Repository</name>
-			<url>http://hrmspadepokan79.ddnsfree.com:8081/repository/padepokan-79-central-hosted/</url>
+			<url>https://nexus-3.padepokan79.com/repository/padepokan-79-central-hosted/</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
