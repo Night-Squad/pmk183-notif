@@ -1,6 +1,13 @@
 package com.bjbs.haji.business.apis.controllers;
 
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+import com.bjbs.haji.business.apis.dtos.Response;
 import com.bjbs.haji.business.apis.dtos.SetoranAwalDTO;
 import com.bjbs.haji.business.models.SetoranAwal;
+import com.bjbs.haji.business.service.SetoranAwalService;
 import com.io.iona.implementations.data.persistent.DefaultReadAllResult;
 import com.io.iona.springboot.controllers.HibernateCRUDController;
 
@@ -17,6 +26,27 @@ import com.io.iona.springboot.controllers.HibernateCRUDController;
 @RequestMapping("/api/setoran-awal")
 public class SetoranAwalController extends HibernateCRUDController<SetoranAwal, SetoranAwalDTO> {
 
+	private static final Log log = LogFactory.getLog(SetoranAwalController.class);
+	
+@Autowired
+private SetoranAwalService setoranAwalService;
+
+@PutMapping("/{setoranAwalId}")
+public ResponseEntity<Response> updateDataSetoranAwal(@PathVariable Long setoranAwalId, 
+		@RequestBody SetoranAwalDTO body){
+	log.info("UPDATE DATA SETORAN AWAL");
+	
+	Response response = setoranAwalService.updateDataSetoranAwal(setoranAwalId,body);
+	
+	if(response.getRC().equals("00")) {
+		return ResponseEntity.ok(response);
+	}else {
+		return ResponseEntity.badRequest().body(response);
+	}
+	
+}
+	
+	
 //    @Override
 //    public DefaultReadAllResult ionaReadAllEndpoint(@RequestParam String filter, @RequestParam String orderby, @RequestParam("top") Integer pageTotalRows, @RequestParam("skip") Integer pageNumber, @RequestParam Map<String, String> requestParameters, @RequestHeader Map<String, String> requestHeaders) throws Exception {
 //        return super.ionaReadAllEndpoint(filter, orderby, pageTotalRows, pageNumber, requestParameters, requestHeaders);
