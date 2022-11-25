@@ -20,6 +20,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class HajiSpringbootApplication {
 
 	public static void main(String[] args) {
+        System.out.println("Testing cicd..");
 		SpringApplication.run(HajiSpringbootApplication.class, args);
 	}
 
