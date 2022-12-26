@@ -72,6 +72,7 @@ public class UploadBuktiController {
             System.out.println("RC : "+jsonResponse.getString("RC"));
             System.out.println("----------------------------------------------------------------------");
             if (jsonResponse.getString("RC").equals("00") || jsonResponse.getString("RC").equals("29")) {
+                System.out.println("here in success condition...");
                 SetoranAwal setoranAwal = setoranAwalRepository.getSetoranAwalByNoValidasi(noValidasi);
                 setoranAwal.setIsUploaded(true);
                 setoranAwalRepository.save(setoranAwal);
