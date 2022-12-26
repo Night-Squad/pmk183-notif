@@ -68,7 +68,8 @@ public class UploadBuktiController {
             ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
             JSONObject jsonResponse = new JSONObject(response.getBody());
             System.out.println("----------------------------------------------------------------------");
-            System.out.println(jsonResponse.toString());
+            System.out.println(jsonResponse);
+            System.out.println("RC : "+jsonResponse.getString("RC"));
             System.out.println("----------------------------------------------------------------------");
             if (jsonResponse.getString("RC").equals("00") || jsonResponse.getString("RC").equals("29")) {
                 SetoranAwal setoranAwal = setoranAwalRepository.getSetoranAwalByNoValidasi(noValidasi);
