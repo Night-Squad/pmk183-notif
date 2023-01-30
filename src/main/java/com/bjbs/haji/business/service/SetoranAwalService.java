@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.bjbs.haji.business.apis.dtos.Response;
 import com.bjbs.haji.business.apis.dtos.SetoranAwalDTO;
 import com.bjbs.haji.business.models.SetoranAwal;
+import com.bjbs.haji.business.models.StatusTransaksi;
 import com.bjbs.haji.business.repositories.haji.SetoranAwalRepository;
 
 @Service
@@ -52,7 +53,8 @@ public class SetoranAwalService {
 			SetoranAwal setoranAwal = exitingSetoranAwal.get();
 			body.setSetoranAwalId(setoranAwalId);
 			modelMapper.map(body, setoranAwal);
-			
+			setoranAwal.setStatusTransaksi(modelMapper.map(body.getStatusTransaksi(),StatusTransaksi.class));
+
 			setoranAwal.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
 			
 			SetoranAwalDTO setoranAwalDTO = modelMapper.map(setoranAwalRepository.save(setoranAwal),
