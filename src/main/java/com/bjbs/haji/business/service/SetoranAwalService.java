@@ -51,11 +51,11 @@ public class SetoranAwalService {
 			modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
 			
 			SetoranAwal setoranAwal = exitingSetoranAwal.get();
+			setoranAwal.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+			setoranAwal.setStatusTransaksi(modelMapper.map(body.getStatusTransaksi(),StatusTransaksi.class));
 			body.setSetoranAwalId(setoranAwalId);
 			modelMapper.map(body, setoranAwal);
-			setoranAwal.setStatusTransaksi(modelMapper.map(body.getStatusTransaksi(),StatusTransaksi.class));
-
-			setoranAwal.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+			
 			
 			SetoranAwalDTO setoranAwalDTO = modelMapper.map(setoranAwalRepository.save(setoranAwal),
 					SetoranAwalDTO.class);
