@@ -1,6 +1,8 @@
 package com.bjbs.haji.business.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -17,6 +19,7 @@ import com.bjbs.haji.business.apis.dtos.SetoranAwalDTO;
 import com.bjbs.haji.business.models.SetoranAwal;
 import com.bjbs.haji.business.models.StatusTransaksi;
 import com.bjbs.haji.business.repositories.haji.SetoranAwalRepository;
+import com.bjbs.haji.business.repositories.haji.StatusTransaksiRepository;
 
 @Service
 public class SetoranAwalService {
@@ -25,6 +28,9 @@ public class SetoranAwalService {
 	
 	@Autowired
 	private SetoranAwalRepository setoranAwalRepository;
+	
+	@Autowired 
+	private StatusTransaksiRepository statusTransaksiRepository;
 	
 	
 	@Transactional
@@ -52,7 +58,8 @@ public class SetoranAwalService {
 			
 			SetoranAwal setoranAwal = exitingSetoranAwal.get();
 			setoranAwal.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-			setoranAwal.setStatusTransaksi(modelMapper.map(body.getStatusTransaksi(),StatusTransaksi.class));
+//			setoranAwal.setStatusTransaksi(modelMapper.map(body.getStatusTransaksi(),StatusTransaksi.class));
+			setoranAwal.setStatusTransaksi(statusTransaksiRepository.findById(body.getStatusTransaksi().getStatusTransaksiId()).orElse(null));
 			body.setSetoranAwalId(setoranAwalId);
 			modelMapper.map(body, setoranAwal);
 			
@@ -72,6 +79,29 @@ public class SetoranAwalService {
 		}
 
 		return response;	
+	}
+	
+	public Response getDropDownStatusTransaksi() {
+		log.info("=== GET DROP DOWN ===");
+
+		Response response = new Response();
+		response.setRC("99");
+		response.setMessage("ERROR");
+		
+		try {
+			List<StatusTransaksi> statusTransaksi = new ArrayList<StatusTransaksi>();
+			statusTransaksi = statusTransaksiRepository.findAllStatusTransaksi() ;
+			response.setRC("00");
+			response.setMessage("Berhasil Menampilkan Dropdown");
+			response.setData(statusTransaksi);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			response.setRC("99");
+			response.setMessage("ERROR");
+		}
+		return response;
 	}
 	
 }
