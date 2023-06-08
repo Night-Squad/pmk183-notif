@@ -1,7 +1,6 @@
 package com.bjbs.haji.business.repositories.controllers;
 
 import com.bjbs.haji.business.apis.controllers.CetakResiSetoranAwal2Controller;
-import com.bjbs.haji.business.apis.controllers.CetakResiSetoranAwalController;
 import com.bjbs.haji.business.apis.controllers.utility.CustomMultipartFile;
 import com.bjbs.haji.business.apis.dtos.*;
 import com.bjbs.haji.business.models.*;
@@ -83,7 +82,7 @@ public class SetoranAwalCustomController {
 
         // validation at 15.00
         LocalTime currentTime = LocalTime.now();
-        boolean hitValidation = setoranAwalService.ValidationTrxTime(currentTime);
+        boolean hitValidation = setoranAwalService.ValidationTrx(currentTime);
         if(!hitValidation) {
             return ResponseEntity.badRequest().body(new Response("99", null, "Setoran hanya bisa dilakukan pada jam 08.00 s.d. 15.00"));
         }
@@ -324,7 +323,7 @@ public class SetoranAwalCustomController {
         try {
             // validation at 15.00
             LocalTime currentTime = LocalTime.now();
-            boolean hitValidation = setoranAwalService.ValidationTrxTime(currentTime);
+            boolean hitValidation = setoranAwalService.ValidationTrx(currentTime);
             if(!hitValidation) {
                 return ResponseEntity.badRequest().body(new Response("99", null, "Setoran hanya bisa dilakukan pada jam 08.00 s.d. 15.00"));
             }
@@ -467,7 +466,7 @@ public class SetoranAwalCustomController {
 
             // validation at 15.00
             LocalTime currentTime = LocalTime.now();
-            boolean hitValidation = setoranAwalService.ValidationTrxTime(currentTime);
+            boolean hitValidation = setoranAwalService.ValidationTrx(currentTime);
             if(!hitValidation) {
                 return ResponseEntity.badRequest().body(new Response("99", null, "Setoran hanya bisa dilakukan pada jam 08.00 s.d. 15.00"));
             }

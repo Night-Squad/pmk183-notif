@@ -9,7 +9,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;import org.modelmapper.Condition;
+import org.apache.juli.logging.LogFactory;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +33,13 @@ public class SetoranAwalService {
 	@Autowired
 	private StatusTransaksiRepository statusTransaksiRepository;
 
-	public boolean ValidationTrxTime(LocalTime currentTime) {
+	public boolean ValidationTrx(LocalTime currentTime) {
 		log.info("..validation trx time..");
 		log.info(currentTime.toString());
 		boolean result = false;
 
-		LocalTime startingTime = LocalTime.parse("08:00");
-		LocalTime cutoffTime = LocalTime.parse("11:00");
+		LocalTime startingTime = LocalTime.parse("21:00");
+		LocalTime cutoffTime = LocalTime.parse("15:00");
 
 		log.info("currentTime.isAfter(startingTime) : "+currentTime.isAfter(startingTime));
 		if(currentTime.isAfter(startingTime)) {
