@@ -44,11 +44,15 @@ public class SetoranAwalService {
 		log.info("currentTime.isAfter(startingTime) : "+currentTime.isAfter(startingTime));
 		if(currentTime.isAfter(startingTime)) {
 			result = true;
+		} else {
+			result = false;
 		}
 
 		log.info("currentTime.isBefore(cutoffTime) : "+currentTime.isBefore(cutoffTime));
 		if(currentTime.isBefore(cutoffTime)) {
 			result = true;
+		} else {
+			result = false;
 		}
 
 		return result;
