@@ -34,15 +34,19 @@ public class SetoranAwalService {
 	private StatusTransaksiRepository statusTransaksiRepository;
 
 	public boolean ValidationTrxTime(LocalTime currentTime) {
+		log.info("..validation trx time..");
+		log.info(currentTime.toString());
 		boolean result = false;
 
 		LocalTime startingTime = LocalTime.parse("08:00");
 		LocalTime cutoffTime = LocalTime.parse("11:00");
 
+		log.info("currentTime.isAfter(startingTime) : "+currentTime.isAfter(startingTime));
 		if(currentTime.isAfter(startingTime)) {
 			result = true;
 		}
 
+		log.info("currentTime.isBefore(cutoffTime) : "+currentTime.isBefore(cutoffTime));
 		if(currentTime.isBefore(cutoffTime)) {
 			result = true;
 		}
