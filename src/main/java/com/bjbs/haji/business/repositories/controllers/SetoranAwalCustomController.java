@@ -8,6 +8,7 @@ import com.bjbs.haji.business.models.*;
 import com.bjbs.haji.business.repositories.haji.AwalReversalHistoryRepository;
 import com.bjbs.haji.business.repositories.haji.CitiesRepository;
 import com.bjbs.haji.business.repositories.haji.SetoranAwalRepository;
+import com.bjbs.haji.business.service.SetoranAwalService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Formatter;
@@ -46,6 +48,9 @@ public class SetoranAwalCustomController {
 
     @Autowired
     CitiesRepository citiesRepository;
+
+    @Autowired
+    private SetoranAwalService setoranAwalService;
 
     @Value("${url.switching.app}")
     String urlSwitchingApp;
@@ -75,6 +80,13 @@ public class SetoranAwalCustomController {
 //        if (!setoranAwalDTO.getNoRekening().substring(5,7).equals("07")) {
 //            return ResponseEntity.ok().body(new Response("98", null, "Nomor Rekening bukan tabungan Haji!"));
 //        }
+
+        // validation at 15.00
+        LocalTime currentTime = LocalTime.now();
+        boolean hitValidation = setoranAwalService.ValidationTrxTime(currentTime);
+        if(!hitValidation) {
+            return ResponseEntity.badRequest().body(new Response("99", null, "Setoran hanya bisa dilakukan pada jam 08.00 s.d. 15.00"));
+        }
 
         SetoranAwal setoranAwal = new SetoranAwal();
         try {
@@ -310,6 +322,13 @@ public class SetoranAwalCustomController {
                              @RequestParam("cityId") String cityId, @RequestParam("provinceId") String provinceId,
                              @RequestHeader("token-kemenag") String tokenKemenag) {
         try {
+            // validation at 15.00
+            LocalTime currentTime = LocalTime.now();
+            boolean hitValidation = setoranAwalService.ValidationTrxTime(currentTime);
+            if(!hitValidation) {
+                return ResponseEntity.badRequest().body(new Response("99", null, "Setoran hanya bisa dilakukan pada jam 08.00 s.d. 15.00"));
+            }
+
             SetoranAwal setoranAwal = setoranAwalRepository.findById(setoranAwalId).orElse(null);
             if (setoranAwal != null) {
                 SetoranAwalHajiRequest setoranAwalHajiRequest = new SetoranAwalHajiRequest();
@@ -445,6 +464,14 @@ public class SetoranAwalCustomController {
                              @RequestParam("branchCode") String branchCode, @RequestParam("userBranchCode") String userBranchCode,
                              @RequestParam("cityId") String cityId, @RequestParam("provinceId") String provinceId) {
         try {
+
+            // validation at 15.00
+            LocalTime currentTime = LocalTime.now();
+            boolean hitValidation = setoranAwalService.ValidationTrxTime(currentTime);
+            if(!hitValidation) {
+                return ResponseEntity.badRequest().body(new Response("99", null, "Setoran hanya bisa dilakukan pada jam 08.00 s.d. 15.00"));
+            }
+
             SetoranAwal setoranAwal = setoranAwalRepository.findById(setoranAwalId).orElse(null);
             if (setoranAwal != null) {
                 SetoranAwalHajiRequest setoranAwalHajiRequest = new SetoranAwalHajiRequest();

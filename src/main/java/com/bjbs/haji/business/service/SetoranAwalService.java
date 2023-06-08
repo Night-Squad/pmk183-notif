@@ -1,6 +1,7 @@
 package com.bjbs.haji.business.service;
 
 import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -26,7 +27,24 @@ public class SetoranAwalService {
 	@Autowired
 	private SetoranAwalRepository setoranAwalRepository;
 	
-	
+
+	public boolean ValidationTrxTime(LocalTime currentTime) {
+		boolean result = false;
+
+		LocalTime startingTime = LocalTime.parse("08:00");
+		LocalTime cutoffTime = LocalTime.parse("11:00");
+
+		if(currentTime.isAfter(startingTime)) {
+			result = true;
+		}
+
+		if(currentTime.isBefore(cutoffTime)) {
+			result = true;
+		}
+
+		return result;
+	}
+
 	@Transactional
 	public Response updateDataSetoranAwal(Long setoranAwalId,SetoranAwalDTO body ) {
 		
