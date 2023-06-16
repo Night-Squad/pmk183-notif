@@ -322,7 +322,7 @@ public class SetoranPelunasanCustomController {
                 pembayaranPelunasanHajiRequest.setJenisHaji(setoranPelunasan.getTipeHaji().getKodeHaji());
                 pembayaranPelunasanHajiRequest.setKodeMataUang(setoranPelunasan.getMataUang().getKodeMataUang());
                 pembayaranPelunasanHajiRequest.setKodePihk(setoranPelunasan.getNoPihk().equals("-") ? "" : setoranPelunasan.getNoPihk());
-                pembayaranPelunasanHajiRequest.setNamaPihk(setoranPelunasan.getNamaPihk());
+                pembayaranPelunasanHajiRequest.setNamaPihk(setoranPelunasan.getNamaPihk().equals("-") ? "" : setoranPelunasan.getNamaPihk());
 
                 PembayaranPelunasanHajiData pembayaranPelunasanHajiData = new PembayaranPelunasanHajiData();
                 pembayaranPelunasanHajiData.setNoRekening(setoranPelunasan.getNoRekening());
