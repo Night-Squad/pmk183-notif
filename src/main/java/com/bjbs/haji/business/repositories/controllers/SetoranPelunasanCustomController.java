@@ -261,6 +261,7 @@ public class SetoranPelunasanCustomController {
                     JSONObject paramKredit = param.getJSONObject(1);
                     paramKredit.put("txId", setoranPelunasan.getTransactionId());
                     param.put(1, paramKredit);
+                    requestJson.put("txId", setoranPelunasan.getTransactionId());
                     requestJson.put("param", param);
                     System.out.println("new Request : " + requestJson.toString());
 
