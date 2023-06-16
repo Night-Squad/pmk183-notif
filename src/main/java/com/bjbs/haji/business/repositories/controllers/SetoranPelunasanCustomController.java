@@ -270,6 +270,8 @@ public class SetoranPelunasanCustomController {
                     try {
                         journalHeaders.setContentType(MediaType.APPLICATION_JSON);
                         journalHeaders.setBearerAuth(token);
+                        System.out.println("url : "+journalUrl);
+                        System.out.println("request body : "+requestJson.toString());
                         HttpEntity<String> requestBody = new HttpEntity<String>(requestJson.toString(), journalHeaders);
                         String cbResponse = journalRestTemplate.postForObject(journalUrl, requestBody, String.class);
 
