@@ -91,7 +91,9 @@ public class CetakResiController extends HibernateReportController<SetoranAwal, 
                 outerResult.put("isi", innerResult);
             }
         } else {
+            System.out.println("print cetak setoran pelunasan");
             SetoranPelunasan setoranPelunasan = setoranPelunasanRepository.getSetoranPelunasanByNoPorsi(noPorsi);
+            System.out.println("tanggal transaksi : "+new SimpleDateFormat("dd/MM/yyyy").format(setoranPelunasan.getTanggalTransaksi()));
             if (setoranPelunasan != null) {
                 Map<String, Object> innerResult = new HashMap<>();
                 innerResult.put("product", "SETORAN PELUNASAN");
