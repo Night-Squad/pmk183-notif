@@ -263,7 +263,11 @@ public class SetoranPelunasanCustomController {
                     param.put(1, paramKredit);
                     requestJson.put("txId", setoranPelunasan.getTransactionId());
                     requestJson.put("param", param);
-                    System.out.println("new Request : " + requestJson.toString());
+
+                    System.out.println("------------------------- REQUEST BODY REVERSAL ------------------------");
+                    System.out.println(requestJson.toString());
+                    System.out.println("------------------------------------------------------------------------");
+
 
                     RestTemplate journalRestTemplate = new RestTemplate();
                     HttpHeaders journalHeaders = new HttpHeaders();
@@ -275,7 +279,9 @@ public class SetoranPelunasanCustomController {
                         HttpEntity<String> requestBody = new HttpEntity<String>(requestJson.toString(), journalHeaders);
                         String cbResponse = journalRestTemplate.postForObject(journalUrl, requestBody, String.class);
 
-                        System.out.println("Core Banking transaction response : " + cbResponse);
+                        System.out.println("--------------------------- RESPONSE REVERSAL --------------------------");
+                        System.out.println(cbResponse);
+                        System.out.println("------------------------------------------------------------------------");
                         JSONObject journalResponse = new JSONObject(cbResponse);
 
                         if (journalResponse.getString("rc").equals("00")) {
