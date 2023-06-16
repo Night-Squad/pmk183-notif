@@ -209,7 +209,7 @@ public class SetoranPelunasanCustomController {
     }
 
     @PostMapping("/pengajuan-reversal")
-    public Object pengajuan(@RequestParam("setoranAwalId") long setoranPelunasanId, @RequestParam("userCode") String userCode) {
+    public Object pengajuan(@RequestParam("setoranPelunasanId") long setoranPelunasanId, @RequestParam("userCode") String userCode) {
         try {
             SetoranPelunasan setoranPelunasan = setoranPelunasanRepository.findById(setoranPelunasanId).orElse(null);
             if(setoranPelunasan != null) {
