@@ -316,7 +316,7 @@ public class SetoranPelunasanCustomController {
                 pembayaranPelunasanHajiRequest.setBiayaBpih(setoranPelunasan.getBiayaBpih().toString());
                 pembayaranPelunasanHajiRequest.setKurs(setoranPelunasan.getKurs().toString());
                 pembayaranPelunasanHajiRequest.setBpihDalamRupiah(setoranPelunasan.getBpihDalamRupiah().toString());
-                pembayaranPelunasanHajiRequest.setSisaPelunasan(setoranPelunasan.getSisaPelunasan().toString());
+                pembayaranPelunasanHajiRequest.setSisaPelunasan(setoranPelunasan.getSisaPelunasan().toString()+"00");
                 pembayaranPelunasanHajiRequest.setFlagLunasTunda(String.valueOf(setoranPelunasan.getFlagLunasTunda()));
                 pembayaranPelunasanHajiRequest.setTahunTunda(setoranPelunasan.getTahunTunda());
                 pembayaranPelunasanHajiRequest.setJenisHaji(setoranPelunasan.getTipeHaji().getKodeHaji());
