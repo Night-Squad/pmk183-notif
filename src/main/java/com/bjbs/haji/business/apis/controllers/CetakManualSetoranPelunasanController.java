@@ -117,7 +117,7 @@ public class CetakManualSetoranPelunasanController extends HibernateReportContro
         innerResult.put("nama_provinsi", data.getProvinsi().toUpperCase());
         innerResult.put("embarkasi", data.getEmbarkasi().toUpperCase());
         innerResult.put("setoran_awal", kursIndonesia.format(new Double(data.getNilaiSetoranAwal()) / 100));
-        innerResult.put("setoran_pelunasan", kursIndonesia.format(new BigInteger(data.getSisaPelunasan()).doubleValue()));
+        innerResult.put("setoran_pelunasan", kursIndonesia.format(new BigInteger(data.getSisaPelunasan()).doubleValue() / 100));
         innerResult.put("biaya_bpih", kursIndonesia.format(new Double(data.getBiayaBpih()) / 100));
         innerResult.put("terbilang", bilangx(new Double(data.getBiayaBpih()) / 100).toUpperCase()+" RUPIAH");
         LocalDate tanggal = new Date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
