@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -78,7 +79,7 @@ public class SetoranPelunasanCustomController {
             inquiryPelunasanHajiData.setBranchCode(branchCode);
 
             String url = urlSwitchingApp + "api/switching_haji/inquiry_pelunasan";
-            RestTemplate restTemplate = new RestTemplate();
+            RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -320,7 +321,7 @@ public class SetoranPelunasanCustomController {
                 pembayaranPelunasanHajiRequest.setTahunTunda(setoranPelunasan.getTahunTunda());
                 pembayaranPelunasanHajiRequest.setJenisHaji(setoranPelunasan.getTipeHaji().getKodeHaji());
                 pembayaranPelunasanHajiRequest.setKodeMataUang(setoranPelunasan.getMataUang().getKodeMataUang());
-                pembayaranPelunasanHajiRequest.setKodePihk(setoranPelunasan.getNoPihk());
+                pembayaranPelunasanHajiRequest.setKodePihk(setoranPelunasan.getNoPihk().equals("-") ? "" : setoranPelunasan.getNoPihk());
                 pembayaranPelunasanHajiRequest.setNamaPihk(setoranPelunasan.getNamaPihk());
 
                 PembayaranPelunasanHajiData pembayaranPelunasanHajiData = new PembayaranPelunasanHajiData();
