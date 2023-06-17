@@ -46,7 +46,7 @@ public class SetoranPelunasan implements java.io.Serializable {
 	private MataUang mataUang;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "status_transaksi_id")
+	@JoinColumn(name = "status_transaksi_id", nullable = false)
 	private StatusTransaksi statusTransaksi;
 
 	@ManyToOne(fetch = FetchType.LAZY)
