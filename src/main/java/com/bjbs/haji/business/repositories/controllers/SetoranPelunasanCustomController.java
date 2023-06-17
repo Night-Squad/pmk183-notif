@@ -272,10 +272,16 @@ public class SetoranPelunasanCustomController {
                     requestJson.put("txId", setoranPelunasan.getTransactionId());
                     requestJson.put("param", param);
 
-                    // override date as per db
-                    SimpleDateFormat sdfDate = new SimpleDateFormat("HHmmss");//dd/MM/yyyy
+                    // override txHour as per db
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("HHmmss");
                     String txHour = sdfDate.format(setoranPelunasan.getTanggalTransaksi());
                     requestJson.put("txHour", txHour);
+
+
+                    // override txDate as per db
+                    SimpleDateFormat sdfDate2 = new SimpleDateFormat("yyyyMMdd");
+                    String txDate = sdfDate2.format(setoranPelunasan.getTanggalTransaksi());
+                    requestJson.put("txDate", txDate);
 
                     System.out.println("------------------------- REQUEST BODY REVERSAL ------------------------");
                     System.out.println(requestJson.toString());
