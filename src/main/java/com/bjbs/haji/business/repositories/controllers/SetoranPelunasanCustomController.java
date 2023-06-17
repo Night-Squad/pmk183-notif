@@ -273,7 +273,7 @@ public class SetoranPelunasanCustomController {
                     requestJson.put("param", param);
 
                     // override date as per db
-                    SimpleDateFormat sdfDate = new SimpleDateFormat("HH:mm:ss");//dd/MM/yyyy
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("HHmmss");//dd/MM/yyyy
                     String txHour = sdfDate.format(setoranPelunasan.getTanggalTransaksi());
                     requestJson.put("txHour", txHour);
 
