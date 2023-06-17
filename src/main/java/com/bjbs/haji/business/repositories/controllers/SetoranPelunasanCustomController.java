@@ -159,9 +159,17 @@ public class SetoranPelunasanCustomController {
                     headers.setContentType(MediaType.APPLICATION_JSON);
                     headers.setBearerAuth(token);
                     HttpEntity<String> requestBody = new HttpEntity<String>(request, headers);
+
+                    System.out.println("------------------------- REQUEST BODY JURNAL COREGTW ------------------------");
+                    System.out.println(requestBody.toString());
+                    System.out.println("------------------------------------------------------------------------");
+
                     String response = restTemplate.postForObject(url, requestBody, String.class);
 
-                    System.out.println("Core Banking transaction response : " + response);
+                    System.out.println("------------------------- RESPONSE BODY JURNAL COREGTW ------------------------");
+                    System.out.println(response);
+                    System.out.println("------------------------------------------------------------------------");
+
                     JSONObject journalResponse = new JSONObject(response);
 
                     if (journalResponse.getString("rc").equals("00")) {
@@ -263,6 +271,11 @@ public class SetoranPelunasanCustomController {
                     param.put(1, paramKredit);
                     requestJson.put("txId", setoranPelunasan.getTransactionId());
                     requestJson.put("param", param);
+
+                    // override date as per db
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("HH:mm:ss");//dd/MM/yyyy
+                    String txHour = sdfDate.format(setoranPelunasan.getTanggalLahir());
+                    requestJson.put("txHour", txHour);
 
                     System.out.println("------------------------- REQUEST BODY REVERSAL ------------------------");
                     System.out.println(requestJson.toString());
