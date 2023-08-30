@@ -377,6 +377,8 @@ public class SetoranAwalCustomController {
                 System.out.println("------------------------------------------------------------------------------------");
 
                 if (objectResponse.getString("rc").equals("00")) {
+
+
                     SetoranAwalHajiResponse data = mapper.readValue(objectResponse.get("data").toString(), SetoranAwalHajiResponse.class);
 
                     setoranAwal.setNoValidasi(data.getNomorValidasi());
@@ -390,60 +392,70 @@ public class SetoranAwalCustomController {
                     setoranAwal.setUpdatedDate(new Date());
                     setoranAwal.setUpdatedBy(userCode);
                     setoranAwalRepository.save(setoranAwal);
-                    Map<String, Object> resultUpload = new HashMap<>();
-                    try {
-                        String uploadBuktiSetoranUrl = siskohatUrl + "siskohat/bank/setoranawal";
 
-                        Map<String, String> parameter = new HashMap<>();
-                        parameter.put("setoranAwalId", setoranAwal.getSetoranAwalId().toString());
-                        Map<String, String> header = new HashMap<>();
-                        SetoranAwalDTO usersDTO = new SetoranAwalDTO();
-                        ResponseEntity<byte[]> responseFile = cetakResiSetoranAwalController.ionaGenerateAsPDF(usersDTO, parameter, header);
+                    System.out.println("--------------VALIDATION SEND BUKTI RESI BY NOMOR REKENING REQUEST AND RESPONSE----------");
+                    System.out.println("setoranAwal.getNoRekening() : "+setoranAwal.getNoRekening());
+                    System.out.println("data.getNomorRekening() : "+data.getNomorRekening());
+                    if(setoranAwal.getNoRekening().equals(data.getNomorRekening())) {
+                        System.out.println("rekening is the same...");
+                        Map<String, Object> resultUpload = new HashMap<>();
+                        try {
+                            String uploadBuktiSetoranUrl = siskohatUrl + "siskohat/bank/setoranawal";
 
-                        String filename = "bukti-setoran-awal-" + LocalDateTime.now().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli() + ".pdf";
-                        CustomMultipartFile multipartFile = new
-                                CustomMultipartFile(responseFile.getBody(), "application/pdf", filename);
-                        multipartFile.transferTo(multipartFile.getFile());
+                            Map<String, String> parameter = new HashMap<>();
+                            parameter.put("setoranAwalId", setoranAwal.getSetoranAwalId().toString());
+                            Map<String, String> header = new HashMap<>();
+                            SetoranAwalDTO usersDTO = new SetoranAwalDTO();
+                            ResponseEntity<byte[]> responseFile = cetakResiSetoranAwalController.ionaGenerateAsPDF(usersDTO, parameter, header);
 
-                        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-                        map.add("no_validasi", data.getNomorValidasi());
-                        map.add("upload", new FileSystemResource(multipartFile.getFile()));
+                            String filename = "bukti-setoran-awal-" + LocalDateTime.now().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli() + ".pdf";
+                            CustomMultipartFile multipartFile = new
+                                    CustomMultipartFile(responseFile.getBody(), "application/pdf", filename);
+                            multipartFile.transferTo(multipartFile.getFile());
 
-                        System.out.println("------------------------- REQUEST BODY BUKTI SETORAN AWAL ------------------");
-                        System.out.println("No Validasi : " + map.get("no_validasi"));
-                        System.out.println("File : " + multipartFile.getName());
-                        System.out.println("token kemenag : " + tokenKemenag);
-                        System.out.println("----------------------------------------------------------------------------");
+                            MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+                            map.add("no_validasi", data.getNomorValidasi());
+                            map.add("upload", new FileSystemResource(multipartFile.getFile()));
 
-                        RestTemplate restTemplateUpload = new RestTemplate();
-                        HttpHeaders headersUpload = new HttpHeaders();
-                        headersUpload.setContentType(MediaType.MULTIPART_FORM_DATA);
-                        headersUpload.set("x-access-key", tokenKemenag);
-                        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headersUpload);
+                            System.out.println("------------------------- REQUEST BODY BUKTI SETORAN AWAL ------------------");
+                            System.out.println("No Validasi : " + map.get("no_validasi"));
+                            System.out.println("File : " + multipartFile.getName());
+                            System.out.println("token kemenag : " + tokenKemenag);
+                            System.out.println("----------------------------------------------------------------------------");
 
-                        ResponseEntity<String> responseUpload = restTemplateUpload.postForEntity(uploadBuktiSetoranUrl, requestEntity, String.class);
+                            RestTemplate restTemplateUpload = new RestTemplate();
+                            HttpHeaders headersUpload = new HttpHeaders();
+                            headersUpload.setContentType(MediaType.MULTIPART_FORM_DATA);
+                            headersUpload.set("x-access-key", tokenKemenag);
+                            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headersUpload);
 
-                        resultUpload.put("uploadBukti", responseUpload.getBody());
-                        JSONObject jsonResultUpload = new JSONObject(responseUpload.getBody());
-                        System.out.println("------------------------- RESPONSE UPLOAD BUKTI SETORAN AWAL ------------------");
-                        System.out.println(jsonResultUpload.toString());
-                        System.out.println("-------------------------------------------------------------------------------");
-                        setoranAwal.setIsUploaded(jsonResultUpload.getString("RC").equals("00"));
+                            ResponseEntity<String> responseUpload = restTemplateUpload.postForEntity(uploadBuktiSetoranUrl, requestEntity, String.class);
 
-                    } catch (HttpClientErrorException hcex) {
-                        hcex.printStackTrace();
-                        resultUpload.put("uploadBukti", hcex.getResponseBodyAsString());
-                        setoranAwal.setIsUploaded(false);
-                    } catch (Exception ioe) {
-                        ioe.printStackTrace();
-                        Map<String, String> error = new HashMap<>();
-                        error.put("RC", "99");
-                        error.put("message", ioe.getLocalizedMessage());
-                        resultUpload.put("uploadBukti", error);
-                        setoranAwal.setIsUploaded(false);
+                            resultUpload.put("uploadBukti", responseUpload.getBody());
+                            JSONObject jsonResultUpload = new JSONObject(responseUpload.getBody());
+                            System.out.println("------------------------- RESPONSE UPLOAD BUKTI SETORAN AWAL ------------------");
+                            System.out.println(jsonResultUpload.toString());
+                            System.out.println("-------------------------------------------------------------------------------");
+                            setoranAwal.setIsUploaded(jsonResultUpload.getString("RC").equals("00"));
+
+                        } catch (HttpClientErrorException hcex) {
+                            hcex.printStackTrace();
+                            resultUpload.put("uploadBukti", hcex.getResponseBodyAsString());
+                            setoranAwal.setIsUploaded(false);
+                        } catch (Exception ioe) {
+                            ioe.printStackTrace();
+                            Map<String, String> error = new HashMap<>();
+                            error.put("RC", "99");
+                            error.put("message", ioe.getLocalizedMessage());
+                            resultUpload.put("uploadBukti", error);
+                            setoranAwal.setIsUploaded(false);
+                        }
+                        setoranAwalRepository.save(setoranAwal);
+                    } else {
+                        System.out.println("rekening is not the same..");
                     }
 
-                    setoranAwalRepository.save(setoranAwal);
+                    System.out.println("--------------VALIDATION SEND BUKTI RESI BY NOMOR REKENING REQUEST AND RESPONSE----------");
 
                     return ResponseEntity.ok().body(new Response(objectResponse.getString("rc"), setoranAwal, objectResponse.getString("message")));
                 } else{

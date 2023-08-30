@@ -14,4 +14,5 @@ public class SetoranAwalHajiResponse {
 	String embarkasi;
 	String kloter;
 	String virtualAccount;
+	String nomorRekening;
 }
