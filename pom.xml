@@ -23,6 +23,8 @@
 			<groupId>com.io</groupId>
 			<artifactId>iona-springboot</artifactId>
 			<version>2.0.0-BETA-32</version>
+			<scope>system</scope>
+      		<systemPath>${project.basedir}/libs/iona-springboot-2.0.0-BETA-32.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
@@ -199,16 +201,15 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-		<repository>
+		<!-- <repository>
 			<id>padepokan-79-central</id>
-			<name>Padepokan 79 Central Repository</name>
+			<name>Padepokan 79 Central Repository</name> -->
 			<!--			<url>https://nexus-3.padepokan79.com/repository/padepokan-79-central-hosted/</url>-->
-			<!--			<url>file://C:/Users//Leni Salsabila A//.m2//repository//com//io//com.io.iona//iona-springboot//2.0.0-BETA-32</url>
--->
-			<url>https://sigurih.bjbs.co.id/boiler-plate/iona-beta-32.git</url>
+			<!--			<url>file://C:/Users//Leni Salsabila A//.m2//repository//com//io//com.io.iona//iona-springboot//2.0.0-BETA-32</url>-->
+			<!-- <url>https://sigurih.bjbs.co.id/boiler-plate/iona-beta-32/-/tree/main</url>
 			<snapshots>
 				<enabled>false</enabled>
 			</snapshots>
-		</repository>
+		</repository> -->
 	</repositories>
 </project>
