@@ -39,7 +39,7 @@ public class SetoranAwalService {
 		boolean result = false;
 
 		LocalTime startingTime = LocalTime.parse("08:00");
-		LocalTime cutoffTime = LocalTime.parse("15:00");
+		LocalTime cutoffTime = LocalTime.parse("23:59");
 
 		log.info("currentTime.isAfter(startingTime) : "+currentTime.isAfter(startingTime));
 		if(currentTime.isAfter(startingTime)) {
