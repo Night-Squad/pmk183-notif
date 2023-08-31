@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
 
 import com.bjbs.haji.business.views.dtos.kafka.SetoranAwalHajiDataKafka;
 
+@Component
 public class MessageListener {
 
 	@Value("${kafka-topic}")
@@ -24,6 +26,6 @@ public class MessageListener {
     )
    public void listen(SetoranAwalHajiDataKafka message) {
        System.out.println("sending via kafka listener..");
-       template.convertAndSend("/topic/group-setoran-awal-incoming", message);
+       template.convertAndSend("/topic/setoran-awal-incoming", message);
    }
 }

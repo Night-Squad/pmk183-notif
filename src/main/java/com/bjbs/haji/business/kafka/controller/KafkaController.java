@@ -36,7 +36,7 @@ public class KafkaController {
 			// Sending the message to kafka topic queue
 			System.out.println("sending chat...");
 			System.out.println("chat : " + message.toString());
-			template.convertAndSend("/topic/group-setoran-awal-incoming", message);
+			template.convertAndSend("/topic/setoran-awal-incoming", message);
 			kafkaTemplate.send(kafkaTopic, message).get();
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception exception) {
@@ -44,11 +44,11 @@ public class KafkaController {
 		}
 	}
 
-////    -------------- WebSocket API ----------------
-//	@MessageMapping("/sendMessage")
-//	@SendTo("/topic/group-setoran-awal-incoming")
-//	public SetoranAwalHajiDataKafka broadcastGroupMessage(@Payload SetoranAwalHajiDataKafka message) {
-//		// Sending this message to all the subscribers
-//		return message;
-//	}
+//    -------------- WebSocket API ----------------
+	@MessageMapping("/sendMessage")
+	@SendTo("/topic/setoran-awal-incoming")
+	public SetoranAwalHajiDataKafka broadcastGroupMessage(@Payload SetoranAwalHajiDataKafka message) {
+		// Sending this message to all the subscribers
+		return message;
+	}
 }

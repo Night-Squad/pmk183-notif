@@ -10,7 +10,7 @@ public class SetoranAwalHajiDataKafka {
 	private String branchCode;
 	private String userBranchCode;
 	private String cityId;
-	private String proviceId;
+	private String provinceId;
 	private String tokenKemenag;
 	private String timestap;
 

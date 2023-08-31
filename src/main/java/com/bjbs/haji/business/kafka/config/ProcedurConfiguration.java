@@ -13,8 +13,11 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.stereotype.Component;
 
 import com.bjbs.haji.business.views.dtos.kafka.SetoranAwalHajiDataKafka;
+
+import lombok.RequiredArgsConstructor;
 
 
 @EnableKafka
@@ -33,7 +36,7 @@ public class ProcedurConfiguration {
 	     public Map<String, Object> producerConfigurations() {
 	         Map<String, Object> configurations = new HashMap<>();
 	         configurations.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHost);
-	         configurations.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+	         configurations.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 	         configurations.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 	         return configurations;
 	     }
