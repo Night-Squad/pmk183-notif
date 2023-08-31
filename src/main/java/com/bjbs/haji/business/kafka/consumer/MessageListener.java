@@ -26,6 +26,6 @@ public class MessageListener {
     )
    public void listen(SetoranAwalHajiDataKafka message) {
        System.out.println("sending via kafka listener..");
-       template.convertAndSend("/topic/setoran-awal-incoming", message);
+       template.convertAndSend("/topic/setoran_awal_incoming", message);
    }
 }
