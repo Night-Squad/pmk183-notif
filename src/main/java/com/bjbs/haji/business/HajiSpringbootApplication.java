@@ -38,33 +38,33 @@ public class HajiSpringbootApplication {
         };
     }
 
-    @Bean
-    CommandLineRunner commandLineRunner(KafkaTemplate<String, String> kafkaTemplate) {
-        return args -> {
-            System.out.println("let gooo");
-            for (int i = 0; i < 100; i++) {
-                kafkaTemplate.send("setoran_awal_incoming", "Alhamdulillah " + i);
-            }
-        };
-    }
+//     @Bean
+//     CommandLineRunner commandLineRunner(KafkaTemplate<String, String> kafkaTemplate) {
+//         return args -> {
+//             System.out.println("let gooo");
+//             for (int i = 0; i < 100; i++) {
+//                 kafkaTemplate.send("setoran_awal_incoming", "Alhamdulillah " + i);
+//             }
+//         };
+//     }
 
-    @Bean
-    CommandLineRunner commandLineRunnerAPI(KafkaTemplate<String, String> kafkaTemplate) {
-        return args -> {
-            System.out.println("let gooo");
-            SetoranAwalHajiDataKafka message = new SetoranAwalHajiDataKafka();
+//     @Bean
+//     CommandLineRunner commandLineRunnerAPI(KafkaTemplate<String, SetoranAwalHajiDataKafka> kafkaTemplate) {
+//         return args -> {
+//             System.out.println("let gooo");
+//             SetoranAwalHajiDataKafka message = new SetoranAwalHajiDataKafka();
 
-            message.setTimestap(LocalDateTime.now().toString());
-            try {
-                // Sending the message to kafka topic queue
-                System.out.println("sending chat...");
-                System.out.println("chat : " + message.toString());
-// 			template.convertAndSend("/topic/setoran_awal_incoming", message);
-//                kafkaTemplate.send("setoran_awal_incoming", message.toString());
-                kafkaTemplate.send("setoran_awal_incoming", "setoran-awal", message.toString());
-            } catch (Exception exception) {
-                throw exception;
-            }
-        };
-    }
+//             message.setTimestap(LocalDateTime.now().toString());
+//             try {
+//                 // Sending the message to kafka topic queue
+//                 System.out.println("sending chat...");
+//                 System.out.println("chat : " + message.toString());
+// // 			template.convertAndSend("/topic/setoran_awal_incoming", message);
+// //                kafkaTemplate.send("setoran_awal_incoming", message.toString());
+//                 kafkaTemplate.send("setoran_awal_incoming", "setoran-awal", message);
+//             } catch (Exception exception) {
+//                 throw exception;
+//             }
+//         };
+//     }
 }
