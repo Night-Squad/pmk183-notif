@@ -2,6 +2,8 @@
 
  import java.time.LocalDateTime;
 
+ import com.bjbs.haji.business.views.dtos.kafka.ResponseSetoranAwalDataKafka;
+ import com.google.gson.Gson;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.beans.factory.annotation.Value;
  import org.springframework.http.HttpStatus;
@@ -24,12 +26,18 @@
 
  	@PostMapping(value = "/repo/setoran-awal/v2/pembayaran", consumes = "application/json", produces = "application/json")
  	public ResponseEntity<Void> sendMessage(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
+        ResponseSetoranAwalDataKafka responseSetoranAwalDataKafka = new ResponseSetoranAwalDataKafka();
+        responseSetoranAwalDataKafka.setResponseCode("00");
+        responseSetoranAwalDataKafka.setResponseMessage("Request setoran awal sedang di proses");
+
  		message.setTimestap(LocalDateTime.now().toString());
+
+        responseSetoranAwalDataKafka.setData(message);
  		try {
  			// Sending the message to kafka topic queue
  			System.out.println("sending chat...");
  			System.out.println("chat : " + message.toString());
-            kafkaTemplate.send("setoran_awal_incoming", "setoran-awal", message.toString());
+            kafkaTemplate.send("setoran_awal_incoming", "setoran-awal", new Gson().toJson(responseSetoranAwalDataKafka));
  			return new ResponseEntity<>(HttpStatus.OK);
  		} catch (Exception exception) {
  			throw exception;
