@@ -1,8 +1,8 @@
  package com.bjbs.haji.business.kafka.controller;
 
- import java.time.LocalDateTime;
+ import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
- import com.bjbs.haji.business.views.dtos.kafka.ResponseSetoranAwalDataKafka;
  import com.google.gson.Gson;
  import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +14,15 @@
  import org.springframework.web.bind.annotation.RestController;
 
 import com.bjbs.haji.business.apis.dtos.Response;
+import com.bjbs.haji.business.apis.dtos.SetoranAwalHajiData;
+import com.bjbs.haji.business.apis.dtos.SetoranAwalHajiRequest;
+import com.bjbs.haji.business.models.Cities;
+import com.bjbs.haji.business.models.SetoranAwal;
+import com.bjbs.haji.business.repositories.haji.CitiesRepository;
+import com.bjbs.haji.business.repositories.haji.SetoranAwalRepository;
+import com.bjbs.haji.business.views.dtos.kafka.ResponseSetoranAwalDataKafka;
 import com.bjbs.haji.business.views.dtos.kafka.SetoranAwalHajiDataKafka;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
  @RestController
  public class KafkaController {
@@ -22,26 +30,79 @@ import com.bjbs.haji.business.views.dtos.kafka.SetoranAwalHajiDataKafka;
  	@Value("${kafka-topic}")
  	private String kafkaTopic;
 
+	 @Autowired
+    CitiesRepository citiesRepository;
+
+ 	@Autowired
+    SetoranAwalRepository setoranAwalRepository;
+
+	ObjectMapper mapper = new ObjectMapper();
+
+
  	@Autowired
  	private KafkaTemplate<String, String> kafkaTemplate;
 
  	@PostMapping(value = "/repo/setoran-awal/v2/pembayaran", consumes = "application/json", produces = "application/json")
- 	public Object sendMessage(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
-        ResponseSetoranAwalDataKafka responseSetoranAwalDataKafka = new ResponseSetoranAwalDataKafka();
-        responseSetoranAwalDataKafka.setResponseCode("00");
-        responseSetoranAwalDataKafka.setResponseMessage("Request setoran awal sedang di proses");
+ 	public Response sendMessage(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
+		// ResponseSetoranAwalDataKafka responseSetoranAwalDataKafka = new ResponseSetoranAwalDataKafka();
+		Response response = new Response();
+		try{
+		SetoranAwal setoranAwal = setoranAwalRepository.findById(message.getSetoranAwalId()).orElse(null);
+            if (setoranAwal != null) {
+                SetoranAwalHajiRequest setoranAwalHajiRequest = new SetoranAwalHajiRequest();
+                setoranAwalHajiRequest.setJenisHaji(setoranAwal.getTipeHaji().getKodeHaji());
+                setoranAwalHajiRequest.setJenisKelamin(String.valueOf(setoranAwal.getJenisKelamin()));
+                setoranAwalHajiRequest.setKodePekerjaan(String.valueOf(setoranAwal.getPekerjaan().getKodePekerjaan()));
+                setoranAwalHajiRequest.setKodePendidikan(String.valueOf(setoranAwal.getPendidikan().getKodePendidikan()));
+                setoranAwalHajiRequest.setKodeStatusPernikahan(String.valueOf(setoranAwal.getStatusKawin().getStatusKawinKemenag()));
+                setoranAwalHajiRequest.setNamaJemaah(setoranAwal.getNamaJemaah());
+                setoranAwalHajiRequest.setNoIdentitas(setoranAwal.getNoIdentitas());
+                setoranAwalHajiRequest.setTanggalLahir(new SimpleDateFormat("ddMMyyyy").format(setoranAwal.getTanggalLahir()));
+                setoranAwalHajiRequest.setTempatLahir(setoranAwal.getTempatLahir());
+                setoranAwalHajiRequest.setAlamat(setoranAwal.getAlamat());
+                setoranAwalHajiRequest.setKodePos(setoranAwal.getKodePos());
+                setoranAwalHajiRequest.setDesa(setoranAwal.getKelurahan());
+                setoranAwalHajiRequest.setKecamatan(setoranAwal.getKecamatan());
+                setoranAwalHajiRequest.setKabupatenKota(setoranAwal.getKabupatenKota());
+                Cities city = citiesRepository.findByCityCodeCbs(setoranAwal.getKabupatenKotaId());
+                setoranAwalHajiRequest.setKodeKabupatenKota(city.getCityCode());
+                setoranAwalHajiRequest.setKodeProvinsi(city.getProvinces().getProvinceCode());
+                setoranAwalHajiRequest.setNamaAyah(setoranAwal.getNamaAyah());
 
- 		message.setTimestap(LocalDateTime.now().toString());
+                SetoranAwalHajiData setoranAwalHajiData = new SetoranAwalHajiData();
+                setoranAwalHajiData.setNoRekening(setoranAwal.getNoRekening());
+                setoranAwalHajiData.setMerchantType(setoranAwal.getChannel().getKodeMerchant());
+                setoranAwalHajiData.setSettlementDate(setoranAwal.getTanggalTransaksi());
+                setoranAwalHajiData.setTerminalId(message.getUserBranchCode());
+                setoranAwalHajiData.setTransactionAmount(setoranAwal.getNominalSetoran().toString() + "00");
+                setoranAwalHajiData.setBranchCode(message.getBranchCode());
+                setoranAwalHajiData.setSetoranAwalHajiRequest(setoranAwalHajiRequest);
 
-        responseSetoranAwalDataKafka.setData(message);
- 		try {
- 			// Sending the message to kafka topic queue
- 			System.out.println("sending chat...");
- 			System.out.println("chat : " + message.toString());
-            kafkaTemplate.send("setoran_awal_incoming", "setoran-awal", new Gson().toJson(responseSetoranAwalDataKafka));
-			return ResponseEntity.ok().body(new Response("00", message, "Request setoran awal sedang di proses"));
-		} catch (Exception exception) {
- 			throw exception;
- 		}
- 	}
+                System.out.println("------------------ REQUEST BODY SWITCHING PEMBAYARAN SETORAN AWAL ------------------");
+                System.out.println(mapper.writeValueAsString(setoranAwalHajiData));
+                System.out.println("------------------------------------------------------------------------------------");
+
+
+				message.setTimestap(LocalDateTime.now().toString());
+
+				response.setRC("00");
+				response.setData(setoranAwalHajiData);
+				response.setMessage("Request setoran awal sedang di proses");
+				// Sending the message to kafka topic queue
+				System.out.println("sending chat...");
+				System.out.println("chat : " + message.toString());
+				kafkaTemplate.send("setoran_awal_incoming", "setoran-awal", new Gson().toJson(response));
+		
+				return response;
+ 			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+				response.setRC("99");
+				response.setData(e.getLocalizedMessage());
+				response.setMessage(null);
+				return response;
+		}
+		return response;
+	}
  }
