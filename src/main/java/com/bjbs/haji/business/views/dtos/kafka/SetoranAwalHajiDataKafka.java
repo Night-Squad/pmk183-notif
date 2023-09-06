@@ -13,6 +13,6 @@ public class SetoranAwalHajiDataKafka {
 	private String provinceId;
 	private String tokenKemenag;
 	private String timestap;
-	private String responseMessage;
+	// private String responseMessage;
 
 }

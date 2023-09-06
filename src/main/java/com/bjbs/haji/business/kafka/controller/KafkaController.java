@@ -4,7 +4,9 @@
 import java.time.LocalDateTime;
 
  import com.google.gson.Gson;
- import org.springframework.beans.factory.annotation.Autowired;
+
+import org.jfree.util.Log;
+import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.beans.factory.annotation.Value;
  import org.springframework.http.HttpStatus;
  import org.springframework.http.ResponseEntity;
@@ -46,8 +48,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  	public Response sendMessage(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
 		// ResponseSetoranAwalDataKafka responseSetoranAwalDataKafka = new ResponseSetoranAwalDataKafka();
 		Response response = new Response();
+		System.out.println("+++++++++++++++DATAAAAAAAAA++++++++++"+message);
 		try{
 		SetoranAwal setoranAwal = setoranAwalRepository.findById(message.getSetoranAwalId()).orElse(null);
+		System.out.println("DATAAAAAAAAA++++++++++"+ setoranAwal);
             if (setoranAwal != null) {
                 SetoranAwalHajiRequest setoranAwalHajiRequest = new SetoranAwalHajiRequest();
                 setoranAwalHajiRequest.setJenisHaji(setoranAwal.getTipeHaji().getKodeHaji());
@@ -64,7 +68,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
                 setoranAwalHajiRequest.setDesa(setoranAwal.getKelurahan());
                 setoranAwalHajiRequest.setKecamatan(setoranAwal.getKecamatan());
                 setoranAwalHajiRequest.setKabupatenKota(setoranAwal.getKabupatenKota());
+
                 Cities city = citiesRepository.findByCityCodeCbs(setoranAwal.getKabupatenKotaId());
+				if(city == null){
+					response.setMessage("Mohon Periksa Kembali Data Setoran Awal ID atau City Code CBS");
+					response.setRC("53");
+					return response;
+				}
                 setoranAwalHajiRequest.setKodeKabupatenKota(city.getCityCode());
                 setoranAwalHajiRequest.setKodeProvinsi(city.getProvinces().getProvinceCode());
                 setoranAwalHajiRequest.setNamaAyah(setoranAwal.getNamaAyah());
@@ -93,8 +103,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 				System.out.println("chat : " + message.toString());
 				kafkaTemplate.send("setoran_awal_incoming", "setoran-awal", new Gson().toJson(response));
 		
+				System.out.println("+=================================================================");
 				return response;
- 			}
+ 			}else{
+				response.setMessage("Mohon Periksa Kembali Data Setoran Awal ID");
+				response.setRC("53");
+				return response;
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,6 +118,5 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 				response.setMessage(null);
 				return response;
 		}
-		return response;
 	}
  }
