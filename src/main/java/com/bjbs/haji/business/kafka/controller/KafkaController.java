@@ -13,7 +13,8 @@
  import org.springframework.web.bind.annotation.RequestBody;
  import org.springframework.web.bind.annotation.RestController;
 
- import com.bjbs.haji.business.views.dtos.kafka.SetoranAwalHajiDataKafka;
+import com.bjbs.haji.business.apis.dtos.Response;
+import com.bjbs.haji.business.views.dtos.kafka.SetoranAwalHajiDataKafka;
 
  @RestController
  public class KafkaController {
@@ -25,7 +26,7 @@
  	private KafkaTemplate<String, String> kafkaTemplate;
 
  	@PostMapping(value = "/repo/setoran-awal/v2/pembayaran", consumes = "application/json", produces = "application/json")
- 	public ResponseEntity<Void> sendMessage(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
+ 	public Object sendMessage(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
         ResponseSetoranAwalDataKafka responseSetoranAwalDataKafka = new ResponseSetoranAwalDataKafka();
         responseSetoranAwalDataKafka.setResponseCode("00");
         responseSetoranAwalDataKafka.setResponseMessage("Request setoran awal sedang di proses");
@@ -38,8 +39,8 @@
  			System.out.println("sending chat...");
  			System.out.println("chat : " + message.toString());
             kafkaTemplate.send("setoran_awal_incoming", "setoran-awal", new Gson().toJson(responseSetoranAwalDataKafka));
- 			return new ResponseEntity<>(HttpStatus.OK);
- 		} catch (Exception exception) {
+			return ResponseEntity.ok().body(new Response("00", message, "Request setoran awal sedang di proses"));
+		} catch (Exception exception) {
  			throw exception;
  		}
  	}
