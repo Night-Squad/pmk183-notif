@@ -10,7 +10,7 @@ public class KafkaListeners {
             topics = "setoran_awal_incoming",
             groupId = "setoran-awal",
             topicPartitions = {
-                    @TopicPartition(topic = "setoran_awal_incoming", partitions = { "0", "1", "2","3","4","5","6","7" })
+                    @TopicPartition(topic = "setoran_awal_incoming", partitions = { "0", "1", "2" })
             }
     )
     void listener(String data) {
