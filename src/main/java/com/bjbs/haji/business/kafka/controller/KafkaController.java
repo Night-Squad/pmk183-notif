@@ -1,12 +1,16 @@
  package com.bjbs.haji.business.kafka.controller;
 
- import java.text.SimpleDateFormat;
+ import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 import com.google.gson.Gson;
 
 import org.jfree.util.Log;
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.beans.factory.annotation.Value;
  import org.springframework.http.HttpStatus;
@@ -17,12 +21,15 @@ import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.web.bind.annotation.RestController;
 
 import com.bjbs.haji.business.apis.dtos.Response;
+import com.bjbs.haji.business.apis.dtos.SetoranAwalDTO;
 import com.bjbs.haji.business.apis.dtos.SetoranAwalHajiData;
 import com.bjbs.haji.business.apis.dtos.SetoranAwalHajiRequest;
 import com.bjbs.haji.business.models.Cities;
 import com.bjbs.haji.business.models.SetoranAwal;
+import com.bjbs.haji.business.models.StatusTransaksi;
 import com.bjbs.haji.business.repositories.haji.CitiesRepository;
 import com.bjbs.haji.business.repositories.haji.SetoranAwalRepository;
+import com.bjbs.haji.business.repositories.haji.StatusTransaksiRepository;
 import com.bjbs.haji.business.views.dtos.kafka.ResponseSetoranAwalDataKafka;
 import com.bjbs.haji.business.views.dtos.kafka.SetoranAwalHajiDataKafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +45,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
  	@Autowired
     SetoranAwalRepository setoranAwalRepository;
+
+	@Autowired
+	StatusTransaksiRepository statusTransaksiRepository;
 
 	ObjectMapper mapper = new ObjectMapper();
 
@@ -89,9 +99,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
                 setoranAwalHajiData.setBranchCode(message.getBranchCode());
                 setoranAwalHajiData.setSetoranAwalHajiRequest(setoranAwalHajiRequest);
 
-				// Map<String,Object> updateData = setoranAwalRepository.updateData(message.getSetoranAwalId());
-				// SetoranAwal updateDataSetoranAwal = new SetoranAwal();
-				// updateDataSetoranAwal.setStatusTransaksi();;
+				Optional<SetoranAwal> exitingSetoranAwal = setoranAwalRepository.findById(message.getSetoranAwalId());
+				if(!exitingSetoranAwal.isPresent()){
+					response.setMessage("Data Setoran Awal ID Tidak Ada");
+					response.setRC("53");
+					return response;
+				}
+			
+				SetoranAwal setoranAwalUpdate = exitingSetoranAwal.get();
+
+				StatusTransaksi statusTransaksi = statusTransaksiRepository.findById((long) 7).orElse(null);
+				setoranAwalUpdate.setStatusTransaksi(statusTransaksi);
+				
+				setoranAwalRepository.save(setoranAwalUpdate);
 
                 System.out.println("------------------ REQUEST BODY SWITCHING PEMBAYARAN SETORAN AWAL ------------------");
                 System.out.println(mapper.writeValueAsString(setoranAwalHajiData));
