@@ -2,8 +2,9 @@
 
  import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Map;
 
- import com.google.gson.Gson;
+import com.google.gson.Gson;
 
 import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +49,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  	public Response sendMessage(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
 		// ResponseSetoranAwalDataKafka responseSetoranAwalDataKafka = new ResponseSetoranAwalDataKafka();
 		Response response = new Response();
-		System.out.println("+++++++++++++++DATAAAAAAAAA++++++++++"+message);
+		System.out.println("Request Body = "+message);
 		try{
 		SetoranAwal setoranAwal = setoranAwalRepository.findById(message.getSetoranAwalId()).orElse(null);
-		System.out.println("DATAAAAAAAAA++++++++++"+ setoranAwal);
+		System.out.println(""+ setoranAwal);
             if (setoranAwal != null) {
                 SetoranAwalHajiRequest setoranAwalHajiRequest = new SetoranAwalHajiRequest();
                 setoranAwalHajiRequest.setJenisHaji(setoranAwal.getTipeHaji().getKodeHaji());
@@ -88,16 +89,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
                 setoranAwalHajiData.setBranchCode(message.getBranchCode());
                 setoranAwalHajiData.setSetoranAwalHajiRequest(setoranAwalHajiRequest);
 
+				// Map<String,Object> updateData = setoranAwalRepository.updateData(message.getSetoranAwalId());
+				// SetoranAwal updateDataSetoranAwal = new SetoranAwal();
+				// updateDataSetoranAwal.setStatusTransaksi();;
+
                 System.out.println("------------------ REQUEST BODY SWITCHING PEMBAYARAN SETORAN AWAL ------------------");
                 System.out.println(mapper.writeValueAsString(setoranAwalHajiData));
                 System.out.println("------------------------------------------------------------------------------------");
-
 
 				message.setTimestap(LocalDateTime.now().toString());
 
 				response.setRC("00");
 				response.setData(setoranAwalHajiData);
-				response.setMessage("Request setoran awal sedang di proses");
+				response.setMessage("Setoran Awal dengan Nomor Rekening "+ setoranAwal.getNoRekening() +" sedang di proses");
 				// Sending the message to kafka topic queue
 				System.out.println("sending chat...");
 				System.out.println("chat : " + message.toString());

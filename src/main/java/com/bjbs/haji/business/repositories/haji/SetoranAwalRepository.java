@@ -67,4 +67,6 @@ public interface SetoranAwalRepository extends JpaRepository<SetoranAwal, Long> 
     @Query("FROM SetoranAwal WHERE isUploaded = false")
     List<SetoranAwal> getSetoranAwalNotUploaded();
 
+    // @Query(value = "update setoran_awal set status_transaksi_id = 7 where setoran_awal_id = ?1",nativeQuery = true)
+    // Map<String,Object> updateDataStatusId (Long setoranAwalId);
 }
