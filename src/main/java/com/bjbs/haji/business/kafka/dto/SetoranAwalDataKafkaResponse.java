@@ -10,6 +10,6 @@ public class SetoranAwalDataKafkaResponse extends SetoranAwalHajiData {
 	String userCode;
 	String tokenKemenag;
 	Long setoranAwalId;
-	String timestap;
+	String timestamp;
 
 }

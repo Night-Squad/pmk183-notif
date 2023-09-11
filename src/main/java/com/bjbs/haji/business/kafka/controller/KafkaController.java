@@ -1,33 +1,29 @@
  package com.bjbs.haji.business.kafka.controller;
 
- import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import com.google.gson.Gson;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
+ import com.bjbs.haji.business.apis.dtos.Response;
+ import com.bjbs.haji.business.apis.dtos.SetoranAwalHajiRequest;
+ import com.bjbs.haji.business.kafka.dto.SetoranAwalDataKafkaResponse;
+ import com.bjbs.haji.business.models.Cities;
+ import com.bjbs.haji.business.models.SetoranAwal;
+ import com.bjbs.haji.business.models.StatusTransaksi;
+ import com.bjbs.haji.business.repositories.haji.CitiesRepository;
+ import com.bjbs.haji.business.repositories.haji.SetoranAwalRepository;
+ import com.bjbs.haji.business.repositories.haji.StatusTransaksiRepository;
+ import com.bjbs.haji.business.views.dtos.kafka.SetoranAwalHajiDataKafka;
+ import com.fasterxml.jackson.databind.ObjectMapper;
+ import com.google.gson.Gson;
+ import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.beans.factory.annotation.Value;
  import org.springframework.kafka.core.KafkaTemplate;
  import org.springframework.web.bind.annotation.PostMapping;
  import org.springframework.web.bind.annotation.RequestBody;
  import org.springframework.web.bind.annotation.RestController;
 
-import com.bjbs.haji.business.apis.dtos.Response;
-import com.bjbs.haji.business.apis.dtos.SetoranAwalHajiRequest;
-import com.bjbs.haji.business.kafka.dto.SetoranAwalDataKafkaResponse;
-import com.bjbs.haji.business.models.Cities;
-import com.bjbs.haji.business.models.SetoranAwal;
-import com.bjbs.haji.business.models.StatusTransaksi;
-import com.bjbs.haji.business.repositories.haji.CitiesRepository;
-import com.bjbs.haji.business.repositories.haji.SetoranAwalRepository;
-import com.bjbs.haji.business.repositories.haji.StatusTransaksiRepository;
-import com.bjbs.haji.business.views.dtos.kafka.SetoranAwalHajiDataKafka;
-import com.fasterxml.jackson.databind.ObjectMapper;
+ import java.text.SimpleDateFormat;
+ import java.time.LocalDateTime;
+ import java.util.HashMap;
+ import java.util.Map;
+ import java.util.Optional;
 
  @RestController
  public class KafkaController {
@@ -53,6 +49,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  	@PostMapping(value = "/repo/setoran-awal/v2/pembayaran", consumes = "application/json", produces = "application/json")
  	public Response sendMessageIncoming(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
 		Response response = new Response();
+        Map<String, Object> result = new HashMap<>();
 		System.out.println("Request Body = "+message);
 		LocalDateTime date = LocalDateTime.now();
 		try{
@@ -96,7 +93,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
                 setoranAwalHajiData.setUserCode(message.getUserCode());
                 setoranAwalHajiData.setSetoranAwalId(message.getSetoranAwalId());
                 setoranAwalHajiData.setTokenKemenag(message.getTokenKemenag());
-                setoranAwalHajiData.setTimestap(date.toString());
+                setoranAwalHajiData.setTimestamp(date.toString());
 
 				Optional<SetoranAwal> exitingSetoranAwal = setoranAwalRepository.findById(message.getSetoranAwalId());
 				if(!exitingSetoranAwal.isPresent()){
