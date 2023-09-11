@@ -3,6 +3,7 @@
  import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -56,8 +57,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  	private KafkaTemplate<String, String> kafkaTemplate;
 
  	@PostMapping(value = "/repo/setoran-awal/v2/pembayaran", consumes = "application/json", produces = "application/json")
- 	public Response sendMessage(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
-		// ResponseSetoranAwalDataKafka responseSetoranAwalDataKafka = new ResponseSetoranAwalDataKafka();
+ 	public Response sendMessageIncoming(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
 		Response response = new Response();
 		System.out.println("Request Body = "+message);
 		try{
@@ -119,8 +119,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 				message.setTimestap(LocalDateTime.now().toString());
 
+				Map<String,Object> result = new HashMap<>();
+				result.put("data", setoranAwalHajiData);
+				result.put("setoranAwalId",message.getSetoranAwalId());
+
 				response.setRC("00");
-				response.setData(setoranAwalHajiData);
+				response.setData(result);
 				response.setMessage("Setoran Awal dengan Nomor Rekening "+ setoranAwal.getNoRekening() +" sedang di proses");
 				// Sending the message to kafka topic queue
 				System.out.println("sending chat...");

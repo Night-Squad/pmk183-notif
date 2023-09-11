@@ -363,6 +363,7 @@ public class SetoranAwalCustomController {
                 System.out.println(mapper.writeValueAsString(setoranAwalHajiData));
                 System.out.println("------------------------------------------------------------------------------------");
 
+                
                 String url = urlSwitchingApp + "api/switching_haji/pembayaran_setoran_awal";
                 RestTemplate restTemplate = new RestTemplate();
                 HttpHeaders headers = new HttpHeaders();
@@ -376,6 +377,7 @@ public class SetoranAwalCustomController {
                 System.out.println(objectResponse.toString());
                 System.out.println("------------------------------------------------------------------------------------");
 
+                //dari sinih
                 if (objectResponse.getString("rc").equals("00")) {
 
 
@@ -429,6 +431,7 @@ public class SetoranAwalCustomController {
                             headersUpload.set("x-access-key", tokenKemenag);
                             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headersUpload);
 
+                            // 
                             ResponseEntity<String> responseUpload = restTemplateUpload.postForEntity(uploadBuktiSetoranUrl, requestEntity, String.class);
 
                             resultUpload.put("uploadBukti", responseUpload.getBody());
@@ -437,7 +440,8 @@ public class SetoranAwalCustomController {
                             System.out.println(jsonResultUpload.toString());
                             System.out.println("-------------------------------------------------------------------------------");
                             setoranAwal.setIsUploaded(jsonResultUpload.getString("RC").equals("00"));
-
+                            //
+                    
                         } catch (HttpClientErrorException hcex) {
                             hcex.printStackTrace();
                             resultUpload.put("uploadBukti", hcex.getResponseBodyAsString());
@@ -458,7 +462,10 @@ public class SetoranAwalCustomController {
                     System.out.println("--------------VALIDATION SEND BUKTI RESI BY NOMOR REKENING REQUEST AND RESPONSE----------");
 
                     return ResponseEntity.ok().body(new Response(objectResponse.getString("rc"), setoranAwal, objectResponse.getString("message")));
-                } else{
+                }
+                //sampai sinih
+
+                else{
                     return ResponseEntity.ok().body(new Response(objectResponse.getString("rc"), null, objectResponse.getString("message")));
                 }
             } else{
