@@ -431,7 +431,6 @@ public class SetoranAwalCustomController {
                             headersUpload.set("x-access-key", tokenKemenag);
                             HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(map, headersUpload);
 
-                            // 
                             ResponseEntity<String> responseUpload = restTemplateUpload.postForEntity(uploadBuktiSetoranUrl, requestEntity, String.class);
 
                             resultUpload.put("uploadBukti", responseUpload.getBody());
@@ -440,7 +439,6 @@ public class SetoranAwalCustomController {
                             System.out.println(jsonResultUpload.toString());
                             System.out.println("-------------------------------------------------------------------------------");
                             setoranAwal.setIsUploaded(jsonResultUpload.getString("RC").equals("00"));
-                            //
                     
                         } catch (HttpClientErrorException hcex) {
                             hcex.printStackTrace();

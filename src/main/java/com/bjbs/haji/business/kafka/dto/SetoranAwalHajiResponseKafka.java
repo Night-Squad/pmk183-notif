@@ -16,4 +16,7 @@ public class SetoranAwalHajiResponseKafka {
 	String virtualAccount;
 	String nomorRekening;
     String setoranAwalId;
+    String rc;
+    String userCode;
+    String tokenKemenag;
 }

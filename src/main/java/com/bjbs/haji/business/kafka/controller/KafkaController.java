@@ -9,29 +9,23 @@ import java.util.Optional;
 
 import com.google.gson.Gson;
 
-import org.jfree.util.Log;
-import org.modelmapper.Conditions;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
  import org.springframework.beans.factory.annotation.Value;
- import org.springframework.http.HttpStatus;
- import org.springframework.http.ResponseEntity;
  import org.springframework.kafka.core.KafkaTemplate;
  import org.springframework.web.bind.annotation.PostMapping;
  import org.springframework.web.bind.annotation.RequestBody;
  import org.springframework.web.bind.annotation.RestController;
 
 import com.bjbs.haji.business.apis.dtos.Response;
-import com.bjbs.haji.business.apis.dtos.SetoranAwalDTO;
-import com.bjbs.haji.business.apis.dtos.SetoranAwalHajiData;
 import com.bjbs.haji.business.apis.dtos.SetoranAwalHajiRequest;
+import com.bjbs.haji.business.kafka.dto.SetoranAwalDataKafkaResponse;
 import com.bjbs.haji.business.models.Cities;
 import com.bjbs.haji.business.models.SetoranAwal;
 import com.bjbs.haji.business.models.StatusTransaksi;
 import com.bjbs.haji.business.repositories.haji.CitiesRepository;
 import com.bjbs.haji.business.repositories.haji.SetoranAwalRepository;
 import com.bjbs.haji.business.repositories.haji.StatusTransaksiRepository;
-import com.bjbs.haji.business.views.dtos.kafka.ResponseSetoranAwalDataKafka;
 import com.bjbs.haji.business.views.dtos.kafka.SetoranAwalHajiDataKafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -60,6 +54,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  	public Response sendMessageIncoming(@RequestBody SetoranAwalHajiDataKafka message) throws Exception {
 		Response response = new Response();
 		System.out.println("Request Body = "+message);
+		LocalDateTime date = LocalDateTime.now();
 		try{
 		SetoranAwal setoranAwal = setoranAwalRepository.findById(message.getSetoranAwalId()).orElse(null);
 		System.out.println(""+ setoranAwal);
@@ -90,7 +85,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
                 setoranAwalHajiRequest.setKodeProvinsi(city.getProvinces().getProvinceCode());
                 setoranAwalHajiRequest.setNamaAyah(setoranAwal.getNamaAyah());
 
-                SetoranAwalHajiData setoranAwalHajiData = new SetoranAwalHajiData();
+                SetoranAwalDataKafkaResponse setoranAwalHajiData = new SetoranAwalDataKafkaResponse();
                 setoranAwalHajiData.setNoRekening(setoranAwal.getNoRekening());
                 setoranAwalHajiData.setMerchantType(setoranAwal.getChannel().getKodeMerchant());
                 setoranAwalHajiData.setSettlementDate(setoranAwal.getTanggalTransaksi());
@@ -98,6 +93,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
                 setoranAwalHajiData.setTransactionAmount(setoranAwal.getNominalSetoran().toString() + "00");
                 setoranAwalHajiData.setBranchCode(message.getBranchCode());
                 setoranAwalHajiData.setSetoranAwalHajiRequest(setoranAwalHajiRequest);
+                setoranAwalHajiData.setUserCode(message.getUserCode());
+                setoranAwalHajiData.setSetoranAwalId(message.getSetoranAwalId());
+                setoranAwalHajiData.setTokenKemenag(message.getTokenKemenag());
+                setoranAwalHajiData.setTimestap(date.toString());
 
 				Optional<SetoranAwal> exitingSetoranAwal = setoranAwalRepository.findById(message.getSetoranAwalId());
 				if(!exitingSetoranAwal.isPresent()){
@@ -119,12 +118,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 				message.setTimestap(LocalDateTime.now().toString());
 
-				Map<String,Object> result = new HashMap<>();
-				result.put("data", setoranAwalHajiData);
-				result.put("setoranAwalId",message.getSetoranAwalId());
+//				Map<String,Object> result = new HashMap<>();
+//				result.put("data", setoranAwalHajiData);
+//				result.put("body",message);
 
 				response.setRC("00");
-				response.setData(result);
+				response.setData(setoranAwalHajiData);
 				response.setMessage("Setoran Awal dengan Nomor Rekening "+ setoranAwal.getNoRekening() +" sedang di proses");
 				// Sending the message to kafka topic queue
 				System.out.println("sending chat...");
