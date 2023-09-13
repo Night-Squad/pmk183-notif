@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >-->
 
-<hibernate-reverse-engineering>
-  <table-filter match-schema="public" match-name="cabang"/>
-  <table-filter match-schema="public" match-name="channel"/>
-  <table-filter match-schema="public" match-name="kab_kota"/>
-  <table-filter match-schema="public" match-name="mata_uang"/>
-  <table-filter match-schema="public" match-name="pekerjaan"/>
-  <table-filter match-schema="public" match-name="pelunasan_haji"/>
-  <table-filter match-schema="public" match-name="pembayaran_awal"/>
-  <table-filter match-schema="public" match-name="pendidikan"/>
-  <table-filter match-schema="public" match-name="provinsi"/>
-  <table-filter match-schema="public" match-name="status_kawin"/>
-  <table-filter match-schema="public" match-name="status_transaksi"/>
-</hibernate-reverse-engineering>
+<!--<hibernate-reverse-engineering>-->
+<!--  <table-filter match-schema="public" match-name="cabang"/>-->
+<!--  <table-filter match-schema="public" match-name="channel"/>-->
+<!--  <table-filter match-schema="public" match-name="kab_kota"/>-->
+<!--  <table-filter match-schema="public" match-name="mata_uang"/>-->
+<!--  <table-filter match-schema="public" match-name="pekerjaan"/>-->
+<!--  <table-filter match-schema="public" match-name="pelunasan_haji"/>-->
+<!--  <table-filter match-schema="public" match-name="pembayaran_awal"/>-->
+<!--  <table-filter match-schema="public" match-name="pendidikan"/>-->
+<!--  <table-filter match-schema="public" match-name="provinsi"/>-->
+<!--  <table-filter match-schema="public" match-name="status_kawin"/>-->
+<!--  <table-filter match-schema="public" match-name="status_transaksi"/>-->
+<!--</hibernate-reverse-engineering>-->
