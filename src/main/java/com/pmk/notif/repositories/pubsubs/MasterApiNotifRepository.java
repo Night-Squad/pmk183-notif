@@ -16,4 +16,11 @@ public interface MasterApiNotifRepository extends JpaRepository<MasterApiNotif, 
     Page<MasterApiNotif> findByTxAmountAndCreatedAtBetweenAndSentOrSentAndReceived(Long txAmount, Date startDate, Date endDate, Boolean sent, Boolean sentOr, Boolean received, Pageable pageable);
     Page<MasterApiNotif> findByTxReferenceNoContainingAndCreatedAtBetweenAndSentOrSentAndReceived(String txReferenceNo, Date startDate, Date endDate, Boolean sent, Boolean sentOr, Boolean received, Pageable pageable);
     Page<MasterApiNotif> findByCompanyIdAndCreatedAtBetweenAndSentOrSentAndReceived(Integer companyId, Date startDate, Date endDate, Boolean sent, Boolean sentOr, Boolean received, Pageable pageable);
+
+    Page<MasterApiNotif> findBySentTrueAndReceivedTrue(Pageable pageable);
+    Page<MasterApiNotif> findByCreatedAtBetweenAndSentTrueAndReceivedTrue(Date startDate, Date endDate, Pageable pageable);
+    Page<MasterApiNotif> findByVaAccNoContainingAndCreatedAtBetweenAndSentTrueAndReceivedTrue(String vaAccNo, Date startDate, Date endDate, Pageable pageable);
+    Page<MasterApiNotif> findByTxAmountAndCreatedAtBetweenAndSentTrueAndReceivedTrue(Long txAmount, Date startDate, Date endDate, Pageable pageable);
+    Page<MasterApiNotif> findByTxReferenceNoContainingAndCreatedAtBetweenAndSentTrueAndReceivedTrue(String txReferenceNo, Date startDate, Date endDate, Pageable pageable);
+    Page<MasterApiNotif> findByCompanyIdAndCreatedAtBetweenAndSentTrueAndReceivedTrue(Integer companyId, Date startDate, Date endDate, Pageable pageable);
 }

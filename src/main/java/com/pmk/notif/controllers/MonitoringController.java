@@ -33,4 +33,16 @@ public class MonitoringController {
             return new ResponseMessage().success(response.getRc(), 400, response.getRm(), null);
         }
     }
+
+    @GetMapping("/subscriber")
+    public Map<String, Object> getMonitoringSubscriber(@RequestParam Map<String, String> reqParams) {
+
+        ResponseMsg response = monitoringNotifService.getMonitoringSubscribers(reqParams);
+
+        if (response.getRc().equals("00")) {
+            return new ResponseMessage().success(response.getRc(), 200, response.getRm(), response.getData());
+        } else {
+            return new ResponseMessage().success(response.getRc(), 400, response.getRm(), null);
+        }
+    }
 }
