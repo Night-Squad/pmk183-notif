@@ -172,7 +172,7 @@ public class MonitoringNotifService {
         } catch (Exception e) {
             e.printStackTrace();
             response.setRc("99");
-            response.setRm("Error Occured while fetching monitoring api notif data");
+            response.setRm("Error Occured while fetching monitoring notif data");
         }
 
         return response;
@@ -277,7 +277,7 @@ public class MonitoringNotifService {
         } catch (Exception e) {
             e.printStackTrace();
             response.setRc("99");
-            response.setRm("Error Occured while fetching monitoring api notif data");
+            response.setRm("Error Occured while fetching monitoring subscriber data");
         }
 
         return response;
