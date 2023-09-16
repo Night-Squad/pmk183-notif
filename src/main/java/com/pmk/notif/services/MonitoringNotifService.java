@@ -1,9 +1,10 @@
 package com.pmk.notif.services;
 
 import com.pmk.notif.Constants;
-import com.pmk.notif.controllers.MonitoringNotifController;
+import com.pmk.notif.controllers.payloads.NotifTrxPayload;
 import com.pmk.notif.dtos.MasterApiNotifDTO;
 import com.pmk.notif.models.pubsubs.MasterApiNotif;
+import com.pmk.notif.models.pubsubs.RefChannel;
 import com.pmk.notif.repositories.pubsubs.MasterApiNotifRepository;
 import com.pmk.notif.response.ResponseMsg;
 import org.apache.commons.logging.Log;
@@ -16,7 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -27,6 +29,48 @@ public class MonitoringNotifService {
 
     @Autowired
     private MasterApiNotifRepository masterApiNotifRepository;
+
+    @Transactional
+    public ResponseMsg saveNotifTrx(NotifTrxPayload body) {
+
+        ResponseMsg response = new ResponseMsg();
+
+        response.setRc("99");
+        response.setRm("ERROR");
+
+        try {
+
+            MasterApiNotif masterApiNotif = new MasterApiNotif();
+            masterApiNotif.setVaAccNo(body.getVaAccNo());
+            masterApiNotif.setTxAmount(body.getTxAmount());
+            masterApiNotif.setTxReferenceNo(body.getTxReferenceNo());
+            masterApiNotif.setCreatedAt(Timestamp.valueOf(body.getCreatedAt()));
+            masterApiNotif.setCreatedBy(body.getCreatedBy());
+            masterApiNotif.setTrxTime(Timestamp.valueOf(body.getTrxTime()));
+            RefChannel refChannel = new RefChannel();
+            refChannel.setId((long) 1);
+            masterApiNotif.setRefChannel(refChannel);
+            masterApiNotif.setCompanyId(body.getCompanyId());
+            masterApiNotif.setIsActive(true);
+            masterApiNotif.setSent(false);
+            masterApiNotif.setSentAt(null);
+            masterApiNotif.setReceived(null);
+            masterApiNotif.setReceivedAt(null);
+
+            masterApiNotifRepository.save(masterApiNotif);
+
+            response.setRc("00");
+            response.setRm("OK");
+            response.setData(null);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setRc("99");
+            response.setRm("Error Occured while insert notif trx data");
+        }
+
+        return response;
+    }
 
     public ResponseMsg getMonitoringNotifs(Map<String, String> params) {
 
