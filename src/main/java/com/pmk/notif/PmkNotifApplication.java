@@ -16,7 +16,7 @@ import java.util.TimeZone;
 public class PmkNotifApplication {
 
 	public static void main(String[] args) {
-        System.out.println("Testing cicd - 20230817");
+        System.out.println("Testing cicd - 20230817 - v2");
 		SpringApplication.run(PmkNotifApplication.class, args);
 	}
 
