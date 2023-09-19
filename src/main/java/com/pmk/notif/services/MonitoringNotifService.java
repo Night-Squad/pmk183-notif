@@ -3,6 +3,7 @@ package com.pmk.notif.services;
 import com.pmk.notif.Constants;
 import com.pmk.notif.controllers.payloads.NotifTrxPayload;
 import com.pmk.notif.dtos.MasterApiNotifDTO;
+import com.pmk.notif.kafka.service.KafkaService;
 import com.pmk.notif.models.pubsubs.MasterApiNotif;
 import com.pmk.notif.models.pubsubs.RefChannel;
 import com.pmk.notif.repositories.pubsubs.MasterApiNotifRepository;
@@ -30,6 +31,9 @@ public class MonitoringNotifService {
     @Autowired
     private MasterApiNotifRepository masterApiNotifRepository;
 
+    @Autowired
+    private KafkaService kafkaService;
+
     @Transactional
     public ResponseMsg saveNotifTrx(NotifTrxPayload body) {
 
@@ -52,12 +56,15 @@ public class MonitoringNotifService {
             masterApiNotif.setRefChannel(refChannel);
             masterApiNotif.setCompanyId(body.getCompanyId());
             masterApiNotif.setIsActive(true);
-            masterApiNotif.setSent(false);
+            masterApiNotif.setSent(true);
             masterApiNotif.setSentAt(null);
             masterApiNotif.setReceived(null);
             masterApiNotif.setReceivedAt(null);
 
             masterApiNotifRepository.save(masterApiNotif);
+
+            //send data to kafka
+            kafkaService.sendMessageToKafka(masterApiNotif);
 
             response.setRc("00");
             response.setRm("OK");
@@ -120,30 +127,30 @@ public class MonitoringNotifService {
 
                     switch (searchBy) {
                         case "vaAccNo":
-                            resultDataSet = masterApiNotifRepository.findByVaAccNoContainingAndCreatedAtBetweenAndSentOrSentAndReceived(searchValue,
-                                    tglAwalFormated, tglAkhirFormated, null, true, null, pageable);
+                            resultDataSet = masterApiNotifRepository.findByVaAccNoContainingAndTrxTimeBetweenAndSentAndReceived(searchValue,
+                                    tglAwalFormated, tglAkhirFormated, true, pageable);
                             break;
                         case "txAmount":
-                            resultDataSet = masterApiNotifRepository.findByTxAmountAndCreatedAtBetweenAndSentOrSentAndReceived(Long.parseLong(searchValue),
-                                    tglAwalFormated, tglAkhirFormated, null, true, null, pageable);
+                            resultDataSet = masterApiNotifRepository.findByTxAmountAndTrxTimeBetweenAndSentAndReceived(Long.parseLong(searchValue),
+                                    tglAwalFormated, tglAkhirFormated, true, pageable);
                             break;
                         case "txReferenceNo":
-                            resultDataSet = masterApiNotifRepository.findByTxReferenceNoContainingAndCreatedAtBetweenAndSentOrSentAndReceived(searchValue,
-                                    tglAwalFormated, tglAkhirFormated, null, true, null, pageable);
+                            resultDataSet = masterApiNotifRepository.findByTxReferenceNoContainingAndTrxTimeBetweenAndSentAndReceived(searchValue,
+                                    tglAwalFormated, tglAkhirFormated, true, pageable);
                             break;
                         case "companyId":
-                            resultDataSet = masterApiNotifRepository.findByCompanyIdAndCreatedAtBetweenAndSentOrSentAndReceived(Integer.parseInt(searchValue),
-                                    tglAwalFormated, tglAkhirFormated, null, true, null, pageable);
+                            resultDataSet = masterApiNotifRepository.findByCompanyIdAndTrxTimeBetweenAndSentAndReceived(Integer.parseInt(searchValue),
+                                    tglAwalFormated, tglAkhirFormated, true, pageable);
                             break;
                     }
                     // add case to add another filter
 
                 } else {
-                    resultDataSet = masterApiNotifRepository.findByCreatedAtBetweenAndSentOrSentAndReceived(tglAwalFormated, tglAkhirFormated,
-                            null, true, null ,pageable);
+                    resultDataSet = masterApiNotifRepository.findByTrxTimeBetweenAndSentAndReceived(tglAwalFormated, tglAkhirFormated,
+                            true, pageable);
                 }
             } else {
-                resultDataSet = masterApiNotifRepository.findBySentOrSentAndReceived(null, true, null, pageable);
+                resultDataSet = masterApiNotifRepository.findBySentAndReceived(true, pageable);
             }
 
             if (resultDataSet != null) {
@@ -226,26 +233,26 @@ public class MonitoringNotifService {
 
                     switch (searchBy) {
                         case "vaAccNo":
-                            resultDataSet = masterApiNotifRepository.findByVaAccNoContainingAndCreatedAtBetweenAndSentTrueAndReceivedTrue(searchValue,
+                            resultDataSet = masterApiNotifRepository.findByVaAccNoContainingAndTrxTimeBetweenAndSentTrueAndReceivedTrue(searchValue,
                                     tglAwalFormated, tglAkhirFormated, pageable);
                             break;
                         case "txAmount":
-                            resultDataSet = masterApiNotifRepository.findByTxAmountAndCreatedAtBetweenAndSentTrueAndReceivedTrue(Long.parseLong(searchValue),
+                            resultDataSet = masterApiNotifRepository.findByTxAmountAndTrxTimeBetweenAndSentTrueAndReceivedTrue(Long.parseLong(searchValue),
                                     tglAwalFormated, tglAkhirFormated, pageable);
                             break;
                         case "txReferenceNo":
-                            resultDataSet = masterApiNotifRepository.findByTxReferenceNoContainingAndCreatedAtBetweenAndSentTrueAndReceivedTrue(searchValue,
+                            resultDataSet = masterApiNotifRepository.findByTxReferenceNoContainingAndTrxTimeBetweenAndSentTrueAndReceivedTrue(searchValue,
                                     tglAwalFormated, tglAkhirFormated,pageable);
                             break;
                         case "companyId":
-                            resultDataSet = masterApiNotifRepository.findByCompanyIdAndCreatedAtBetweenAndSentTrueAndReceivedTrue(Integer.parseInt(searchValue),
+                            resultDataSet = masterApiNotifRepository.findByCompanyIdAndTrxTimeBetweenAndSentTrueAndReceivedTrue(Integer.parseInt(searchValue),
                                     tglAwalFormated, tglAkhirFormated, pageable);
                             break;
                     }
                     // add case to add another filter
 
                 } else {
-                    resultDataSet = masterApiNotifRepository.findByCreatedAtBetweenAndSentTrueAndReceivedTrue(tglAwalFormated, tglAkhirFormated, pageable);
+                    resultDataSet = masterApiNotifRepository.findByTrxTimeBetweenAndSentTrueAndReceivedTrue(tglAwalFormated, tglAkhirFormated, pageable);
                 }
             } else {
                 resultDataSet = masterApiNotifRepository.findBySentTrueAndReceivedTrue(pageable);
