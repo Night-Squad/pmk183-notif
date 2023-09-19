@@ -20,7 +20,7 @@ public class NotifTrxController {
     @Autowired
     private MonitoringNotifService monitoringNotifService;
 
-    @PostMapping("/")
+    @PostMapping()
     public Map<String, Object> saveNotifTrx(@RequestBody NotifTrxPayload body) {
 
         ResponseMsg response = monitoringNotifService.saveNotifTrx(body);

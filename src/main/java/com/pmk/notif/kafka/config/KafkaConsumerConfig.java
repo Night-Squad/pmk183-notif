@@ -18,40 +18,40 @@ import org.springframework.kafka.listener.ContainerProperties;
 @Configuration
 public class KafkaConsumerConfig {
     
-//    @Value("${spring.kafka.bootstrap-servers}")
-//    private String bootstrapServers;
-//
-//    public Map<String, Object> consumerConfig() {
-//        Map<String, Object> props = new HashMap<>();
-//        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-//        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
-//        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
-//
-//
-//        return props;
-//    }
-//
-//
-//    public ConsumerFactory<String, String> consumerFactory() {
-//        return new DefaultKafkaConsumerFactory<>(consumerConfig());
-//    }
-//
-//    @Bean
-//    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> factory(
-//            ConsumerFactory<String, String> consumerFactory
-//    ) {
-//        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-//        factory.setConsumerFactory(consumerFactory);
-//
-//        return factory;
-//    }
-//
-//    @Bean
-//    public ConcurrentKafkaListenerContainerFactory<String, Object> greetingKafkaListenerContainerFactory() {
-//        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-//        // Other configurations
-//        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
-//        factory.afterPropertiesSet();
-//        return factory;
-//    }
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
+
+    public Map<String, Object> consumerConfig() {
+        Map<String, Object> props = new HashMap<>();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringSerializer.class);
+
+
+        return props;
+    }
+
+
+    public ConsumerFactory<String, String> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfig());
+    }
+
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> factory(
+            ConsumerFactory<String, String> consumerFactory
+    ) {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory);
+
+        return factory;
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, Object> greetingKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        // Other configurations
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
+        factory.afterPropertiesSet();
+        return factory;
+    }
 }
