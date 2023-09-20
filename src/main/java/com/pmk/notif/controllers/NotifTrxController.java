@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/api/v1/notif-trx", produces = "application/json")
+@RequestMapping(value = "/api/v1", produces = "application/json")
 public class NotifTrxController {
 
     private static final Log log = LogFactory.getLog(NotifTrxController.class);
@@ -20,7 +20,7 @@ public class NotifTrxController {
     @Autowired
     private MonitoringNotifService monitoringNotifService;
 
-    @PostMapping()
+    @PostMapping("/notif-trx")
     public Map<String, Object> saveNotifTrx(@RequestBody NotifTrxPayload body) {
 
         ResponseMsg response = monitoringNotifService.saveNotifTrx(body);
