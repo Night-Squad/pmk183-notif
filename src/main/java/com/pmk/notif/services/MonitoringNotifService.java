@@ -68,7 +68,7 @@ public class MonitoringNotifService {
 
             response.setRc("00");
             response.setRm("OK");
-            response.setData(null);
+            response.setData(body);
 
         } catch (Exception e) {
             e.printStackTrace();
