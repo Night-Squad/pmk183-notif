@@ -140,7 +140,7 @@ public class MonitoringNotifService {
             masterProduceHist.setResponse(ex.getMessage() != null ? ex.getMessage() : ex.getLocalizedMessage());
         }
         masterProduceHist.setCreatedBy("system");
-        masterProduceHist.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        masterProduceHist.setCreatedAt(getCurrentTimeService.getCurrentTime());
         masterProduceHistRepository.save(masterProduceHist);
     }
 
