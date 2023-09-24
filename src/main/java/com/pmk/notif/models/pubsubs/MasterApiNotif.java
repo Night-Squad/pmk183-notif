@@ -53,4 +53,6 @@ public class MasterApiNotif {
     private RefChannel refChannel;
 
     private Integer companyId;
+
+    private Boolean sentFailed;
 }
