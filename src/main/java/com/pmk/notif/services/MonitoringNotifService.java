@@ -1,22 +1,30 @@
 package com.pmk.notif.services;
 
+import com.google.gson.Gson;
 import com.pmk.notif.Constants;
 import com.pmk.notif.controllers.payloads.NotifTrxPayload;
 import com.pmk.notif.dtos.MasterApiNotifDTO;
 import com.pmk.notif.kafka.service.KafkaService;
 import com.pmk.notif.models.pubsubs.MasterApiNotif;
+import com.pmk.notif.models.pubsubs.MasterProduceHist;
 import com.pmk.notif.models.pubsubs.RefChannel;
 import com.pmk.notif.repositories.pubsubs.MasterApiNotifRepository;
+import com.pmk.notif.repositories.pubsubs.MasterProduceHistRepository;
 import com.pmk.notif.response.ResponseMsg;
+import com.pmk.notif.utils.GetCurrentTimeService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
@@ -32,7 +40,19 @@ public class MonitoringNotifService {
     private MasterApiNotifRepository masterApiNotifRepository;
 
     @Autowired
+    private MasterProduceHistRepository masterProduceHistRepository;
+
+    @Autowired
     private KafkaService kafkaService;
+
+    @Autowired
+    private GetCurrentTimeService getCurrentTimeService;
+
+    @Value("${kafka-topic}")
+    private String kafkaTopic;
+
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
 
     @Transactional
     public ResponseMsg saveNotifTrx(NotifTrxPayload body) {
@@ -56,15 +76,44 @@ public class MonitoringNotifService {
             masterApiNotif.setRefChannel(refChannel);
             masterApiNotif.setCompanyId(body.getCompanyId());
             masterApiNotif.setIsActive(true);
-            masterApiNotif.setSent(true);
+            masterApiNotif.setSent(null);
             masterApiNotif.setSentAt(null);
             masterApiNotif.setReceived(null);
             masterApiNotif.setReceivedAt(null);
+            masterApiNotif.setSentFailed(null);
 
-            masterApiNotifRepository.save(masterApiNotif);
+            MasterApiNotif savedMasterApiNotif = masterApiNotifRepository.save(masterApiNotif);
 
             //send data to kafka
-            kafkaService.sendMessageToKafka(masterApiNotif);
+            try {
+                ListenableFuture<SendResult<String, String>> kafkaResponse = kafkaService.sendMessageToKafka(masterApiNotif);
+
+                kafkaResponse.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+                    @Override
+                    public void onFailure(Throwable ex) {
+                        //update sent false & sent_failed true
+                        savedMasterApiNotif.setSent(false);
+                        savedMasterApiNotif.setSentFailed(true);
+                        MasterApiNotif updatedMasterApiNotif = masterApiNotifRepository.save(savedMasterApiNotif);
+
+                        //insert to masterProduceHist
+                        insertMasterProduceHist(ex, updatedMasterApiNotif.getId(), masterApiNotif, false);
+                    }
+
+                    @Override
+                    public void onSuccess(SendResult<String, String> result) {
+                        //update sent true && sent_at jam terkirim
+                        savedMasterApiNotif.setSent(true);
+                        savedMasterApiNotif.setSentAt(getCurrentTimeService.getCurrentTime());
+                        MasterApiNotif updatedMasterApiNotif = masterApiNotifRepository.save(savedMasterApiNotif);
+
+                        //insert to masterProduceHist
+                        insertMasterProduceHist(null, updatedMasterApiNotif.getId(), masterApiNotif, true);
+                    }
+                });
+            } catch (Exception e) {
+                log.error("Error occured when sending message to kafka : " + e.getMessage());
+            }
 
             response.setRc("00");
             response.setRm("OK");
@@ -77,6 +126,22 @@ public class MonitoringNotifService {
         }
 
         return response;
+    }
+
+    private void insertMasterProduceHist(Throwable ex, Long id, MasterApiNotif masterApiNotif, Boolean isSuccess) {
+        MasterProduceHist masterProduceHist = new MasterProduceHist();
+        masterProduceHist.setApiNotifId(id);
+        masterProduceHist.setMessage(new Gson().toJson(masterApiNotif));
+        masterProduceHist.setTopic(kafkaTopic);
+        masterProduceHist.setKafkaHost(bootstrapServers);
+        if(isSuccess) {
+            masterProduceHist.setResponse("success");
+        } else {
+            masterProduceHist.setResponse(ex.getMessage() != null ? ex.getMessage() : ex.getLocalizedMessage());
+        }
+        masterProduceHist.setCreatedBy("system");
+        masterProduceHist.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        masterProduceHistRepository.save(masterProduceHist);
     }
 
     public ResponseMsg getMonitoringNotifs(Map<String, String> params) {
