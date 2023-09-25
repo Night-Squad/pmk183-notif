@@ -28,4 +28,10 @@ public class NotifTrxPayload {
     private Long channelId;
     @JsonProperty("company_id")
     private Integer companyId;
+    @JsonProperty("tx_type")
+    private Integer txType;
+    @JsonProperty("tx_code")
+    private Integer txCode;
+    @JsonProperty("tx_desc")
+    private Integer txDesc;
 }

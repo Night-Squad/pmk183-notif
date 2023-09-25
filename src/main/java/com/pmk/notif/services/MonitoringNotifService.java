@@ -72,7 +72,7 @@ public class MonitoringNotifService {
             masterApiNotif.setCreatedBy(body.getCreatedBy());
             masterApiNotif.setTrxTime(Timestamp.valueOf(body.getTrxTime()));
             RefChannel refChannel = new RefChannel();
-            refChannel.setId((long) 1);
+            refChannel.setId(body.getChannelId());
             masterApiNotif.setRefChannel(refChannel);
             masterApiNotif.setCompanyId(body.getCompanyId());
             masterApiNotif.setIsActive(true);
