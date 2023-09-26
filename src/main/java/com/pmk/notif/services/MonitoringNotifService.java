@@ -8,6 +8,7 @@ import com.pmk.notif.kafka.service.KafkaService;
 import com.pmk.notif.models.pubsubs.MasterApiNotif;
 import com.pmk.notif.models.pubsubs.MasterProduceHist;
 import com.pmk.notif.models.pubsubs.RefChannel;
+import com.pmk.notif.models.pubsubs.RefNotifCode;
 import com.pmk.notif.repositories.pubsubs.MasterApiNotifRepository;
 import com.pmk.notif.repositories.pubsubs.MasterProduceHistRepository;
 import com.pmk.notif.response.ResponseMsg;
@@ -72,7 +73,7 @@ public class MonitoringNotifService {
             masterApiNotif.setCreatedBy(body.getCreatedBy());
             masterApiNotif.setTrxTime(Timestamp.valueOf(body.getTrxTime()));
             RefChannel refChannel = new RefChannel();
-            refChannel.setId((long) 1);
+            refChannel.setId(body.getChannelId());
             masterApiNotif.setRefChannel(refChannel);
             masterApiNotif.setCompanyId(body.getCompanyId());
             masterApiNotif.setIsActive(true);
@@ -141,6 +142,9 @@ public class MonitoringNotifService {
         }
         masterProduceHist.setCreatedBy("system");
         masterProduceHist.setCreatedAt(getCurrentTimeService.getCurrentTime());
+        RefNotifCode refNotifCode = new RefNotifCode();
+        refNotifCode.setId((long) 1);
+        masterProduceHist.setRefNotifCode(refNotifCode);
         masterProduceHistRepository.save(masterProduceHist);
     }
 

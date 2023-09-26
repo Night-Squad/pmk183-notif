@@ -26,5 +26,8 @@ public class MasterProduceHist {
     private String response;
     private Timestamp createdAt;
     private String createdBy;
-
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "notif_code_id", referencedColumnName = "id")
+    @ToString.Exclude
+    private RefNotifCode refNotifCode;
 }
