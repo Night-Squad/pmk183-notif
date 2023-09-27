@@ -60,4 +60,6 @@ public class MasterApiNotif {
     private Integer txType;
     @Transient
     private Integer txCode;
+    @Transient
+    private String txDesc;
 }

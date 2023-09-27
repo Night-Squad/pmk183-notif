@@ -33,5 +33,5 @@ public class NotifTrxPayload {
     @JsonProperty("tx_code")
     private Integer txCode;
     @JsonProperty("tx_desc")
-    private Integer txDesc;
+    private String txDesc;
 }
