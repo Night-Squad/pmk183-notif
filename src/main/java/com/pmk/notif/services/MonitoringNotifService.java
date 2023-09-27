@@ -96,23 +96,25 @@ public class MonitoringNotifService {
                     @Override
                     public void onFailure(Throwable ex) {
                         //update sent false & sent_failed true
-                        savedMasterApiNotif.setSent(false);
-                        savedMasterApiNotif.setSentFailed(true);
-                        MasterApiNotif updatedMasterApiNotif = masterApiNotifRepository.save(savedMasterApiNotif);
+                        MasterApiNotif dataWillBeUpdated = savedMasterApiNotif;
+                        dataWillBeUpdated.setSent(false);
+                        dataWillBeUpdated.setSentFailed(true);
+                        MasterApiNotif updatedMasterApiNotif = masterApiNotifRepository.save(dataWillBeUpdated);
 
                         //insert to masterProduceHist
-                        insertMasterProduceHist(ex, updatedMasterApiNotif.getId(), masterApiNotif, false);
+                        insertMasterProduceHist(ex, updatedMasterApiNotif, masterApiNotif, false);
                     }
 
                     @Override
                     public void onSuccess(SendResult<String, String> result) {
                         //update sent true && sent_at jam terkirim
-                        savedMasterApiNotif.setSent(true);
-                        savedMasterApiNotif.setSentAt(getCurrentTimeService.getCurrentTime());
-                        MasterApiNotif updatedMasterApiNotif = masterApiNotifRepository.save(savedMasterApiNotif);
+                        MasterApiNotif dataWillBeUpdated = savedMasterApiNotif;
+                        dataWillBeUpdated.setSent(true);
+                        dataWillBeUpdated.setSentAt(getCurrentTimeService.getCurrentTime());
+                        MasterApiNotif updatedMasterApiNotif = masterApiNotifRepository.save(dataWillBeUpdated);
 
                         //insert to masterProduceHist
-                        insertMasterProduceHist(null, updatedMasterApiNotif.getId(), masterApiNotif, true);
+                        insertMasterProduceHist(null, updatedMasterApiNotif, masterApiNotif, true);
                     }
                 });
             } catch (Exception e) {
@@ -132,9 +134,9 @@ public class MonitoringNotifService {
         return response;
     }
 
-    private void insertMasterProduceHist(Throwable ex, Long id, MasterApiNotif masterApiNotif, Boolean isSuccess) {
+    private void insertMasterProduceHist(Throwable ex, MasterApiNotif updatedMasterApiNotif, MasterApiNotif masterApiNotif, Boolean isSuccess) {
         MasterProduceHist masterProduceHist = new MasterProduceHist();
-        masterProduceHist.setApiNotifId(id);
+        masterProduceHist.setMasterApiNotif(updatedMasterApiNotif);
         masterProduceHist.setMessage(new Gson().toJson(masterApiNotif));
         masterProduceHist.setTopic(kafkaTopic);
         masterProduceHist.setKafkaHost(bootstrapServers);
