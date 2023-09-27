@@ -5,6 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @ToString
 @Getter
@@ -62,4 +64,8 @@ public class MasterApiNotif {
     private Integer txCode;
     @Transient
     private String txDesc;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterApiNotif")
+    @ToString.Exclude
+    private Set<MasterProduceHist> masterProduceHists = new HashSet<MasterProduceHist>(0);
 }

@@ -19,7 +19,10 @@ public class MasterProduceHist {
     @SequenceGenerator(name = "generator_master_produce_hist_id_seq", sequenceName = "master_produce_hist_id_seq", schema = "public", allocationSize = 1)
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
-    private Long apiNotifId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "api_notif_id", referencedColumnName = "id")
+    @ToString.Exclude
+    private MasterApiNotif masterApiNotif;
     private String kafkaHost;
     private String topic;
     private String message;
