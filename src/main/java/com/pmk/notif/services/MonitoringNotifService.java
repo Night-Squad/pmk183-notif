@@ -82,6 +82,8 @@ public class MonitoringNotifService {
             masterApiNotif.setReceived(null);
             masterApiNotif.setReceivedAt(null);
             masterApiNotif.setSentFailed(null);
+            masterApiNotif.setTxType(body.getTxType());
+            masterApiNotif.setTxCode(body.getTxCode());
 
             MasterApiNotif savedMasterApiNotif = masterApiNotifRepository.save(masterApiNotif);
 

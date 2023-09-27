@@ -55,4 +55,9 @@ public class MasterApiNotif {
     private Integer companyId;
 
     private Boolean sentFailed;
+
+    @Transient
+    private Integer txType;
+    @Transient
+    private Integer txCode;
 }
