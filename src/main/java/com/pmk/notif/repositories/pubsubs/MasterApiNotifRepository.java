@@ -19,7 +19,7 @@ public interface MasterApiNotifRepository extends JpaRepository<MasterApiNotif, 
     Page<MasterApiNotif> findByVaAccNoContainingAndTrxTimeBetweenAndSentAndReceived(String vaAccNo, Date startDate, Date endDate,  Pageable pageable);
     @Query(value = "SELECT * FROM master_api_notif WHERE tx_amount=:txAmount AND (trx_time BETWEEN :startDate AND :endDate ) AND (sent IS true OR sent IS NULL) AND received IS NULL", nativeQuery = true)
     Page<MasterApiNotif> findByTxAmountAndTrxTimeBetweenAndSentAndReceived(Long txAmount, Date startDate, Date endDate,  Pageable pageable);
-    @Query(value = "SELECT * FROM master_api_notif WHERE tx_reference LIKE %:txReferenceNo% AND (trx_time BETWEEN :startDate AND :endDate ) AND (sent IS true OR sent IS NULL) AND received IS NULL", nativeQuery = true)
+    @Query(value = "SELECT * FROM master_api_notif WHERE tx_reference_no LIKE %:txReferenceNo% AND (trx_time BETWEEN :startDate AND :endDate ) AND (sent IS true OR sent IS NULL) AND received IS NULL", nativeQuery = true)
     Page<MasterApiNotif> findByTxReferenceNoContainingAndTrxTimeBetweenAndSentAndReceived(String txReferenceNo, Date startDate, Date endDate,  Pageable pageable);
     @Query(value = "SELECT * FROM master_api_notif WHERE company_id=:companyId AND (trx_time BETWEEN :startDate AND :endDate ) AND (sent IS true OR sent IS NULL) AND received IS NULL", nativeQuery = true)
     Page<MasterApiNotif> findByCompanyIdAndTrxTimeBetweenAndSentAndReceived(Integer companyId, Date startDate, Date endDate,  Pageable pageable);
