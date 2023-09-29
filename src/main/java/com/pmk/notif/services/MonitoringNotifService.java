@@ -197,34 +197,42 @@ public class MonitoringNotifService {
                 Date tglAwalFormated = formatter.parse(startDate + " 00:00:00");
                 Date tglAkhirFormated = formatter.parse(endDate + " 23:59:59");
 
+                log.info(startDate.toString());
+                log.info(endDate.toString());
+                log.info(tglAwalFormated.toString());
+                log.info(tglAkhirFormated.toString());
+
                 if (searchBy != null && searchValue != null) {
+
+                    log.info(searchBy);
+                    log.info(searchValue);
 
                     switch (searchBy) {
                         case "vaAccNo":
                             resultDataSet = masterApiNotifRepository.findByVaAccNoContainingAndTrxTimeBetweenAndSentAndReceived(searchValue,
-                                    tglAwalFormated, tglAkhirFormated, true, pageable);
+                                    tglAwalFormated, tglAkhirFormated, pageable);
                             break;
                         case "txAmount":
                             resultDataSet = masterApiNotifRepository.findByTxAmountAndTrxTimeBetweenAndSentAndReceived(Long.parseLong(searchValue),
-                                    tglAwalFormated, tglAkhirFormated, true, pageable);
+                                    tglAwalFormated, tglAkhirFormated, pageable);
                             break;
                         case "txReferenceNo":
                             resultDataSet = masterApiNotifRepository.findByTxReferenceNoContainingAndTrxTimeBetweenAndSentAndReceived(searchValue,
-                                    tglAwalFormated, tglAkhirFormated, true, pageable);
+                                    tglAwalFormated, tglAkhirFormated, pageable);
                             break;
                         case "companyId":
                             resultDataSet = masterApiNotifRepository.findByCompanyIdAndTrxTimeBetweenAndSentAndReceived(Integer.parseInt(searchValue),
-                                    tglAwalFormated, tglAkhirFormated, true, pageable);
+                                    tglAwalFormated, tglAkhirFormated, pageable);
                             break;
                     }
                     // add case to add another filter
 
                 } else {
                     resultDataSet = masterApiNotifRepository.findByTrxTimeBetweenAndSentAndReceived(tglAwalFormated, tglAkhirFormated,
-                            true, pageable);
+                            pageable);
                 }
             } else {
-                resultDataSet = masterApiNotifRepository.findBySentAndReceived(true, pageable);
+                resultDataSet = masterApiNotifRepository.findBySentAndReceived(pageable);
             }
 
             if (resultDataSet != null) {

@@ -23,30 +23,43 @@ public class MasterApiNotif {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
+    @Column(name = "va_acc_no")
     private String vaAccNo;
 
+    @Column(name = "tx_amount")
     private Long txAmount;
 
+    @Column(name = "tx_reference_no")
     private String txReferenceNo;
 
+    @Column(name = "created_at")
     private Timestamp createdAt;
 
+    @Column(name = "created_by")
     private String createdBy;
 
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
+    @Column(name = "updated_by")
     private String updatedBy;
 
+    @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "sent")
     private Boolean sent;
 
+    @Column(name = "received")
     private Boolean received;
 
+    @Column(name = "received_at")
     private Timestamp receivedAt;
 
+    @Column(name = "sent_at")
     private Timestamp sentAt;
 
+    @Column(name = "trx_time")
     private Timestamp trxTime;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
@@ -54,8 +67,10 @@ public class MasterApiNotif {
     @ToString.Exclude
     private RefChannel refChannel;
 
+    @Column(name = "company_id")
     private Integer companyId;
 
+    @Column(name = "sent_failed")
     private Boolean sentFailed;
 
     @Transient
