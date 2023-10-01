@@ -73,6 +73,12 @@ public class MasterApiNotif {
     @Column(name = "sent_failed")
     private Boolean sentFailed;
 
+    @Column(name = "channel_code")
+    private String channelCode;
+
+    @Column(name = "trn_code")
+    private String trnCode;
+
     @Transient
     private Integer txType;
     @Transient

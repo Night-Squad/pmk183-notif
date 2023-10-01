@@ -72,9 +72,10 @@ public class MonitoringNotifService {
             masterApiNotif.setCreatedAt(Timestamp.valueOf(body.getCreatedAt()));
             masterApiNotif.setCreatedBy(body.getCreatedBy());
             masterApiNotif.setTrxTime(Timestamp.valueOf(body.getTrxTime()));
-            RefChannel refChannel = new RefChannel();
-            refChannel.setId(body.getChannelId());
-            masterApiNotif.setRefChannel(refChannel);
+            //disabled
+//            RefChannel refChannel = new RefChannel();
+//            refChannel.setId(body.getChannelId());
+//            masterApiNotif.setRefChannel(refChannel);
             masterApiNotif.setCompanyId(body.getCompanyId());
             masterApiNotif.setIsActive(true);
             masterApiNotif.setSent(null);
@@ -83,8 +84,11 @@ public class MonitoringNotifService {
             masterApiNotif.setReceivedAt(null);
             masterApiNotif.setSentFailed(null);
             masterApiNotif.setTxType(body.getTxType());
-            masterApiNotif.setTxCode(body.getTxCode());
+            //disabled
+//            masterApiNotif.setTxCode(body.getTxCode());
             masterApiNotif.setTxDesc(body.getTxDesc());
+            masterApiNotif.setTrnCode(body.getTrnCode());
+            masterApiNotif.setChannelCode(body.getChannelCode());
 
             MasterApiNotif savedMasterApiNotif = masterApiNotifRepository.save(masterApiNotif);
 

@@ -34,4 +34,8 @@ public class NotifTrxPayload {
     private Integer txCode;
     @JsonProperty("tx_desc")
     private String txDesc;
+    @JsonProperty("channel_code")
+    private String channelCode;
+    @JsonProperty("trn_code")
+    private String trnCode;
 }
