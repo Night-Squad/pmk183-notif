@@ -18,8 +18,8 @@ public class NotifTrxPayload {
     private Long txAmount;
     @JsonProperty("tx_reference_no")
     private String txReferenceNo;
-    @JsonProperty("created_at")
-    private String createdAt;
+//    @JsonProperty("created_at")
+//    private String createdAt;
     @JsonProperty("created_by")
     private String createdBy;
     @JsonProperty("trx_time")

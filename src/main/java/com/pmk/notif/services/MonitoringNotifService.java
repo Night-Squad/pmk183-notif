@@ -69,7 +69,8 @@ public class MonitoringNotifService {
             masterApiNotif.setVaAccNo(body.getVaAccNo());
             masterApiNotif.setTxAmount(body.getTxAmount());
             masterApiNotif.setTxReferenceNo(body.getTxReferenceNo());
-            masterApiNotif.setCreatedAt(Timestamp.valueOf(body.getCreatedAt()));
+//            masterApiNotif.setCreatedAt(Timestamp.valueOf(body.getCreatedAt()));
+            masterApiNotif.setCreatedAt(getCurrentTimeService.getCurrentTime());
             masterApiNotif.setCreatedBy(body.getCreatedBy());
             masterApiNotif.setTrxTime(Timestamp.valueOf(body.getTrxTime()));
             //disabled
