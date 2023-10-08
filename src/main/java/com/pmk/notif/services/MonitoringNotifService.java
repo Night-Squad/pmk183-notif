@@ -90,6 +90,8 @@ public class MonitoringNotifService {
             masterApiNotif.setTxDesc(body.getTxDesc());
             masterApiNotif.setTrnCode(body.getTrnCode());
             masterApiNotif.setChannelCode(body.getChannelCode());
+            masterApiNotif.setTxType(body.getTxType());
+            masterApiNotif.setTxDesc(body.getTxDesc());
 
             MasterApiNotif savedMasterApiNotif = masterApiNotifRepository.save(masterApiNotif);
 

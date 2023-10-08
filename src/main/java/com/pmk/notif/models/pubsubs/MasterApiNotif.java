@@ -79,11 +79,13 @@ public class MasterApiNotif {
     @Column(name = "trn_code")
     private String trnCode;
 
-    @Transient
-    private Integer txType;
+    @Column(name = "tx_type")
+    private Short txType;
+
     @Transient
     private Integer txCode;
-    @Transient
+
+    @Column(name = "tx_desc")
     private String txDesc;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterApiNotif")

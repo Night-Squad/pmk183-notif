@@ -29,7 +29,7 @@ public class NotifTrxPayload {
     @JsonProperty("company_id")
     private Integer companyId;
     @JsonProperty("tx_type")
-    private Integer txType;
+    private Short txType;
 //    @JsonProperty("tx_code")
 //    private Integer txCode;
     @JsonProperty("tx_desc")
