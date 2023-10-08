@@ -4,12 +4,29 @@ import com.pmk.notif.models.pubsubs.MasterApiNotif;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 
+@Repository
 public interface MasterApiNotifRepository extends JpaRepository<MasterApiNotif, Long> {
+
+    MasterApiNotif findFirstById(Long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE master_api_notif SET sent = true, sent_at = :currentTime WHERE id = :id", nativeQuery = true)
+    void updateSentStatus(Long id, Timestamp currentTime);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE master_api_notif SET sent_failed = true WHERE id = :id", nativeQuery = true)
+    void updateSentFailedStatus(Long id);
 
     @Query(value = "SELECT * FROM master_api_notif WHERE (sent IS true OR sent IS NULL) AND received IS NULL", nativeQuery = true)
     Page<MasterApiNotif> findBySentAndReceived( Pageable pageable);

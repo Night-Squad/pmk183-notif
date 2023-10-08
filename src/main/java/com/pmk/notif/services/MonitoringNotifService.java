@@ -71,7 +71,7 @@ public class MonitoringNotifService {
             masterApiNotif.setTxReferenceNo(body.getTxReferenceNo());
 //            masterApiNotif.setCreatedAt(Timestamp.valueOf(body.getCreatedAt()));
             masterApiNotif.setCreatedAt(getCurrentTimeService.getCurrentTime());
-            masterApiNotif.setCreatedBy(body.getCreatedBy());
+            masterApiNotif.setCreatedBy("system");
             masterApiNotif.setTrxTime(Timestamp.valueOf(body.getTrxTime()));
             //disabled
 //            RefChannel refChannel = new RefChannel();

@@ -20,18 +20,18 @@ public class NotifTrxPayload {
     private String txReferenceNo;
 //    @JsonProperty("created_at")
 //    private String createdAt;
-    @JsonProperty("created_by")
-    private String createdBy;
+//    @JsonProperty("created_by")
+//    private String createdBy;
     @JsonProperty("trx_time")
     private String trxTime;
-    @JsonProperty("channel_id")
-    private Long channelId;
+//    @JsonProperty("channel_id")
+//    private Long channelId;
     @JsonProperty("company_id")
     private Integer companyId;
     @JsonProperty("tx_type")
     private Integer txType;
-    @JsonProperty("tx_code")
-    private Integer txCode;
+//    @JsonProperty("tx_code")
+//    private Integer txCode;
     @JsonProperty("tx_desc")
     private String txDesc;
     @JsonProperty("channel_code")
