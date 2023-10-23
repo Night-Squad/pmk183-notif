@@ -9,8 +9,14 @@ import com.pmk.notif.models.pubsubs.MasterApiNotif;
 import com.pmk.notif.models.pubsubs.MasterProduceHist;
 import com.pmk.notif.models.pubsubs.RefChannel;
 import com.pmk.notif.models.pubsubs.RefNotifCode;
+import com.pmk.notif.models.va.MasterCustomer;
+import com.pmk.notif.models.va.ReffChannel;
+import com.pmk.notif.models.va.ReffTxCode;
 import com.pmk.notif.repositories.pubsubs.MasterApiNotifRepository;
 import com.pmk.notif.repositories.pubsubs.MasterProduceHistRepository;
+import com.pmk.notif.repositories.va.MasterCustomerRepository;
+import com.pmk.notif.repositories.va.ReffChannelRepository;
+import com.pmk.notif.repositories.va.ReffTxCodeRepository;
 import com.pmk.notif.response.ResponseMsg;
 import com.pmk.notif.utils.GetCurrentTimeService;
 import org.apache.commons.logging.Log;
@@ -49,6 +55,15 @@ public class MonitoringNotifService {
     @Autowired
     private GetCurrentTimeService getCurrentTimeService;
 
+    @Autowired
+    private MasterCustomerRepository masterCustomerRepository;
+
+    @Autowired
+    private ReffChannelRepository reffChannelRepository;
+
+    @Autowired
+    private ReffTxCodeRepository reffTxCodeRepository;
+
     @Value("${kafka-topic}")
     private String kafkaTopic;
 
@@ -64,6 +79,43 @@ public class MonitoringNotifService {
         response.setRm("ERROR");
 
         try {
+
+            //validate trncode and channelcode
+            Optional<ReffChannel> reffChannel = reffChannelRepository.findFirstByChannelCode(body.getChannelCode());
+            Optional<ReffTxCode> reffTxCode = reffTxCodeRepository.findFirstByTrnCode(body.getTrnCode());
+
+            if(!reffChannel.isPresent()) {
+                response.setRc("99");
+                response.setRm("Channel code : " + body.getChannelCode() + " tidak ditemukan");
+                return response;
+            }
+
+            if(!reffTxCode.isPresent()) {
+                response.setRc("99");
+                response.setRm("Trn code : " + body.getTrnCode() + " tidak ditemukan");
+                return response;
+            }
+
+            //validate balance
+            MasterCustomer masterCustomer = masterCustomerRepository
+                    .findByVaAccNoAndBitId(body.getVaAccNo(), (short) 8).orElse(null);
+
+            if(masterCustomer == null) {
+                response.setRc("99");
+                response.setRm("Customer dengan va_acc_no : " + body.getVaAccNo() + " tidak ditemukan");
+                return response;
+            } else {
+                if(body.getTxType() == 0) {
+                    Long currentBalance = Long.parseLong(masterCustomer.getValue());
+                    Long finalBalance = currentBalance - body.getTxAmount();
+
+                    if(finalBalance < 0) {
+                        response.setRc("99");
+                        response.setRm("Saldo tidak mencukupi");
+                        return response;
+                    }
+                }
+            }
 
             MasterApiNotif masterApiNotif = new MasterApiNotif();
             masterApiNotif.setVaAccNo(body.getVaAccNo());
