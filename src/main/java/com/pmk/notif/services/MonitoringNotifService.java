@@ -431,4 +431,113 @@ public class MonitoringNotifService {
         return response;
     }
 
+    public ResponseMsg getNotifTrxs(Map<String, String> params) {
+
+        ResponseMsg response = new ResponseMsg();
+
+        response.setRc("99");
+        response.setRm("ERROR");
+
+        int pageNo = Integer.parseInt(params.get(Constants.PAGINATION_PAGE_NO) != null ? params.get(Constants.PAGINATION_PAGE_NO) : "0" );
+        int pageSize = Integer.parseInt(params.get(Constants.PAGINATION_PAGE_SIZE) != null ? params.get(Constants.PAGINATION_PAGE_SIZE) : "100");
+        String orderBy = params.get(Constants.PAGINATION_ORDER_BY);
+        String orderDirection = params.get(Constants.PAGINATION_ORDER_DIRECTION);
+        String startDate = params.get(Constants.PAGINATION_FILTER_START_DATE);
+        String endDate = params.get(Constants.PAGINATION_FILTER_END_DATE);
+        String searchBy = params.get(Constants.PAGINATION_FILTER_SEARCH_BY);
+        String searchValue = params.get(Constants.PAGINATION_FILTER_SEARCH_VALUE);
+
+        try {
+
+            List<MasterApiNotif> masterApiNotifs = new ArrayList<>();
+            Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.Direction.DESC, "createdAt");
+
+            if (orderBy != null && orderDirection != null) {
+                Sort.Direction direction = null;
+                switch (orderDirection) {
+                    case "asc":
+                        direction = Sort.Direction.ASC;
+                        break;
+                    case "desc":
+                        direction = Sort.Direction.DESC;
+                        break;
+                }
+                pageable = PageRequest.of(pageNo, pageSize, direction, orderBy);
+            }
+
+            Page<MasterApiNotif> resultDataSet = null;
+
+            if (startDate != null && endDate != null) {
+
+                // format date
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                Date tglAwalFormated = formatter.parse(startDate + " 00:00:00");
+                Date tglAkhirFormated = formatter.parse(endDate + " 23:59:59");
+
+                if (searchBy != null && searchValue != null) {
+
+                    log.info(searchBy);
+                    log.info(searchValue);
+
+                    switch (searchBy) {
+                        case "vaAccNo":
+                            resultDataSet = masterApiNotifRepository.findByVaAccNoContainingAndTrxTimeBetween(searchValue,
+                                    tglAwalFormated, tglAkhirFormated, pageable);
+                            break;
+                        case "txAmount":
+                            resultDataSet = masterApiNotifRepository.findByTxAmountAndTrxTimeBetween(Long.parseLong(searchValue),
+                                    tglAwalFormated, tglAkhirFormated, pageable);
+                            break;
+                        case "txReferenceNo":
+                            resultDataSet = masterApiNotifRepository.findByTxReferenceNoContainingAndTrxTimeBetween(searchValue,
+                                    tglAwalFormated, tglAkhirFormated, pageable);
+                            break;
+                        case "companyId":
+                            resultDataSet = masterApiNotifRepository.findByCompanyIdAndTrxTimeBetween(Integer.parseInt(searchValue),
+                                    tglAwalFormated, tglAkhirFormated, pageable);
+                            break;
+                    }
+                    // add case to add another filter
+
+                } else {
+                    resultDataSet = masterApiNotifRepository.findByTrxTimeBetween(tglAwalFormated, tglAkhirFormated,
+                            pageable);
+                }
+            } else {
+                resultDataSet = masterApiNotifRepository.findAll(pageable);
+            }
+
+            if (resultDataSet != null) {
+                masterApiNotifs = resultDataSet.getContent();
+            }
+
+            ModelMapper modelMapper = new ModelMapper();
+
+            List<MasterApiNotifDTO> masterApiNotifDTOS = new ArrayList<>();
+            for(MasterApiNotif masterApiNotif : masterApiNotifs) {
+                MasterApiNotifDTO masterApiNotifDTO = new MasterApiNotifDTO();
+                masterApiNotifDTO = modelMapper.map(masterApiNotif, MasterApiNotifDTO.class);
+                masterApiNotifDTOS.add(masterApiNotifDTO);
+            }
+
+            HashMap<String, Object> responseData = new HashMap<String, Object>();
+            responseData.put("content", masterApiNotifDTOS);
+            responseData.put("currentPage", resultDataSet != null ? resultDataSet.getNumber() : 0);
+            responseData.put("totalItems", resultDataSet != null ? resultDataSet.getTotalElements() : 0);
+            responseData.put("totalPages", resultDataSet != null ? resultDataSet.getTotalPages() : 0);
+
+            response.setRc("00");
+            response.setRm("OK");
+            response.setData(responseData);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setRc("99");
+            response.setRm("Error Occured while fetching master api notif data");
+        }
+
+        return response;
+    }
+
 }

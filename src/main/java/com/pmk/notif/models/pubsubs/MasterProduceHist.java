@@ -23,11 +23,17 @@ public class MasterProduceHist {
     @JoinColumn(name = "api_notif_id", referencedColumnName = "id")
     @ToString.Exclude
     private MasterApiNotif masterApiNotif;
+    @Column(name = "kafka_host")
     private String kafkaHost;
+    @Column(name = "topic")
     private String topic;
+    @Column(name = "message")
     private String message;
+    @Column(name = "response")
     private String response;
+    @Column(name = "created_at")
     private Timestamp createdAt;
+    @Column(name = "created_by")
     private String createdBy;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "notif_code_id", referencedColumnName = "id")
