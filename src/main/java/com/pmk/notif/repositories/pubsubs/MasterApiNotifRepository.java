@@ -47,4 +47,11 @@ public interface MasterApiNotifRepository extends JpaRepository<MasterApiNotif, 
     Page<MasterApiNotif> findByTxAmountAndTrxTimeBetweenAndSentTrueAndReceivedTrue(Long txAmount, Date startDate, Date endDate, Pageable pageable);
     Page<MasterApiNotif> findByTxReferenceNoContainingAndTrxTimeBetweenAndSentTrueAndReceivedTrue(String txReferenceNo, Date startDate, Date endDate, Pageable pageable);
     Page<MasterApiNotif> findByCompanyIdAndTrxTimeBetweenAndSentTrueAndReceivedTrue(Integer companyId, Date startDate, Date endDate, Pageable pageable);
+
+    //get notif trx
+    Page<MasterApiNotif> findByTrxTimeBetween(Date startDate, Date endDate,  Pageable pageable);
+    Page<MasterApiNotif> findByVaAccNoContainingAndTrxTimeBetween(String vaAccNo, Date startDate, Date endDate,  Pageable pageable);
+    Page<MasterApiNotif> findByTxAmountAndTrxTimeBetween(Long txAmount, Date startDate, Date endDate,  Pageable pageable);
+    Page<MasterApiNotif> findByTxReferenceNoContainingAndTrxTimeBetween(String txReferenceNo, Date startDate, Date endDate,  Pageable pageable);
+    Page<MasterApiNotif> findByCompanyIdAndTrxTimeBetween(Integer companyId, Date startDate, Date endDate,  Pageable pageable);
 }
