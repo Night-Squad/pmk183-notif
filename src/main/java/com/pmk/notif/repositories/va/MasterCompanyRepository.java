@@ -11,4 +11,6 @@ public interface MasterCompanyRepository extends JpaRepository<MasterCompany, In
     @Query(value = "SELECT id, company_name FROM master_company WHERE id = :id", nativeQuery = true)
     Optional<Object> findByCompanyId(Integer id);
 
+    Optional<MasterCompany> findFirstByKdComp(Integer kdComp);
+
 }
