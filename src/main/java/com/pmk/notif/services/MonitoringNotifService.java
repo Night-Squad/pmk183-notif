@@ -4,16 +4,18 @@ import com.google.gson.Gson;
 import com.pmk.notif.Constants;
 import com.pmk.notif.controllers.payloads.NotifTrxPayload;
 import com.pmk.notif.dtos.MasterApiNotifDTO;
+import com.pmk.notif.dtos.MasterApiNotifKontigensiDTO;
+import com.pmk.notif.dtos.RefChannelDTO;
 import com.pmk.notif.kafka.service.KafkaService;
 import com.pmk.notif.models.pubsubs.MasterApiNotif;
 import com.pmk.notif.models.pubsubs.MasterProduceHist;
-import com.pmk.notif.models.pubsubs.RefChannel;
 import com.pmk.notif.models.pubsubs.RefNotifCode;
 import com.pmk.notif.models.va.MasterCustomer;
 import com.pmk.notif.models.va.ReffChannel;
 import com.pmk.notif.models.va.ReffTxCode;
 import com.pmk.notif.repositories.pubsubs.MasterApiNotifRepository;
 import com.pmk.notif.repositories.pubsubs.MasterProduceHistRepository;
+import com.pmk.notif.repositories.va.MasterCompanyRepository;
 import com.pmk.notif.repositories.va.MasterCustomerRepository;
 import com.pmk.notif.repositories.va.ReffChannelRepository;
 import com.pmk.notif.repositories.va.ReffTxCodeRepository;
@@ -69,6 +71,9 @@ public class MonitoringNotifService {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
+
+    @Autowired
+    private MasterCompanyRepository masterCompanyRepository;
 
     @Transactional
     public ResponseMsg saveNotifTrx(NotifTrxPayload body) {
@@ -514,10 +519,25 @@ public class MonitoringNotifService {
 
             ModelMapper modelMapper = new ModelMapper();
 
-            List<MasterApiNotifDTO> masterApiNotifDTOS = new ArrayList<>();
+            List<MasterApiNotifKontigensiDTO> masterApiNotifDTOS = new ArrayList<>();
             for(MasterApiNotif masterApiNotif : masterApiNotifs) {
-                MasterApiNotifDTO masterApiNotifDTO = new MasterApiNotifDTO();
-                masterApiNotifDTO = modelMapper.map(masterApiNotif, MasterApiNotifDTO.class);
+                MasterApiNotifKontigensiDTO masterApiNotifDTO = new MasterApiNotifKontigensiDTO();
+                masterApiNotifDTO.setId(masterApiNotif.getId());
+                masterApiNotifDTO.setVaAccNo(masterApiNotif.getVaAccNo());
+                masterApiNotifDTO.setTxAmount(masterApiNotif.getTxAmount());
+                masterApiNotifDTO.setTxReferenceNo(masterApiNotif.getTxReferenceNo());
+                masterApiNotifDTO.setCreatedAt(masterApiNotif.getCreatedAt());
+                masterApiNotifDTO.setCreatedBy(masterApiNotif.getCreatedBy());
+                masterApiNotifDTO.setUpdatedAt(masterApiNotif.getUpdatedAt());
+                masterApiNotifDTO.setUpdatedBy(masterApiNotif.getUpdatedBy());
+                masterApiNotifDTO.setIsActive(masterApiNotif.getIsActive());
+                masterApiNotifDTO.setSent(masterApiNotif.getSent());
+                masterApiNotifDTO.setReceived(masterApiNotif.getReceived());
+                masterApiNotifDTO.setReceivedAt(masterApiNotif.getReceivedAt());
+                masterApiNotifDTO.setSentAt(masterApiNotif.getSentAt());
+                masterApiNotifDTO.setTrxTime(masterApiNotif.getTrxTime());
+                masterApiNotifDTO.setRefChannel(null);
+                masterApiNotifDTO.setMasterCompany(masterCompanyRepository.findByCompanyId(masterApiNotif.getCompanyId()).orElse(null));
                 masterApiNotifDTOS.add(masterApiNotifDTO);
             }
 
