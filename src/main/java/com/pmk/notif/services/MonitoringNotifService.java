@@ -10,6 +10,7 @@ import com.pmk.notif.kafka.service.KafkaService;
 import com.pmk.notif.models.pubsubs.MasterApiNotif;
 import com.pmk.notif.models.pubsubs.MasterProduceHist;
 import com.pmk.notif.models.pubsubs.RefNotifCode;
+import com.pmk.notif.models.va.MasterCompany;
 import com.pmk.notif.models.va.MasterCustomer;
 import com.pmk.notif.models.va.ReffChannel;
 import com.pmk.notif.models.va.ReffTxCode;
@@ -85,9 +86,20 @@ public class MonitoringNotifService {
 
         try {
 
-            //validate trncode and channelcode
+            //validate trncode and channelcode and master company
+            log.info("Validate input");
+            log.info("Channel code : " + body.getChannelCode());
+            log.info("Trn code : " + body.getTrnCode());
+            log.info("Kd Comp : " + body.getVaAccNo().trim().substring(3,6));
             Optional<ReffChannel> reffChannel = reffChannelRepository.findFirstByChannelCode(body.getChannelCode());
             Optional<ReffTxCode> reffTxCode = reffTxCodeRepository.findFirstByTrnCode(body.getTrnCode());
+            Optional<MasterCompany> masterCompany = masterCompanyRepository.findFirstByKdComp(Integer.valueOf(body.getVaAccNo().trim().substring(3,6)));
+
+            if(!masterCompany.isPresent()) {
+                response.setRc("99");
+                response.setRm("company_id pada nomor va : " + body.getVaAccNo() + " tidak ditemukan");
+                return response;
+            }
 
             if(!reffChannel.isPresent()) {
                 response.setRc("99");
@@ -134,7 +146,7 @@ public class MonitoringNotifService {
 //            RefChannel refChannel = new RefChannel();
 //            refChannel.setId(body.getChannelId());
 //            masterApiNotif.setRefChannel(refChannel);
-            masterApiNotif.setCompanyId(body.getCompanyId());
+            masterApiNotif.setCompanyId(masterCompany.get().getId());
             masterApiNotif.setIsActive(true);
             masterApiNotif.setSent(null);
             masterApiNotif.setSentAt(null);
