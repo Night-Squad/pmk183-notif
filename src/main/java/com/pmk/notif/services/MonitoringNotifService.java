@@ -93,7 +93,7 @@ public class MonitoringNotifService {
             log.info("Kd Comp : " + body.getVaAccNo().trim().substring(3,6));
             Optional<ReffChannel> reffChannel = reffChannelRepository.findFirstByChannelCode(body.getChannelCode());
             Optional<ReffTxCode> reffTxCode = reffTxCodeRepository.findFirstByTrnCode(body.getTrnCode());
-            Optional<MasterCompany> masterCompany = masterCompanyRepository.findFirstByKdComp(Integer.valueOf(body.getVaAccNo().trim().substring(3,6)));
+            Optional<MasterCompany> masterCompany = masterCompanyRepository.findFirstByKdComp(body.getVaAccNo().trim().substring(3,6));
 
             if(!masterCompany.isPresent()) {
                 response.setRc("99");

@@ -51,7 +51,7 @@ public class MasterCompany implements Serializable {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
     @Column(name = "kd_comp")
-    private Integer kdComp;
+    private String kdComp;
     @Column(name = "is_exceed_allowed")
     private Boolean isExceedAllowed;
     @Column(name = "id_branch")
