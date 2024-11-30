@@ -27,5 +27,12 @@ public class MasterApiNotifKontigensiDTO {
     private Timestamp trxTime;
     private RefChannelDTO refChannel;
     private Object masterCompany;
+    private Boolean sentFailed;
+    private String channelCode;
+    private String trnCode;
+    private Short txType;
+    private Integer txCode;
+    private String txDesc;
+
 
 }
