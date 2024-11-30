@@ -529,8 +529,6 @@ public class MonitoringNotifService {
                 masterApiNotifs = resultDataSet.getContent();
             }
 
-            ModelMapper modelMapper = new ModelMapper();
-
             List<MasterApiNotifKontigensiDTO> masterApiNotifDTOS = new ArrayList<>();
             for(MasterApiNotif masterApiNotif : masterApiNotifs) {
                 MasterApiNotifKontigensiDTO masterApiNotifDTO = new MasterApiNotifKontigensiDTO();
@@ -550,6 +548,12 @@ public class MonitoringNotifService {
                 masterApiNotifDTO.setTrxTime(masterApiNotif.getTrxTime());
                 masterApiNotifDTO.setRefChannel(null);
                 masterApiNotifDTO.setMasterCompany(masterCompanyRepository.findByCompanyId(masterApiNotif.getCompanyId()).orElse(null));
+                masterApiNotifDTO.setSentFailed(masterApiNotif.getSentFailed());
+                masterApiNotifDTO.setChannelCode(masterApiNotif.getChannelCode());
+                masterApiNotifDTO.setTrnCode(masterApiNotif.getTrnCode());
+                masterApiNotifDTO.setTxType(masterApiNotif.getTxType());
+                masterApiNotifDTO.setTxCode(masterApiNotif.getTxCode());
+                masterApiNotifDTO.setTxDesc(masterApiNotif.getTxDesc());
                 masterApiNotifDTOS.add(masterApiNotifDTO);
             }
 
