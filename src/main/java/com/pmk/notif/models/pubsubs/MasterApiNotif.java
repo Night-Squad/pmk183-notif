@@ -88,6 +88,9 @@ public class MasterApiNotif {
     @Column(name = "tx_desc")
     private String txDesc;
 
+    @Column(name = "error_reason")
+    private String errorReason;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "masterApiNotif")
     @ToString.Exclude
     private Set<MasterProduceHist> masterProduceHists = new HashSet<MasterProduceHist>(0);

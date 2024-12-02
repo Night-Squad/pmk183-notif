@@ -12,11 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Optional;
 
 @Repository
 public interface MasterApiNotifRepository extends JpaRepository<MasterApiNotif, Long> {
 
     MasterApiNotif findFirstById(Long id);
+    Optional<MasterApiNotif> findFirstByTxReferenceNoAndCreatedByOrderByCreatedAtDesc(String refNo, String createdBy);
 
     @Modifying
     @Transactional
