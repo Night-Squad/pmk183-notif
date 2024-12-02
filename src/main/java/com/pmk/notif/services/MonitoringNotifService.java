@@ -3,6 +3,7 @@ package com.pmk.notif.services;
 import com.google.gson.Gson;
 import com.pmk.notif.Constants;
 import com.pmk.notif.controllers.payloads.NotifTrxPayload;
+import com.pmk.notif.controllers.payloads.ResendNotifTrxPayload;
 import com.pmk.notif.dtos.MasterApiNotifDTO;
 import com.pmk.notif.dtos.MasterApiNotifKontigensiDTO;
 import com.pmk.notif.dtos.RefChannelDTO;
@@ -195,6 +196,134 @@ public class MonitoringNotifService {
                 });
             } catch (Exception e) {
                 log.error("Error occured when sending message to kafka : " + e.getMessage());
+            }
+
+            response.setRc("00");
+            response.setRm("OK");
+            response.setData(body);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setRc("99");
+            response.setRm("Error Occured while insert notif trx data");
+        }
+
+        return response;
+    }
+
+    public ResponseMsg resendNotifTrx(ResendNotifTrxPayload body) {
+
+        ResponseMsg response = new ResponseMsg();
+
+        response.setRc("99");
+        response.setRm("ERROR");
+
+        try {
+
+            MasterApiNotif masterApiNotif = masterApiNotifRepository.findFirstByTxReferenceNoAndCreatedByOrderByCreatedAtDesc(body.getTxReferenceNo(), "system").orElse(null);
+
+            if(masterApiNotif == null) {
+                response.setRc("99");
+                response.setRm("Tidak ada transaksi dengan tx_reference_no : " + body.getTxReferenceNo());
+                return response;
+            }
+
+
+            if(masterApiNotif.getSent()) {
+                response.setRc("99");
+                response.setRm(String.format("tx_reference_no : %s, sudah berhasil dilakukan transaksi", body.getTxReferenceNo()));
+                return response;
+            }
+
+            masterApiNotif.setId(null);
+            masterApiNotif.setCreatedBy(body.getCreatedBy());
+            masterApiNotif.setMasterProduceHists(null);
+
+            //validate trncode and channelcode and master company
+            log.info("Validate input");
+            log.info("Channel code : " + masterApiNotif.getChannelCode());
+            log.info("Trn code : " + masterApiNotif.getTrnCode());
+            log.info("Kd Comp : " + masterApiNotif.getVaAccNo().trim().substring(3,6));
+            Optional<ReffChannel> reffChannel = reffChannelRepository.findFirstByChannelCode(masterApiNotif.getChannelCode());
+            Optional<ReffTxCode> reffTxCode = reffTxCodeRepository.findFirstByTrnCode(masterApiNotif.getTrnCode());
+            Optional<MasterCompany> masterCompany = masterCompanyRepository.findFirstByKdComp(masterApiNotif.getVaAccNo().trim().substring(3,6));
+
+            if(!masterCompany.isPresent()) {
+                response.setRc("99");
+                response.setRm("company_id pada nomor va : " + masterApiNotif.getVaAccNo() + " tidak ditemukan");
+                return response;
+            }
+
+            if(!reffChannel.isPresent()) {
+                response.setRc("99");
+                response.setRm("Channel code : " + masterApiNotif.getChannelCode() + " tidak ditemukan");
+                return response;
+            }
+
+            if(!reffTxCode.isPresent()) {
+                response.setRc("99");
+                response.setRm("Trn code : " + masterApiNotif.getTrnCode() + " tidak ditemukan");
+                return response;
+            }
+
+            //validate balance
+            MasterCustomer masterCustomer = masterCustomerRepository
+                    .findByVaAccNoAndBitId(masterApiNotif.getVaAccNo(), (short) 8).orElse(null);
+
+            if(masterCustomer == null) {
+                response.setRc("99");
+                response.setRm("Customer dengan va_acc_no : " + masterApiNotif.getVaAccNo() + " tidak ditemukan");
+                return response;
+            } else {
+                if(masterApiNotif.getTxType() == 0) {
+                    Long currentBalance = Long.parseLong(masterCustomer.getValue());
+                    Long finalBalance = currentBalance - masterApiNotif.getTxAmount();
+
+                    if(finalBalance < 0) {
+                        response.setRc("99");
+                        response.setRm("Saldo tidak mencukupi");
+                        return response;
+                    }
+                }
+            }
+
+            MasterApiNotif savedMasterApiNotif = masterApiNotifRepository.save(masterApiNotif);
+
+            //send data to kafka
+            try {
+                ListenableFuture<SendResult<String, String>> kafkaResponse = kafkaService.sendMessageToKafka(masterApiNotif);
+
+                kafkaResponse.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+                    @Override
+                    public void onFailure(Throwable ex) {
+                        //update sent false & sent_failed true
+                        MasterApiNotif dataWillBeUpdated = savedMasterApiNotif;
+                        dataWillBeUpdated.setSent(false);
+                        dataWillBeUpdated.setSentFailed(true);
+                        dataWillBeUpdated.setErrorReason(ex.getLocalizedMessage());
+                        MasterApiNotif updatedMasterApiNotif = masterApiNotifRepository.save(dataWillBeUpdated);
+
+                        //insert to masterProduceHist
+                        insertMasterProduceHist(ex, updatedMasterApiNotif, masterApiNotif, false);
+                    }
+
+                    @Override
+                    public void onSuccess(SendResult<String, String> result) {
+                        //update sent true && sent_at jam terkirim
+                        MasterApiNotif dataWillBeUpdated = savedMasterApiNotif;
+                        dataWillBeUpdated.setSent(true);
+                        dataWillBeUpdated.setSentAt(getCurrentTimeService.getCurrentTime());
+                        MasterApiNotif updatedMasterApiNotif = masterApiNotifRepository.save(dataWillBeUpdated);
+
+                        //insert to masterProduceHist
+                        insertMasterProduceHist(null, updatedMasterApiNotif, masterApiNotif, true);
+                    }
+                });
+            } catch (Exception e) {
+                log.error("Error occured when sending message to kafka : " + e.getLocalizedMessage());
+                savedMasterApiNotif.setErrorReason(e.getLocalizedMessage());
+                masterApiNotifRepository.save(masterApiNotif);
+                throw e;
             }
 
             response.setRc("00");

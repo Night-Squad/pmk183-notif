@@ -1,6 +1,7 @@
 package com.pmk.notif.controllers;
 
 import com.pmk.notif.controllers.payloads.NotifTrxPayload;
+import com.pmk.notif.controllers.payloads.ResendNotifTrxPayload;
 import com.pmk.notif.response.ResponseMessage;
 import com.pmk.notif.response.ResponseMsg;
 import com.pmk.notif.services.MonitoringNotifService;
@@ -24,6 +25,18 @@ public class NotifTrxController {
     public Map<String, Object> saveNotifTrx(@RequestBody NotifTrxPayload body) {
 
         ResponseMsg response = monitoringNotifService.saveNotifTrx(body);
+
+        if (response.getRc().equals("00")) {
+            return new ResponseMessage().success(response.getRc(), 200, response.getRm(), response.getData());
+        } else {
+            return new ResponseMessage().success(response.getRc(), 400, response.getRm(), null);
+        }
+    }
+
+    @PostMapping("/notif-trx/re-push")
+    public Map<String, Object> repushNotifTrx(@RequestBody ResendNotifTrxPayload body) {
+
+        ResponseMsg response = monitoringNotifService.resendNotifTrx(body);
 
         if (response.getRc().equals("00")) {
             return new ResponseMessage().success(response.getRc(), 200, response.getRm(), response.getData());
