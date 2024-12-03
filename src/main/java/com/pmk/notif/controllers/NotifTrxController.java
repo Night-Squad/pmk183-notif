@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -35,6 +36,10 @@ public class NotifTrxController {
 
     @PostMapping("/notif-trx/re-push")
     public Map<String, Object> repushNotifTrx(@RequestBody ResendNotifTrxPayload body) {
+
+        log.info("-= Re-push notif trx -=");
+        log.info("timestamp : " + LocalDateTime.now());
+        log.info("Request : " + body.toString());
 
         ResponseMsg response = monitoringNotifService.resendNotifTrx(body);
 
