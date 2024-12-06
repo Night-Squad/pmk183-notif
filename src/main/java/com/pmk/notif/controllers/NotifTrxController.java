@@ -53,6 +53,10 @@ public class NotifTrxController {
     @GetMapping("/master-api-notif")
     public Map<String, Object> getNotifTrxs(@RequestParam Map<String, String> reqParams) {
 
+        log.info("-= Get master-api-notif =-");
+        log.info("timestamp : " + LocalDateTime.now());
+        log.info("Request Params: " + reqParams.toString());
+
         ResponseMsg response = monitoringNotifService.getNotifTrxs(reqParams);
 
         if (response.getRc().equals("00")) {
