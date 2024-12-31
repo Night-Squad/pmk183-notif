@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,9 +21,16 @@ public class GetCurrentTimeService {
         return new Timestamp(calendar.getTimeInMillis());
     }
 
+    public static LocalDateTime[] getCurrentDayRange() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay(); // 00:00:00
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX); // 23:59:59.999999999
+        return new LocalDateTime[]{startOfDay, endOfDay};
+    }
+
     public HashMap<String, String> inString() {
 
-        HashMap<String, String> result = null;
+        HashMap<String, String> result = new HashMap<>();
 
 
         try {
@@ -49,7 +57,8 @@ public class GetCurrentTimeService {
 
 
         } catch (Exception e) {
-            System.out.println("Error in generate current timestatmp");
+            System.out.println("Error in generate current timestatamp");
+            System.out.println(e.getLocalizedMessage());
         }
         return result;
     }

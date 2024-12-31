@@ -2,6 +2,7 @@ package com.pmk.notif.services;
 
 
 import com.pmk.notif.controllers.payloads.NotifReversalPayload;
+import com.pmk.notif.models.va.MasterTx;
 import com.pmk.notif.repositories.va.MasterTxRepository;
 import com.pmk.notif.response.ResponseMsg;
 import com.pmk.notif.utils.GetCurrentTimeService;
@@ -9,6 +10,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Optional;
 
 @Service
 public class ReversalTrxService {
@@ -30,9 +35,18 @@ public class ReversalTrxService {
         try {
 
             // Check if tx_reference_no is available
+            LocalDateTime[] getCurrentDate = GetCurrentTimeService.getCurrentDayRange();
+            Optional<MasterTx> masterTxChecked = masterTxRepository.findMasterTxBetween(body.getTxReferenceNo(), getCurrentDate[0], getCurrentDate[1]);
 
+            log.info("master_tx find master tx between: ");
+            log.info("is present : "+masterTxChecked.isPresent());
+            log.info(masterTxChecked);
 
-            masterTxRepository.findMasterTxBetween(body.getTxReferenceNod(), "", "");
+            if(!masterTxChecked.isPresent()) {
+                response.setRc("50");
+                response.setStatusId("404");
+                response.setMessage("Data transaksi dengan tx_reference_no : "+body.getTxReferenceNo()+" tidak ditemukan");
+            }
 
         } catch (Exception e) {
             log.error("Error message : "+e.getLocalizedMessage());

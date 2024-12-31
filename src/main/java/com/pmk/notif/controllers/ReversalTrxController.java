@@ -28,9 +28,9 @@ public class ReversalTrxController {
 
         ResponseMsg response = reversalTrxService.notifReversalTrx(body);
         if (response.getRc().equals("00")) {
-            return new ResponseMessage().success(response.getRc(), 200, response.getRm(), response.getData());
+            return new ResponseMessage().success(response.getRc(), 200, response.getMessage(), response.getData());
         } else {
-            return new ResponseMessage().success(response.getRc(), 400, response.getRm(), null);
+            return new ResponseMessage().success(response.getRc(), 400, response.getMessage(), null);
         }
     }
 

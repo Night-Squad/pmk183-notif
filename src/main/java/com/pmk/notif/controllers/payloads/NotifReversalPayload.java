@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class NotifReversalPayload {
 
     @JsonProperty("tx_reference_no")
-    private String txReferenceNod;
+    private String txReferenceNo;
 
     @JsonProperty("reversal_date")
     private String reversalDate;
@@ -19,19 +19,19 @@ public class NotifReversalPayload {
     public NotifReversalPayload() {
     }
 
-    public NotifReversalPayload(String txReferenceNod, String reversalDate, String vaAccNo, Long txAmount) {
-        this.txReferenceNod = txReferenceNod;
+    public NotifReversalPayload(String txReferenceNo, String reversalDate, String vaAccNo, Long txAmount) {
+        this.txReferenceNo = txReferenceNo;
         this.reversalDate = reversalDate;
         this.vaAccNo = vaAccNo;
         this.txAmount = txAmount;
     }
 
-    public String getTxReferenceNod() {
-        return txReferenceNod;
+    public String getTxReferenceNo() {
+        return txReferenceNo;
     }
 
-    public void setTxReferenceNod(String txReferenceNod) {
-        this.txReferenceNod = txReferenceNod;
+    public void setTxReferenceNo(String txReferenceNo) {
+        this.txReferenceNo = txReferenceNo;
     }
 
     public String getReversalDate() {
@@ -58,13 +58,5 @@ public class NotifReversalPayload {
         this.txAmount = txAmount;
     }
 
-    @Override
-    public String toString() {
-        return "NotifReversalPayload{" +
-                "txReferenceNod='" + txReferenceNod + '\'' +
-                ", reversalDate='" + reversalDate + '\'' +
-                ", vaAccNo='" + vaAccNo + '\'' +
-                ", txAmount=" + txAmount +
-                '}';
-    }
+
 }
