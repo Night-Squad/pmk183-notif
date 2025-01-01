@@ -232,7 +232,6 @@ public class MonitoringNotifService {
             // logging
             log.info("masterApiNotif : "+masterApiNotif.toString());
 
-            log.info("masterApiNotif.getSent() : "+masterApiNotif.getSent());
             if(masterApiNotif.getSent()) {
                 response.setRc("51");
                 response.setRm(String.format("tx_reference_no : %s, sudah berhasil dilakukan transaksi", body.getTxReferenceNo()));
@@ -292,6 +291,7 @@ public class MonitoringNotifService {
             }
 
             masterApiNotif.setSent(true);
+            log.info("masterApiNotif.getSent() : "+masterApiNotif.getSent());
 
             MasterApiNotif savedMasterApiNotif = masterApiNotifRepository.save(masterApiNotif);
 
