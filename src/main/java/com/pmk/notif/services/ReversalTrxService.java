@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -36,16 +37,23 @@ public class ReversalTrxService {
 
             // Check if tx_reference_no is available
             LocalDateTime[] getCurrentDate = GetCurrentTimeService.getCurrentDayRange();
-            Optional<MasterTx> masterTxChecked = masterTxRepository.findMasterTxBetween(body.getTxReferenceNo(), getCurrentDate[0], getCurrentDate[1]);
+            List<MasterTx> masterTxChecked = masterTxRepository.findMasterTxBetween(body.getTxReferenceNo(), getCurrentDate[0], getCurrentDate[1]);
 
-            log.info("master_tx find master tx between: ");
-            log.info("is present : "+masterTxChecked.isPresent());
-            log.info(masterTxChecked);
+//            log.info("master_tx find master tx between: ");
+//            log.info("size : "+masterTxChecked.size());
+//            log.info(masterTxChecked);
 
-            if(!masterTxChecked.isPresent()) {
+            if(masterTxChecked.isEmpty()) {
                 response.setRc("50");
                 response.setStatusId("404");
                 response.setMessage("Data transaksi dengan tx_reference_no : "+body.getTxReferenceNo()+" tidak ditemukan");
+            }
+
+            if(!masterTxChecked.isEmpty()) {
+                // do jurnal
+
+
+                // update is reversal
             }
 
         } catch (Exception e) {

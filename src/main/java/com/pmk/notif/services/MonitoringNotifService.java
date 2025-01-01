@@ -229,8 +229,12 @@ public class MonitoringNotifService {
             }
 
 
+            // logging
+            log.info("masterApiNotif : "+masterApiNotif.toString());
+
+            log.info("masterApiNotif.getSent() : "+masterApiNotif.getSent());
             if(masterApiNotif.getSent()) {
-                response.setRc("99");
+                response.setRc("51");
                 response.setRm(String.format("tx_reference_no : %s, sudah berhasil dilakukan transaksi", body.getTxReferenceNo()));
                 return response;
             }
@@ -274,18 +278,20 @@ public class MonitoringNotifService {
                 response.setRc("99");
                 response.setRm("Customer dengan va_acc_no : " + masterApiNotif.getVaAccNo() + " tidak ditemukan");
                 return response;
-            } else {
-                if(masterApiNotif.getTxType() == 0) {
-                    Long currentBalance = Long.parseLong(masterCustomer.getValue());
-                    Long finalBalance = currentBalance - masterApiNotif.getTxAmount();
+            }
 
-                    if(finalBalance < 0) {
-                        response.setRc("99");
-                        response.setRm("Saldo tidak mencukupi");
-                        return response;
-                    }
+            if(masterApiNotif.getTxType() == 0) {
+                Long currentBalance = Long.parseLong(masterCustomer.getValue());
+                Long finalBalance = currentBalance - masterApiNotif.getTxAmount();
+
+                if(finalBalance < 0) {
+                    response.setRc("99");
+                    response.setRm("Saldo tidak mencukupi");
+                    return response;
                 }
             }
+
+            masterApiNotif.setSent(true);
 
             MasterApiNotif savedMasterApiNotif = masterApiNotifRepository.save(masterApiNotif);
 
