@@ -220,7 +220,7 @@ public class MonitoringNotifService {
 
         try {
 
-            MasterApiNotif masterApiNotif = masterApiNotifRepository.findFirstByTxReferenceNoAndCreatedByOrderByCreatedAtDesc(body.getTxReferenceNo(), "system").orElse(null);
+            MasterApiNotif masterApiNotif = masterApiNotifRepository.findFirstByTxReferenceNoAndCreatedByOrderByCreatedAtDescIdDesc(body.getTxReferenceNo(), "system").orElse(null);
 
             if(masterApiNotif == null) {
                 response.setRc("99");

@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface MasterApiNotifRepository extends JpaRepository<MasterApiNotif, Long> {
 
     MasterApiNotif findFirstById(Long id);
-    Optional<MasterApiNotif> findFirstByTxReferenceNoAndCreatedByOrderByCreatedAtDesc(String refNo, String createdBy);
+    Optional<MasterApiNotif> findFirstByTxReferenceNoAndCreatedByOrderByCreatedAtDescIdDesc(String refNo, String createdBy);
 
     @Modifying
     @Transactional
