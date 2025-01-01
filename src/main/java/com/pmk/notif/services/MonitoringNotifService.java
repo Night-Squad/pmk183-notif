@@ -195,7 +195,7 @@ public class MonitoringNotifService {
                     }
                 });
             } catch (Exception e) {
-                log.error("Error occured when sending message to kafka : " + e.getMessage());
+                log.error("Error occurred when sending message to kafka : " + e.getMessage());
             }
 
             response.setRc("00");

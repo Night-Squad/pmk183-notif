@@ -2,19 +2,23 @@ package com.pmk.notif.services;
 
 
 import com.pmk.notif.controllers.payloads.NotifReversalPayload;
+import com.pmk.notif.kafka.service.KafkaService;
 import com.pmk.notif.models.va.MasterTx;
+import com.pmk.notif.models.va.RefTxType;
 import com.pmk.notif.repositories.va.MasterTxRepository;
 import com.pmk.notif.response.ResponseMsg;
 import com.pmk.notif.utils.GetCurrentTimeService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReversalTrxService {
@@ -22,10 +26,13 @@ public class ReversalTrxService {
     private static final Log log = LogFactory.getLog(ReversalTrxService.class);
 
     @Autowired
-    MasterTxRepository masterTxRepository;
+    private MasterTxRepository masterTxRepository;
 
     @Autowired
-    GetCurrentTimeService getCurrentTimeService;
+    private GetCurrentTimeService getCurrentTimeService;
+
+    @Autowired
+    private KafkaService kafkaService;
 
     public ResponseMsg notifReversalTrx(NotifReversalPayload body) {
         ResponseMsg response = new ResponseMsg();
@@ -51,6 +58,11 @@ public class ReversalTrxService {
 
             if(!masterTxChecked.isEmpty()) {
                 // do jurnal
+               //  this.reversalJournal(masterTxChecked);
+
+                // send to kafka
+
+
 
 
                 // update is reversal
@@ -65,5 +77,89 @@ public class ReversalTrxService {
 
         return response;
     }
+
+    // send to kafka
+    @Transactional
+    public ResponseMsg sendToKafka(NotifReversalPayload payload) {
+        ResponseMsg response = new ResponseMsg();
+        response.setRc("99");
+        response.setRm("default error..");
+        try {
+            ListenableFuture<SendResult<String, String>> kafkaResponse = kafkaService.sendMessageToKafka(payload);
+
+            kafkaResponse.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+                @Override
+                public void onFailure(Throwable ex) {
+                    log.error("Data to kafka error send.. "+ex.getMessage());
+
+                }
+
+                @Override
+                public void onSuccess(SendResult<String, String> stringStringSendResult) {
+                    log.info("Data sent to kafka successful...");
+                }
+            });
+
+        } catch (Exception e) {
+            log.error("Error occurred during sending message to kafka : "+e.getMessage());
+
+
+
+        }
+
+        return response;
+
+    }
+
+    public ResponseMsg reversalJournal(List<MasterTx> allMasterTx) {
+        ResponseMsg response = new ResponseMsg<>();
+        response.setRc("99");
+        response.setMessage("default error...");
+        try {
+
+            // looping all to journal
+            log.info("===doing reversalJurnal...");
+            for(int i=0;i<allMasterTx.size();i++) {
+                log.info("insert journal seq : "+i);
+                log.info("master_tx : "+allMasterTx.get(i));
+
+                MasterTx newJournalMasterTx = allMasterTx.get(i);
+
+                newJournalMasterTx.setCurrentOs(newJournalMasterTx.getLastOs());
+
+
+                if(newJournalMasterTx.getRefTxType().getId() == 0) {
+                    log.info("if debit, than last os will be added by tx amount...");
+                    newJournalMasterTx.setLastOs(newJournalMasterTx.getCurrentOs() + newJournalMasterTx.getTxAmount());
+                    RefTxType newTxType = new RefTxType();
+                    newTxType.setId(1);
+                    newJournalMasterTx.setRefTxType(newTxType);
+                }
+
+                if(newJournalMasterTx.getRefTxType().getId() == 1) {
+                    log.info("if credit, than last os will be deducted by tx amount...");
+                    newJournalMasterTx.setLastOs(newJournalMasterTx.getCurrentOs() - newJournalMasterTx.getTxAmount());
+                    RefTxType newTxType = new RefTxType();
+                    newTxType.setId(0);
+                    newJournalMasterTx.setRefTxType(newTxType);
+                }
+
+                newJournalMasterTx.setIsReversal(true);
+
+                masterTxRepository.save(newJournalMasterTx);
+            }
+
+            log.info("===/doing reversalJurnal");
+
+
+
+        } catch (Exception e) {
+            log.error("Error in reversal jurnal : "+e.getLocalizedMessage());
+        }
+
+        return response;
+    }
+
+
 
 }
