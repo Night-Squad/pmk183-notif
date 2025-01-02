@@ -22,6 +22,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -58,10 +59,23 @@ public class ReversalTrxService {
 //            log.info("size : "+masterTxChecked.size());
 //            log.info(masterTxChecked);
 
+
+            // validation no 5.2. in backlog --> [B001SP005 - Fitur Reversal Transaksi]
             if(masterTxChecked.isEmpty()) {
                 response.setRc("50");
                 response.setStatusId("404");
                 response.setMessage("Data transaksi dengan tx_reference_no : "+body.getTxReferenceNo()+" tidak ditemukan");
+
+                return response;
+            }
+
+            // validation no 5.3. in backlog --> [B001SP005 - Fitur Reversal Transaksi]
+            List<MasterReversalNotif> reversalNotifChecked = masterReversalNotifRepo.findMasterReversalNotif(body.getTxReferenceNo(), getCurrentDate[0], getCurrentDate[1]);
+            if(!reversalNotifChecked.isEmpty()) {
+                response.setRc("51");
+                response.setMessage("Data transaksi dengan tx_reference_no : "+body.getTxReferenceNo()+" sudah dilakukan pengajuan reversal, dengan id : "+reversalNotifChecked.get(reversalNotifChecked.size() - 1).getId());
+
+                return response;
             }
 
             if(!masterTxChecked.isEmpty()) {
@@ -87,10 +101,7 @@ public class ReversalTrxService {
 
         } catch (Exception e) {
             log.error("Error message : "+e.getLocalizedMessage());
-
         }
-
-
 
         return response;
     }
