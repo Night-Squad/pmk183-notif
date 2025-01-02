@@ -145,7 +145,7 @@ public class ReversalTrxService {
                     response.setRc("00");
                     response.setMessage("success sent to kafka...");
 
-                    masterReversalNotif.setResultReason("Success sent to Kafka..."+stringStringSendResult.toString());
+                    masterReversalNotif.setResultReason("Success sent to Kafka|"+stringStringSendResult.toString());
 
                 }
             });
