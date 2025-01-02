@@ -41,7 +41,7 @@ public class MasterReversalNotif {
     private Boolean isActive;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "ref_rev_status", referencedColumnName = "id")
+    @JoinColumn(name = "status_rev_id", referencedColumnName = "id")
     @ToString.Exclude
     private RefRevStatus refRevStatus;
 
