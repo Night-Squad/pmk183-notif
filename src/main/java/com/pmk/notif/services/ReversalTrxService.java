@@ -69,6 +69,7 @@ public class ReversalTrxService {
                 return response;
             }
 
+
             // validation no 5.3. in backlog --> [B001SP005 - Fitur Reversal Transaksi]
             List<MasterReversalNotif> reversalNotifChecked = masterReversalNotifRepo.findMasterReversalNotif(body.getTxReferenceNo(), getCurrentDate[0], getCurrentDate[1]);
             if(!reversalNotifChecked.isEmpty()) {
