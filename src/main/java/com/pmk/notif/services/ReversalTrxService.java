@@ -3,8 +3,11 @@ package com.pmk.notif.services;
 
 import com.pmk.notif.controllers.payloads.NotifReversalPayload;
 import com.pmk.notif.kafka.service.KafkaService;
+import com.pmk.notif.models.pubsubs.MasterReversalNotif;
+import com.pmk.notif.models.pubsubs.RefRevStatus;
 import com.pmk.notif.models.va.MasterTx;
 import com.pmk.notif.models.va.RefTxType;
+import com.pmk.notif.repositories.pubsubs.MasterReversalNotifRepository;
 import com.pmk.notif.repositories.va.MasterTxRepository;
 import com.pmk.notif.response.ResponseMsg;
 import com.pmk.notif.utils.GetCurrentTimeService;
@@ -17,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,6 +31,9 @@ public class ReversalTrxService {
 
     @Autowired
     private MasterTxRepository masterTxRepository;
+
+    @Autowired
+    private MasterReversalNotifRepository masterReversalNotifRepo;
 
     @Autowired
     private GetCurrentTimeService getCurrentTimeService;
@@ -84,6 +91,18 @@ public class ReversalTrxService {
         ResponseMsg response = new ResponseMsg();
         response.setRc("99");
         response.setRm("default error..");
+
+        // initiate save the data
+        Timestamp currentTime = getCurrentTimeService.getCurrentTime();
+        MasterReversalNotif masterReversalNotif = new MasterReversalNotif();
+        masterReversalNotif.setTxReferenceNo(payload.getTxReferenceNo());
+        masterReversalNotif.setReversalDate(Timestamp.valueOf(payload.getReversalDate()));
+        masterReversalNotif.setVaAccNo(payload.getVaAccNo());
+        masterReversalNotif.setCreatedAt(currentTime);
+        masterReversalNotif.setCreatedBy("system");
+        masterReversalNotif.setActive(true);
+        masterReversalNotif.setRefRevStatus(new RefRevStatus(1L));
+
         try {
             ListenableFuture<SendResult<String, String>> kafkaResponse = kafkaService.sendMessageToKafka(payload);
 
@@ -92,23 +111,32 @@ public class ReversalTrxService {
                 public void onFailure(Throwable ex) {
                     log.error("Data to kafka error send.. "+ex.getMessage());
 
+                    // set status into 2
+                    masterReversalNotif.setRefRevStatus(new RefRevStatus(2L));
+                    masterReversalNotif.setResultReason(ex.getMessage());
+
+
                 }
 
                 @Override
                 public void onSuccess(SendResult<String, String> stringStringSendResult) {
                     log.info("Data sent to kafka successful...");
+                    response.setRm("failed sent to kafka...");
+
+                    response.setRc("00");
+                    response.setRm("success sent to kafka...");
+
                 }
             });
 
+            masterReversalNotifRepo.save(masterReversalNotif);
+
         } catch (Exception e) {
             log.error("Error occurred during sending message to kafka : "+e.getMessage());
-
-
-
+            response.setRm(e.getMessage());
         }
 
         return response;
-
     }
 
     public ResponseMsg reversalJournal(List<MasterTx> allMasterTx) {

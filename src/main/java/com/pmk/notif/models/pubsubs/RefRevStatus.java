@@ -25,6 +25,10 @@ public class RefRevStatus {
     public RefRevStatus() {
     }
 
+    public RefRevStatus(Long id) {
+        this.id = id;
+    }
+
     public RefRevStatus(Long id, String statusName, String description, Boolean isActive) {
         this.id = id;
         this.statusName = statusName;
