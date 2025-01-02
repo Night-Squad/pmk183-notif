@@ -105,23 +105,14 @@ public class ReversalTrxService {
         // initiate save the data
         log.info("initiate save the data");
         Timestamp currentTime = getCurrentTimeService.getCurrentTime();
-        log.info("=====>>>1");
         MasterReversalNotif masterReversalNotif = new MasterReversalNotif();
-        log.info("=====>>>2");
         masterReversalNotif.setTxReferenceNo(payload.getTxReferenceNo());
-        log.info("=====>>>3");
         masterReversalNotif.setReversalDate(Timestamp.valueOf(payload.getReversalDate()));
-        log.info("=====>>>4");
         masterReversalNotif.setVaAccNo(payload.getVaAccNo());
-        log.info("=====>>>5");
         masterReversalNotif.setCreatedAt(currentTime);
-        log.info("=====>>>6");
         masterReversalNotif.setCreatedBy("system");
-        log.info("=====>>>7");
         masterReversalNotif.setActive(true);
-        log.info("=====>>>8");
         masterReversalNotif.setRefRevStatus(new RefRevStatus(1L));
-        log.info("=====>>>9");
 
         try {
             log.info("send message to kafka initiate...");
