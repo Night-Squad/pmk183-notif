@@ -59,7 +59,6 @@ public class ReversalTrxService {
 //            log.info("size : "+masterTxChecked.size());
 //            log.info(masterTxChecked);
 
-
             // validation no 5.2. in backlog --> [B001SP005 - Fitur Reversal Transaksi]
             if(masterTxChecked.isEmpty()) {
                 response.setRc("50");
