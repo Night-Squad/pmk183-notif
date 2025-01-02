@@ -74,7 +74,7 @@ public class ReversalTrxService {
                 if(kafkaResponse.getRc().equals("00")) {
                     response.setRc("00");
                     response.setRm("Success to submit kafka");
-
+                    response.setMessage("Reversal success to submit...");
                 }
 
                 if(!kafkaResponse.getRc().equals("00")) {
