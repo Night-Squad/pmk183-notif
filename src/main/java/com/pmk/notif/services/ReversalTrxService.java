@@ -82,6 +82,7 @@ public class ReversalTrxService {
                 log.info("!masterTxChecked.isEmpty()...");
 
                 // send to kafka
+                // point no 6. in backlog --> [B001SP005 - Fitur Reversal Transaksi]
                 ResponseMsg kafkaResponse = this.sendToKafka(body);
                 log.info("kafkaResponse : "+kafkaResponse.toString());
 
