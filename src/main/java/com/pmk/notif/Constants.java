@@ -12,4 +12,6 @@ public class Constants {
     public static final String PAGINATION_FILTER_SEARCH_VALUE = "searchValue";
     public static final String KAFKA_PRODUCER_TOPIC_KEY = "notifData";
 
+    public static final String KAFKA_PRODUCER_REVERSAL_TOPIC_KEY = "REVERSAL_TRX";
+
 }

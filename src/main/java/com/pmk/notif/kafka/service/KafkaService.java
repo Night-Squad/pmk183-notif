@@ -52,6 +52,12 @@ public class KafkaService {
         return kafkaTemplate.send(kafkaTopic, Constants.KAFKA_PRODUCER_TOPIC_KEY, new Gson().toJson(message));
     }
 
+    public ListenableFuture<SendResult<String, String>> sendMessageReversalToKafka(Object message) {
+        log.info("Sending message to kafka for Reversal Trx...");
+        log.info(String.format("Kafka Host : %s ; Data sent : %s", bootstrapServers, new Gson().toJson(message)));
+        return kafkaTemplate.send(kafkaTopic, Constants.KAFKA_PRODUCER_REVERSAL_TOPIC_KEY, new Gson().toJson(message));
+    }
+
     public ResponseMsg resendMessageToKafka(Long id, Object message) throws JsonProcessingException {
 
         ResponseMsg response = new ResponseMsg();

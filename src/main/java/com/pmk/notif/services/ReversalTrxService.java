@@ -46,6 +46,7 @@ public class ReversalTrxService {
 
         response.setRc("99");
         response.setRm("ERROR");
+        response.setMessage("Default error...");
 
         try {
 
@@ -64,20 +65,29 @@ public class ReversalTrxService {
             }
 
             if(!masterTxChecked.isEmpty()) {
-                // do jurnal
-               //  this.reversalJournal(masterTxChecked);
+                log.info("!masterTxChecked.isEmpty()...");
 
                 // send to kafka
+                ResponseMsg kafkaResponse = this.sendToKafka(body);
+                log.info("kafkaResponse : "+kafkaResponse.toString());
 
+                if(kafkaResponse.getRc().equals("00")) {
+                    response.setRc("00");
+                    response.setRm("Success to submit kafka");
 
+                }
 
+                if(!kafkaResponse.getRc().equals("00")) {
+                    response.setRc("51");
+                    response.setRm("Failed to submit kafka");
+                }
 
                 // update is reversal
             }
 
         } catch (Exception e) {
             log.error("Error message : "+e.getLocalizedMessage());
-            return response;
+
         }
 
 
@@ -86,25 +96,36 @@ public class ReversalTrxService {
     }
 
     // send to kafka
-    @Transactional
     public ResponseMsg sendToKafka(NotifReversalPayload payload) {
+        log.info("Funct : sendToKafka...");
         ResponseMsg response = new ResponseMsg();
         response.setRc("99");
         response.setRm("default error..");
 
         // initiate save the data
+        log.info("initiate save the data");
         Timestamp currentTime = getCurrentTimeService.getCurrentTime();
+        log.info("=====>>>1");
         MasterReversalNotif masterReversalNotif = new MasterReversalNotif();
+        log.info("=====>>>2");
         masterReversalNotif.setTxReferenceNo(payload.getTxReferenceNo());
+        log.info("=====>>>3");
         masterReversalNotif.setReversalDate(Timestamp.valueOf(payload.getReversalDate()));
+        log.info("=====>>>4");
         masterReversalNotif.setVaAccNo(payload.getVaAccNo());
+        log.info("=====>>>5");
         masterReversalNotif.setCreatedAt(currentTime);
+        log.info("=====>>>6");
         masterReversalNotif.setCreatedBy("system");
+        log.info("=====>>>7");
         masterReversalNotif.setActive(true);
+        log.info("=====>>>8");
         masterReversalNotif.setRefRevStatus(new RefRevStatus(1L));
+        log.info("=====>>>9");
 
         try {
-            ListenableFuture<SendResult<String, String>> kafkaResponse = kafkaService.sendMessageToKafka(payload);
+            log.info("send message to kafka initiate...");
+            ListenableFuture<SendResult<String, String>> kafkaResponse = kafkaService.sendMessageReversalToKafka(payload);
 
             kafkaResponse.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
                 @Override
@@ -114,7 +135,6 @@ public class ReversalTrxService {
                     // set status into 2
                     masterReversalNotif.setRefRevStatus(new RefRevStatus(2L));
                     masterReversalNotif.setResultReason(ex.getMessage());
-
 
                 }
 
