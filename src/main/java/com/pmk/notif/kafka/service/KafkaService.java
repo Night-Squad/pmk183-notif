@@ -31,6 +31,9 @@ public class KafkaService {
     @Value("${kafka-topic}")
  	private String kafkaTopic;
 
+    @Value("${kafka-reversal-topic}")
+    private String kafkaReversalTopic;
+
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
 
@@ -55,7 +58,7 @@ public class KafkaService {
     public ListenableFuture<SendResult<String, String>> sendMessageReversalToKafka(Object message) {
         log.info("Sending message to kafka for Reversal Trx...");
         log.info(String.format("Kafka Host : %s ; Data sent : %s", bootstrapServers, new Gson().toJson(message)));
-        return kafkaTemplate.send(kafkaTopic, Constants.KAFKA_PRODUCER_REVERSAL_TOPIC_KEY, new Gson().toJson(message));
+        return kafkaTemplate.send(kafkaReversalTopic, Constants.KAFKA_PRODUCER_REVERSAL_TOPIC_KEY, new Gson().toJson(message));
     }
 
     public ResponseMsg resendMessageToKafka(Long id, Object message) throws JsonProcessingException {
