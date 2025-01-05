@@ -163,55 +163,6 @@ public class ReversalTrxService {
         return response;
     }
 
-    public ResponseMsg reversalJournal(List<MasterTx> allMasterTx) {
-        ResponseMsg response = new ResponseMsg<>();
-        response.setRc("99");
-        response.setMessage("default error...");
-        try {
-
-            // looping all to journal
-            log.info("===doing reversalJurnal...");
-            for(int i=0;i<allMasterTx.size();i++) {
-                log.info("insert journal seq : "+i);
-                log.info("master_tx : "+allMasterTx.get(i));
-
-                MasterTx newJournalMasterTx = allMasterTx.get(i);
-
-                newJournalMasterTx.setCurrentOs(newJournalMasterTx.getLastOs());
-
-
-                if(newJournalMasterTx.getRefTxType().getId() == 0) {
-                    log.info("if debit, than last os will be added by tx amount...");
-                    newJournalMasterTx.setLastOs(newJournalMasterTx.getCurrentOs() + newJournalMasterTx.getTxAmount());
-                    RefTxType newTxType = new RefTxType();
-                    newTxType.setId(1);
-                    newJournalMasterTx.setRefTxType(newTxType);
-                }
-
-                if(newJournalMasterTx.getRefTxType().getId() == 1) {
-                    log.info("if credit, than last os will be deducted by tx amount...");
-                    newJournalMasterTx.setLastOs(newJournalMasterTx.getCurrentOs() - newJournalMasterTx.getTxAmount());
-                    RefTxType newTxType = new RefTxType();
-                    newTxType.setId(0);
-                    newJournalMasterTx.setRefTxType(newTxType);
-                }
-
-                newJournalMasterTx.setIsReversal(true);
-
-                masterTxRepository.save(newJournalMasterTx);
-            }
-
-            log.info("===/doing reversalJurnal");
-
-
-
-        } catch (Exception e) {
-            log.error("Error in reversal jurnal : "+e.getLocalizedMessage());
-        }
-
-        return response;
-    }
-
 
 
 }
