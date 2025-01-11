@@ -53,6 +53,10 @@ public class ReversalTrxService {
 
             // Check if tx_reference_no is available
             LocalDateTime[] getCurrentDate = GetCurrentTimeService.getCurrentDayRange();
+            log.info("start date : "+getCurrentDate[0]);
+            log.info("end date : "+getCurrentDate[1]);
+            log.info("tx reference : "+body.getTxReferenceNo());
+
             List<MasterTx> masterTxChecked = masterTxRepository.findMasterTxBetween(body.getTxReferenceNo(), getCurrentDate[0], getCurrentDate[1]);
 
 //            log.info("master_tx find master tx between: ");
