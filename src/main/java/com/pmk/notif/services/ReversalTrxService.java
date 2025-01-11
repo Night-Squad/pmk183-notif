@@ -57,7 +57,7 @@ public class ReversalTrxService {
             log.info("end date : "+getCurrentDate[1]);
             log.info("tx reference : "+body.getTxReferenceNo());
 
-            List<MasterTx> masterTxChecked = masterTxRepository.findMasterTxBetween(body.getTxReferenceNo(), getCurrentDate[0], getCurrentDate[1]);
+            List<MasterTx> masterTxChecked = masterTxRepository.findMasterTxBetween(body.getVaAccNo(), body.getTxReferenceNo(), getCurrentDate[0], getCurrentDate[1]);
 
 //            log.info("master_tx find master tx between: ");
 //            log.info("size : "+masterTxChecked.size());
