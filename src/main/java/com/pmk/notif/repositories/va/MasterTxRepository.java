@@ -13,6 +13,6 @@ import java.util.Optional;
 @Repository
 public interface MasterTxRepository extends JpaRepository<MasterTx, Integer> {
 
-    @Query(value = "SELECT * FROM master_tx WHERE va_acc_no AND archive_no = :tx_reference_no AND (is_reversal <> true OR is_reversal IS NULL) and created_at BETWEEN :start_date AND :end_date ORDER BY created_at DESC, id DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM master_tx WHERE va_acc_no = :va_acc_no AND archive_no = :tx_reference_no AND (is_reversal <> true OR is_reversal IS NULL) and created_at BETWEEN :start_date AND :end_date ORDER BY created_at DESC, id DESC", nativeQuery = true)
     List<MasterTx> findMasterTxBetween(String va_acc_no , String tx_reference_no, LocalDateTime start_date, LocalDateTime end_date);
 }
