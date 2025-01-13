@@ -3,9 +3,7 @@ package com.pmk.notif.utils;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,10 +20,20 @@ public class GetCurrentTimeService {
     }
 
     public static LocalDateTime[] getCurrentDayRange() {
-        LocalDate today = LocalDate.now();
-        LocalDateTime startOfDay = today.atStartOfDay(); // 00:00:00
-        LocalDateTime endOfDay = today.atTime(LocalTime.MAX); // 23:59:59.999999999
-        return new LocalDateTime[]{startOfDay, endOfDay};
+        ZoneId localZoneId = ZoneId.systemDefault(); // Get the machine's local time zone
+        LocalDate today = LocalDate.now(localZoneId); // Use the local time zone for the current date
+        LocalDateTime startOfDay = today.atStartOfDay(); // Start of the day
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX); // End of the day
+
+        // Convert to ZonedDateTime in the local time zone
+        ZonedDateTime startOfDayZoned = startOfDay.atZone(localZoneId);
+        ZonedDateTime endOfDayZoned = endOfDay.atZone(localZoneId);
+
+        // Return the adjusted LocalDateTime values
+        return new LocalDateTime[]{
+                startOfDayZoned.toLocalDateTime(),
+                endOfDayZoned.toLocalDateTime()
+        };
     }
 
     public HashMap<String, String> inString() {
