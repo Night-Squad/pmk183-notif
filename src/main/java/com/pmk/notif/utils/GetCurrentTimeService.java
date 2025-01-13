@@ -20,7 +20,8 @@ public class GetCurrentTimeService {
     }
 
     public static LocalDateTime[] getCurrentDayRange() {
-        ZoneId localZoneId = ZoneId.systemDefault(); // Matches Asia/Jakarta
+//        ZoneId localZoneId = ZoneId.systemDefault(); // Matches Asia/Jakarta
+        ZoneId localZoneId = ZoneId.of("Asia/Jakarta");
         LocalDate today = LocalDate.now(localZoneId); // Current date in the local time zone
         LocalDateTime startOfDay = today.atStartOfDay(); // Start of the day (00:00:00)
         LocalDateTime endOfDay = today.atTime(LocalTime.MAX); // End of the day (23:59:59.999999999)
