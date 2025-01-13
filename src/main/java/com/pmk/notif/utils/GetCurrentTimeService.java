@@ -20,20 +20,13 @@ public class GetCurrentTimeService {
     }
 
     public static LocalDateTime[] getCurrentDayRange() {
-        ZoneId localZoneId = ZoneId.systemDefault(); // Get the machine's local time zone
-        LocalDate today = LocalDate.now(localZoneId); // Use the local time zone for the current date
-        LocalDateTime startOfDay = today.atStartOfDay(); // Start of the day
-        LocalDateTime endOfDay = today.atTime(LocalTime.MAX); // End of the day
+        ZoneId localZoneId = ZoneId.systemDefault(); // Matches Asia/Jakarta
+        LocalDate today = LocalDate.now(localZoneId); // Current date in the local time zone
+        LocalDateTime startOfDay = today.atStartOfDay(); // Start of the day (00:00:00)
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX); // End of the day (23:59:59.999999999)
 
-        // Convert to ZonedDateTime in the local time zone
-        ZonedDateTime startOfDayZoned = startOfDay.atZone(localZoneId);
-        ZonedDateTime endOfDayZoned = endOfDay.atZone(localZoneId);
-
-        // Return the adjusted LocalDateTime values
-        return new LocalDateTime[]{
-                startOfDayZoned.toLocalDateTime(),
-                endOfDayZoned.toLocalDateTime()
-        };
+        // Return the range adjusted to the local time zone
+        return new LocalDateTime[]{startOfDay, endOfDay};
     }
 
     public HashMap<String, String> inString() {
