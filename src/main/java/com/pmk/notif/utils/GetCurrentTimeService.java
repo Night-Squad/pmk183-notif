@@ -1,7 +1,9 @@
 package com.pmk.notif.utils;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +13,16 @@ import java.util.HashMap;
 
 @Service
 public class GetCurrentTimeService {
+
+    @Value("${trx.time.zone}")
+    private String TrxTimeZone;
+
+    private static String TrxTimeZoneStatic;
+
+    @PostConstruct
+    public void init() {
+        TrxTimeZoneStatic = TrxTimeZone;
+    }
 
     public Timestamp getCurrentTime() {
         Calendar calendar = Calendar.getInstance();
